@@ -1,0 +1,9 @@
+body {
+  font-family: "Inter";
+}
+
+button,
+input,
+textarea {
+  font-family: inherit;
+}
