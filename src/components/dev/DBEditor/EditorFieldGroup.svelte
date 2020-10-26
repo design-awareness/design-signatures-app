@@ -9,7 +9,7 @@
     | { primitive: "boolean" | "string" | "number" | "date" }
     | { entity: DBModelName };
   export let value: readonly any[] = [];
-  export let setView: TriggerInvoker<[DBModelName, string]>;
+  export let setView: TriggerInvoker<[DBModelName, string]> = () => {};
 
   $: if (!Array.isArray(value)) value = [];
 

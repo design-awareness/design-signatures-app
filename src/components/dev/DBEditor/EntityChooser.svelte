@@ -1,7 +1,8 @@
 <script lang="ts">
   import type { DBModelName } from "../../../data/schema";
   import * as db from "../../../data/database";
-  import { ITriggerPassable, onTrigger } from "../../../util/trigger";
+  import { onTrigger } from "../../../util/trigger";
+  import type { ITriggerPassable } from "../../../util/trigger";
   const typeOptions = ["ActivitySet", "Note", "Project", "Session"];
 
   export let selectedType: DBModelName = "ActivitySet";

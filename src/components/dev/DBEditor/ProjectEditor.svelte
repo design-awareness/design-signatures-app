@@ -1,9 +1,6 @@
 <script lang="ts">
-  import {
-    ITriggerPassable,
-    onTrigger,
-    TriggerInvoker,
-  } from "../../../util/trigger";
+  import { onTrigger } from "../../../util/trigger";
+  import type { ITriggerPassable, TriggerInvoker } from "../../../util/trigger";
   import { getProject, newProject } from "../../../data/database";
   import type { DBModelName, Project } from "../../../data/schema";
   import EditorField from "./EditorField.svelte";

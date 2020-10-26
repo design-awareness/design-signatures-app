@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { DBModelName } from "../../../data/schema";
-  import { createTrigger, TriggerInvoker } from "../../../util/trigger";
+  import { createTrigger } from "../../../util/trigger";
+  import type { TriggerInvoker } from "../../../util/trigger";
 
   import ActivitySetEditor from "./ActivitySetEditor.svelte";
   import NoteEditor from "./NoteEditor.svelte";
