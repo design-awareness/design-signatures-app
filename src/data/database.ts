@@ -419,17 +419,17 @@ function createClientObject(
   return [obj as Schema.IDBObj, Promise.all(childResolvers)];
 }
 
-export async function getActivitySet(id: DBID) {
-  return (await getEntry("ActivitySet", id)) as Schema.ActivitySet;
+export function getActivitySet(id: DBID) {
+  return getEntry("ActivitySet", id) as Promise<Schema.ActivitySet>;
 }
-export async function getNote(id: DBID) {
-  return (await getEntry("Note", id)) as Schema.Note;
+export function getNote(id: DBID) {
+  return getEntry("Note", id) as Promise<Schema.Note>;
 }
-export async function getProject(id: DBID) {
-  return (await getEntry("Project", id)) as Schema.Project;
+export function getProject(id: DBID) {
+  return getEntry("Project", id) as Promise<Schema.Project>;
 }
-export async function getSession(id: DBID) {
-  return (await getEntry("Session", id)) as Schema.Session;
+export function getSession(id: DBID) {
+  return getEntry("Session", id) as Promise<Schema.Session>;
 }
 
 export function newActivitySet() {
