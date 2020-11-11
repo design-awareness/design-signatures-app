@@ -1,24 +1,25 @@
 <script lang="ts">
   import Router from "svelte-spa-router/Router.svelte";
-
   import Home from "./routes/Home.svelte";
   import NotFound from "./routes/NotFound.svelte";
-
   import DBEditor from "./routes/dev/DBEditor.svelte";
+  import NewProject from "./routes/NewProject.svelte";
+  import ProjectDetail from "./routes/ProjectDetail.svelte";
+  import AllProjects from "./routes/AllProjects.svelte";
 
   const routes: object = {
     "/": Home, // Home
 
-    "/projects/": Home, // Projects
-    "/projects/new/": Home, // New project
-    "/projects/:id/": Home, // Project detail
-    "/projects/:id/track/": Home, // Project tracking
+    "/projects/": AllProjects, // Projects
+    "/projects/new/": NewProject, // New project
+    "/projects/:id/": ProjectDetail, // Project detail
+    "/projects/:id/track/": NotFound, // Project tracking
 
-    "/about/": Home, // About design awareness
+    "/about/": NotFound, // About design awareness
 
-    "/dev/component-library/": Home, // Component library
+    "/dev/component-library/": NotFound, // Component library
     "/dev/dbeditor/": DBEditor, // Database editor
-    "/dev/codethemes/": Home, // Theme preview
+    "/dev/codethemes/": NotFound, // Theme preview
 
     "*": NotFound, // Not found
   };
