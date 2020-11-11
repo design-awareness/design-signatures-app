@@ -186,6 +186,17 @@ export function getAll(store: Schema.DBModelName): Promise<DBID[]> {
   });
 }
 
+export function saveAll(
+  objects: (
+    | Schema.ActivitySet
+    | Schema.Note
+    | Schema.Project
+    | Schema.Session
+  )[]
+): Promise<void[]> {
+  return Promise.all(objects.map((object) => object.save()));
+}
+
 /**
  * Resolves to the entry with the given id in the given datastore.
  * If there is no entry for the given id, resolves to null.
