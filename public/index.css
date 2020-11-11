@@ -7,3 +7,19 @@ input,
 textarea {
   font-family: inherit;
 }
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+.device-frame {
+  margin: 0;
+}
+
+:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgb(34, 154, 235);
+}
