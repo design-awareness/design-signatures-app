@@ -374,6 +374,7 @@ function createClientObject(
             const repeated = dbtype[1];
             if (repeated) {
               dbObj[name] = [];
+              if (!data[name]) data[name] = [];
               savingChildren.push(
                 Promise.all(
                   data[name].map((child, i) => {
@@ -390,9 +391,13 @@ function createClientObject(
               if (data[name] === null) {
                 dbObj[name] = null;
               } else {
-                const childPromise = data[name].save();
-                dbObj[name] = data[name].id;
-                savingChildren.push(childPromise);
+                if (data[name]) {
+                  const childPromise = data[name].save();
+                  dbObj[name] = data[name].id;
+                  savingChildren.push(childPromise);
+                } else {
+                  dbObj[name] = null;
+                }
               }
             }
           }
