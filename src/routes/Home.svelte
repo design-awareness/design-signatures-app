@@ -3,6 +3,7 @@
   import Button from "../components/Button.svelte";
   import ContentFrame from "../components/layout/ContentFrame.svelte";
   import HorizontalScrollArea from "../components/layout/HorizontalScrollArea.svelte";
+  import Link from "../components/Link.svelte";
   import PageHeader from "../components/PageHeader.svelte";
   import ProjectCard from "../components/ProjectCard.svelte";
   import Header from "../components/type/Header.svelte";
@@ -80,5 +81,16 @@
     <Button on:click={async () => console.log(await push('/projects/'))}>
       All Projects
     </Button>
+
+    <Header>About Design Awareness</Header>
+    <p>
+      <Link>What does this app do?</Link>
+    </p>
+    <p>
+      <Link>Atman's Model</Link>
+    </p>
+    <p>
+      <Link>Design Awareness App Tutorials</Link>
+    </p>
   </ContentFrame>
 </main>
