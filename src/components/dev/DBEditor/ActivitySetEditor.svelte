@@ -70,5 +70,10 @@
       name="colors"
       type={{ primitive: 'string' }}
       bind:value={dbObj.colors} />
+    <EditorField
+      name="wellKnown"
+      type="boolean"
+      bind:value={dbObj.wellKnown}
+      disabled />
   {/if}
 </div>

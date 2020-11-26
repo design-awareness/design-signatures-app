@@ -7,6 +7,10 @@
   import ProjectDetail from "./routes/ProjectDetail.svelte";
   import AllProjects from "./routes/AllProjects.svelte";
 
+  // create preset activity sets!
+  import { presetReady } from "./data/activitySetPresets";
+  presetReady; // noop, but keeps the linter happy :)
+
   const routes: object = {
     "/": Home, // Home
 

@@ -2,6 +2,7 @@ import * as Schema from "./schema";
 import defer from "../util/defer";
 
 const DB_NAME = "design-awareness-local-store";
+const DEBUG_DELAY = 0;
 
 type DBID = string;
 
@@ -180,8 +181,13 @@ export function getAll(store: Schema.DBModelName): Promise<DBID[]> {
     const request = objectStore.getAllKeys();
     request.onerror = rej;
     request.onsuccess = function (evt) {
-      // @ts-ignore
-      res(evt.target.result);
+      if (DEBUG_DELAY) {
+        // @ts-ignore
+        setTimeout(() => res(evt.target.result), DEBUG_DELAY);
+      } else {
+        // @ts-ignore
+        res(evt.target.result);
+      }
     };
   });
 }
@@ -350,12 +356,15 @@ function createClientObject(
     unsubscribe(fn) {
       subscriptions.delete(fn);
     },
-    async save() {
+    // save is typed as async () => void to prevent
+    // setting ids unless you really, really
+    // mean to!
+    async save(newSaveId: string) {
       if (dirty && !saving) {
         saving = true;
         const isNewEntry = id === null;
         if (id === null) {
-          id = idgen();
+          id = newSaveId || idgen();
           objStore[store].set(id, obj as any);
         }
 
@@ -458,6 +467,7 @@ export function newActivitySet() {
       activityCodes: [],
       activityDescriptions: [],
       colors: [],
+      wellKnown: false,
     },
     null
   )[0] as Schema.ActivitySet;

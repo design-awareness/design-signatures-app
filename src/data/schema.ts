@@ -21,6 +21,7 @@ export interface ActivitySet extends IDBObj, IDBClientObj<ActivitySet> {
   activityCodes: readonly string[];
   activityDescriptions: readonly string[];
   colors: readonly string[];
+  wellKnown: boolean;
 }
 const ActivitySetSchema: DBSchema = [
   ["name", null],
@@ -29,6 +30,7 @@ const ActivitySetSchema: DBSchema = [
   ["activityCodes", null],
   ["activityDescriptions", null],
   ["colors", null],
+  ["wellKnown", null],
 ];
 
 export interface Note extends IDBObj, IDBClientObj<Note> {
