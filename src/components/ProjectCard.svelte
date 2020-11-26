@@ -35,12 +35,17 @@
     margin-top: 0.5rem;
     line-height: 1rem;
     width: $card-width;
-
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
     display: block;
     font-size: 0.875rem;
+
+    span {
+      display: inline-block;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      width: calc(#{$card-width} - #{$link-right-pad});
+      vertical-align: bottom;
+    }
 
     &.loading {
       width: 6rem;
@@ -93,7 +98,7 @@
 
   <div class="link" class:loading class:new={newProjectPlaceholder}>
     {#if !loading && !newProjectPlaceholder}
-      {project.name}
+      <span>{project.name}</span>
     {:else if !loading}New project{/if}
   </div>
 </div>
