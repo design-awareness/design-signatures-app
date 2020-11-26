@@ -1,0 +1,45 @@
+@import "vars";
+
+$background-color: getvar(background);
+$text-primary-color: getvar(text-primary);
+
+$block-vertical-spacing: 1.5rem;
+
+// BUTTON
+$button-border-color: getvar(button-border);
+$button-background-color: getvar(button-background);
+$button-border-size: 1px;
+$button-border-radius: 40px;
+$button-padding-vertical: 0.5rem;
+$button-padding-horizontal: 1.5rem;
+$button-min-width: 6rem;
+// label size
+$button-padding-horizontal-label: 0.5rem;
+$button-min-width-label: 3rem;
+
+// INPUT
+$input-border-color: getvar(input-border);
+$input-border-size: 1px;
+$input-border-radius: 2px;
+$input-background-color: getvar(input-background);
+$input-padding-vertical: 0.625rem;
+$input-padding-horizontal: 1rem;
+$input-spacing-inner: 0.5rem;
+$input-active-selection-background-color: getvar(active-selection-background);
+
+// ACTION BAR
+$action-bar-height: 5rem;
+$action-bar-background-color: getvar(action-bar-background);
+$action-bar-background-color_disabled: getvar(action-bar-background_disabled);
+$action-bar-shadow: 0px 4px 8px 4px rgba(0, 0, 0, 0.1);
+
+// ACTIVITY CHIPS
+$token-vertical-spacing: 0;
+$token-horizontal-spacing: 1rem;
+$token-border-radius: 40px;
+$token-text-color-light: white;
+$token-text-color-dark: black;
+// remove once token is rewritten to calculate correct color
+// or, remove options if we ensure all colors are legible
+// with one color of text
+$token-text-color: $token-text-color-light;

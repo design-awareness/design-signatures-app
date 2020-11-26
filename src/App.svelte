@@ -25,4 +25,23 @@
   };
 </script>
 
+<style lang="scss">
+  @import "styles/colors";
+  @import "styles/tokens";
+  @import "styles/type";
+
+  :global(:root) {
+    @include color-theme-light;
+    @media (prefers-color-scheme: dark) {
+      @include color-theme-dark;
+    }
+  }
+
+  :global(body) {
+    @include type-style($type-body);
+    background-color: $background-color;
+    color: $text-primary-color;
+  }
+</style>
+
 <Router {routes} />

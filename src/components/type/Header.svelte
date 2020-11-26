@@ -1,10 +1,9 @@
 <style lang="scss">
+  @import "src/styles/type";
+  @import "src/styles/tokens";
   h1 {
-    margin: 1rem 0 0.5rem 0;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 2rem;
-    line-height: 2.5rem;
+    margin: 2.5rem 0 1rem 0;
+    @include type-style($type-header);
   }
 </style>
 

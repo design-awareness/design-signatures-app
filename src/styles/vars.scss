@@ -1,0 +1,13 @@
+@mixin setvar($name, $value) {
+  --#{$name}: #{$value};
+}
+
+@mixin setvars($vars) {
+  @each $name, $value in $vars {
+    --#{$name}: #{$value};
+  }
+}
+
+@function getvar($name) {
+  @return var(--#{$name});
+}

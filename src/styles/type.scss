@@ -1,0 +1,51 @@
+$type-body: (
+  size: 16,
+  weight: 400,
+  height: 24,
+);
+
+$type-header: (
+  size: 22,
+  weight: 400,
+  height: 24,
+);
+
+$type-button: (
+  size: 16,
+  weight: 300,
+  height: 24,
+);
+
+$type-input-label: (
+  size: 16,
+  weight: 500,
+  height: 24,
+);
+
+$type-label-button: (
+  size: 12,
+  weight: 400,
+  height: map-get($type-input-label, height),
+);
+
+$type-input: (
+  size: 14,
+  weight: 400,
+  height: 20,
+);
+
+$type-token: (
+  size: 14,
+  weight: 600,
+  height: 24,
+);
+
+@function rem($px) {
+  @return $px * 1rem / 16;
+}
+
+@mixin type-style($style) {
+  font-size: rem(map-get($style, size));
+  font-weight: map-get($style, weight);
+  line-height: rem(map-get($style, height));
+}
