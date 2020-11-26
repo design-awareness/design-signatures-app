@@ -6,6 +6,7 @@
   export let type: "boolean" | "string" | "number" | "date";
   export let value: any;
   export let hasRemove = false;
+  export let disabled = false;
 
   const id = Math.random().toString(36).substr(2, 8);
 
@@ -36,13 +37,18 @@
 <div class="field">
   {#if name}<label for={id}>{name}</label>{/if}
   {#if type === 'boolean'}
-    <input type="checkbox" on:blur={blur} bind:checked={value} {id} />
+    <input
+      type="checkbox"
+      on:blur={blur}
+      bind:checked={value}
+      {id}
+      {disabled} />
   {/if}
   {#if type === 'string'}
-    <input type="text" on:blur={blur} bind:value {id} />
+    <input type="text" on:blur={blur} bind:value {id} {disabled} />
   {/if}
   {#if type === 'number'}
-    <input type="number" on:blur={blur} bind:value {id} />
+    <input type="number" on:blur={blur} bind:value {id} {disabled} />
   {/if}
   {#if type === 'date'}
     <input
@@ -55,7 +61,8 @@
               ' ',
               'T'
             ) : new Date().toLocaleString('sv').replace(' ', 'T')}
-      {id} />
+      {id}
+      {disabled} />
   {/if}
   {#if hasRemove}<button on:click={remove}>-</button>{/if}
 </div>
