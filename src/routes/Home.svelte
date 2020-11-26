@@ -10,18 +10,14 @@
   import { getAll } from "../data/database";
 
   let projects: string[] = null;
-  let loading = true;
 
-  async function load() {
-    projects = await getAll("Project");
-    loading = false;
-  }
-  load();
+  const getProjects = () => getAll("Project");
 </script>
 
 <style lang="scss">
+  @import "src/styles/tokens";
   .home {
-    background-color: #e5e5e5;
+    background-color: $background-color;
     min-height: 100%;
   }
 
@@ -62,7 +58,11 @@
             <ProjectCard newProjectPlaceholder />
           </a>
         </li>
-        {#if !loading}
+        {#await getProjects()}
+          <li>
+            <ProjectCard loadingPlaceholder />
+          </li>
+        {:then projects}
           {#each projects as id}
             <li>
               <a href={'#/projects/' + id}>
@@ -70,11 +70,7 @@
               </a>
             </li>
           {/each}
-        {:else}
-          <li>
-            <ProjectCard loadingPlaceholder />
-          </li>
-        {/if}
+        {/await}
       </ul>
     </HorizontalScrollArea>
 
@@ -84,13 +80,20 @@
 
     <Header>About Design Awareness</Header>
     <p>
-      <Link>What does this app do?</Link>
+      <Link href="/">What does this app do?</Link>
     </p>
     <p>
-      <Link>Atman's Model</Link>
+      <Link href="/">Atman's Model</Link>
     </p>
     <p>
-      <Link>Design Awareness App Tutorials</Link>
+      <Link href="/">Design Awareness App Tutorials</Link>
     </p>
+
+    {#if location.hostname.indexOf('design') === -1}
+      <Header>Developer tools</Header>
+      <p>
+        <Link href="/dev/DBEditor">Database editor</Link>
+      </p>
+    {/if}
   </ContentFrame>
 </main>
