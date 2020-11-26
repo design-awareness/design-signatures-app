@@ -5,18 +5,13 @@
   import Header from "../components/type/Header.svelte";
   import { getAll } from "../data/database";
 
-  let loading = true;
-  let projects: string[] = null;
-  async function load() {
-    projects = await getAll("Project");
-    loading = false;
-  }
-  load();
+  let getProjects = () => getAll("Project");
 </script>
 
 <style lang="scss">
   .page {
     background-color: #e5e5e5;
+    min-height: 100%;
   }
   ul {
     list-style-type: none;
@@ -49,7 +44,14 @@
     <Link up href="/">back</Link>
     <Header>View projects</Header>
     <ul>
-      {#if !loading}
+      {#await getProjects()}
+        <!-- loading placeholder? -->
+        {#each [1, 2, 3, 4] as i}
+          <li>
+            <ProjectCard loadingPlaceholder />
+          </li>
+        {/each}
+      {:then projects}
         {#each projects as id}
           <li>
             <a href={'#/projects/' + id}>
@@ -57,7 +59,7 @@
             </a>
           </li>
         {/each}
-      {/if}
+      {/await}
     </ul>
   </ContentFrame>
 </main>
