@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { getActivitySet, getAll } from "../../data/database";
+  import { getActivitySet, getAll, newActivitySet } from "../../data/database";
+  import add from "@iconify-icons/ic/baseline-add";
 
   import type { ActivitySet } from "../../data/schema";
   import { sortBy } from "../../util/sort";
@@ -8,13 +9,23 @@
   import Item from "./Item.svelte";
 
   export let activitySet: ActivitySet;
+  export let label = "Activity Set";
+  export let createNew: () => void = null;
+  export let withEmpty = false;
 
-  const getAllActivitySets = () =>
-    getAll("ActivitySet").then((ids) => Promise.all(ids.map(getActivitySet)));
+  export let allActivitySets: Promise<ActivitySet[]>;
+  function refreshSets() {
+    allActivitySets = getAll("ActivitySet").then((ids) =>
+      Promise.all(ids.map(getActivitySet))
+    );
+  }
+  refreshSets();
 
   function set(as: ActivitySet) {
     activitySet = as;
   }
+
+  let showNew = false;
 </script>
 
 <style lang="scss">
@@ -45,13 +56,22 @@
 </style>
 
 <div class="label">
-  <span>Activity set</span>
-  <Button inlabel>Create new</Button>
+  <span>{label}</span>
+  {#if createNew}
+    <Button inlabel on:click={createNew} icon={add}>Create new</Button>
+  {/if}
 </div>
-{#await getAllActivitySets()}
+{#await allActivitySets}
   <div>Loading activity sets…</div>
 {:then activitySets}
   <ul class="container">
+    {#if withEmpty}
+      <li>
+        <InvisibleButton on:click={() => set(newActivitySet())}>
+          <Item empty />
+        </InvisibleButton>
+      </li>
+    {/if}
     {#each sortBy('wellKnown', sortBy('name', activitySets)) as activitySetItem}
       <li>
         <InvisibleButton on:click={() => set(activitySetItem)}>

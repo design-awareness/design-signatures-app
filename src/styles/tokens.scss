@@ -2,6 +2,8 @@
 
 $background-color: getvar(background);
 $text-primary-color: getvar(text-primary);
+$text-secondary-color: getvar(text-secondary);
+$text-ghost-color: getvar(text-ghost);
 
 $block-vertical-spacing: 1.5rem;
 
@@ -13,9 +15,20 @@ $button-border-radius: 40px;
 $button-padding-vertical: 0.5rem;
 $button-padding-horizontal: 1.5rem;
 $button-min-width: 6rem;
+// icon button
+$button-icon-spacing: 0.5rem;
+$button-icon-size: 1.25em; // use em to scale button icon with button font size
+// small size
+$button-padding-vertical-small: 0.25rem;
+$button-padding-horizontal-small: 1rem;
 // label size
 $button-padding-horizontal-label: 0.5rem;
 $button-min-width-label: 3rem;
+$button-icon-spacing-label: 0.125rem;
+$button-icon-size-label: 1rem;
+
+// BACK BUTTON
+$back-button-text-color: getvar(back-button);
 
 // INPUT
 $input-border-color: getvar(input-border);
@@ -37,9 +50,28 @@ $action-bar-shadow: 0px 4px 8px 4px rgba(0, 0, 0, 0.1);
 $token-vertical-spacing: 0;
 $token-horizontal-spacing: 1rem;
 $token-border-radius: 40px;
+$token-fixed-width: 3rem;
 $token-text-color-light: white;
 $token-text-color-dark: black;
 // remove once token is rewritten to calculate correct color
 // or, remove options if we ensure all colors are legible
 // with one color of text
 $token-text-color: $token-text-color-light;
+
+// MODAL
+$modal-scrim-opacity: 0.35;
+$modal-background-color: white;
+$modal-padding-vertical: 2rem;
+$modal-padding-horizontal: 1.25rem;
+$modal-border-radius: 4px;
+$modal-min-width: 16rem;
+$modal-min-gap-horizontal: 3rem;
+$modal-min-gap-vertical: 4rem;
+$modal-shadow: 0px 24px 38px rgba(black, 0.14), 0px 11px 15px rgba(black, 0.2);
+
+// COLOR PICKER
+$color-picker-swatch-size: 2.5rem;
+$color-picker-spacing: 0.75rem;
+$color-picker-swatch-border-radius: 4px;
+$color-picker-swatch-check-padding: 0.5rem;
+$color-picker-swatch-check-opacity: 1;

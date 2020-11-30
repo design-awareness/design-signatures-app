@@ -16,13 +16,19 @@ $type-button: (
   height: 24,
 );
 
+$type-button-small: (
+  size: 14,
+  weight: 300,
+  height: 20,
+);
+
 $type-input-label: (
   size: 16,
   weight: 500,
   height: 24,
 );
 
-$type-label-button: (
+$type-button-inlabel: (
   size: 12,
   weight: 400,
   height: map-get($type-input-label, height),

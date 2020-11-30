@@ -6,19 +6,18 @@
   let activitySet: ActivitySet;
   $: activitySet = forEach as ActivitySet;
   export let align: "left" | "right" | "center" = "left";
+  export let fixWidth = false;
+  export let space = false;
 
   export let color: string = null;
   export let code: string = null;
+
+  const NBSP = " ";
 </script>
 
 <style lang="scss">
   @import "src/styles/tokens";
   @import "src/styles/type";
-  .label {
-    margin: $block-vertical-spacing 0 $input-spacing-inner 0;
-    display: flex;
-    justify-content: space-between;
-  }
   ul {
     margin: ($input-spacing-inner / 2) 0 0 0;
     padding: 0;
@@ -37,16 +36,27 @@
     font-style: normal;
     padding: $token-vertical-spacing $token-horizontal-spacing;
     border-radius: $token-border-radius;
-    margin: 0 0.25rem 0.25rem 0;
+    text-align: center;
+    &.space {
+      margin: 0 0.25rem 0.25rem 0;
+    }
+    &.fixWidth {
+      width: $token-fixed-width;
+    }
   }
 </style>
 
 {#if forEach}
-  <ul class={align}>
+  <ul style="text-align: {align}">
     {#each activitySet.activityCodes as code, i}
       <li>
-        <svelte:self color={activitySet.colors[i]} {code} />
+        <svelte:self space color={activitySet.colors[i]} {code} />
       </li>
     {/each}
   </ul>
-{:else}<i style="background-color: #{color}">{code}</i>{/if}
+{:else}
+  <i
+    class:fixWidth
+    class:space
+    style="background-color: #{color}">{code || NBSP}</i>
+{/if}

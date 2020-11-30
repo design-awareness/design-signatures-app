@@ -26,6 +26,12 @@
     margin: 0 0 $block-vertical-spacing 0;
     font-size: 0.875rem;
     @include type-style($type-input);
+    &:first-child {
+      margin-top: 0;
+    }
+    &:last-child {
+      margin-bottom: 0;
+    }
   }
   textarea {
     min-width: 100%;
@@ -44,5 +50,7 @@
   <div>{label}</div>
   {#if large}
     <textarea bind:value {placeholder} />
-  {:else}<input type="text" bind:value {placeholder} />{/if}
+  {:else}
+    <input type="text" bind:value {placeholder} on:input {...$$props} />
+  {/if}
 </label>

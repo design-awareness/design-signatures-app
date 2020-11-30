@@ -2,8 +2,9 @@
   import type { ActivitySet } from "../../data/schema";
   import ActivityToken from "../ActivityToken.svelte";
 
-  export let activitySet: ActivitySet;
+  export let activitySet: ActivitySet = null;
   export let selected = false;
+  export let empty = false;
 </script>
 
 <style lang="scss">
@@ -22,6 +23,10 @@
 </style>
 
 <div class="item" class:selected>
-  <p>{activitySet.name}</p>
-  <ActivityToken forEach={activitySet} />
+  {#if empty}
+    <p>Start from scratch</p>
+  {:else}
+    <p>{activitySet.name}</p>
+    <ActivityToken forEach={activitySet} />
+  {/if}
 </div>

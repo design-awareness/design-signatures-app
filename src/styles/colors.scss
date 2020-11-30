@@ -5,19 +5,25 @@
 $neutral-00: #ffffff;
 $neutral-10: #f5f5f5;
 $neutral-20: #bdbdbd;
+$neutral-30: #929292;
 $neutral-40: #515151;
+$neutral-60: #313131;
 $neutral-90: #000000;
 
 @mixin color-theme-light {
   @include setvars(
     (
       background: $neutral-10,
+      modal-background: $neutral-00,
       text-primary: $neutral-90,
+      text-secondary: $neutral-60,
+      text-ghost: $neutral-40,
       button-background: $neutral-10,
+      back-button: $neutral-40,
       button-border: $neutral-40,
       input-background: $neutral-00,
       input-border: $neutral-20,
-      active-selection-background: #dbeaf8,
+      active-selection-background: $neutral-10,
       action-bar-background: #f1c258,
       action-bar-background_disabled: #f1c258,
     )

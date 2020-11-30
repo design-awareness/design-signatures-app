@@ -9,12 +9,15 @@
   import InputField from "../components/InputField.svelte";
   import BottomActionBar from "../components/BottomActionBar.svelte";
   import ActivitySetChooser from "../components/ActivitySet/Chooser.svelte";
+  import BuilderFrame from "../components/ActivitySet/BuilderFrame.svelte";
 
   let name = "";
   let description = "";
 
   let activitySet: ActivitySet = null;
   let isCreating = false;
+
+  let newSetOverlay = false;
 
   let beginEnabled = false;
   $: beginEnabled = name !== "" && activitySet !== null && !isCreating;
@@ -42,15 +45,25 @@
 </style>
 
 <main class="device-frame page">
-  <ContentFrame>
-    <BackButton href="/" />
-    <Header>Create project</Header>
-    <InputField label="Name" placeholder="My cool project" bind:value={name} />
-    <InputField label="Description" large bind:value={description} />
-    <ActivitySetChooser bind:activitySet />
-  </ContentFrame>
-  <BottomActionBar
-    label="Begin tracking"
-    on:click={go}
-    disabled={!beginEnabled} />
+  {#if !newSetOverlay}
+    <ContentFrame>
+      <BackButton href="/" />
+      <Header>Create project</Header>
+      <InputField
+        label="Name"
+        placeholder="My cool project"
+        bind:value={name} />
+      <InputField label="Description" large bind:value={description} />
+      <ActivitySetChooser
+        bind:activitySet
+        createNew={() => (newSetOverlay = true)} />
+    </ContentFrame>
+    <BottomActionBar
+      label="Begin tracking"
+      on:click={go}
+      disabled={!beginEnabled} />
+  {:else}
+    <!-- newSetOverlay -->
+    <BuilderFrame bind:visible={newSetOverlay} bind:activitySet />
+  {/if}
 </main>
