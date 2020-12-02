@@ -2,6 +2,7 @@
   import ContentFrame from "../components/layout/ContentFrame.svelte";
   import Link from "../components/Link.svelte";
   import ProjectCard from "../components/ProjectCard.svelte";
+  import BackButton from "../components/BackButton.svelte";
   import Header from "../components/type/Header.svelte";
   import { getAll } from "../data/database";
 
@@ -41,7 +42,7 @@
 
 <main class="device-frame page">
   <ContentFrame>
-    <Link up href="/">back</Link>
+    <BackButton href="/" />
     <Header>View projects</Header>
     <ul>
       {#await getProjects()}

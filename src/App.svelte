@@ -6,6 +6,8 @@
   import NewProject from "./routes/NewProject.svelte";
   import ProjectDetail from "./routes/ProjectDetail.svelte";
   import AllProjects from "./routes/AllProjects.svelte";
+  import AppDo from "./routes/AppDo.svelte";
+  import Atmans from "./routes/Atmans.svelte";
 
   // create preset activity sets!
   import { presetReady } from "./data/activitySetPresets";
@@ -20,6 +22,8 @@
     "/projects/:id/track/": NotFound, // Project tracking
 
     "/about/": NotFound, // About design awareness
+    "/about/appdo": AppDo, // What does this app do?
+    "/about/atmans": Atmans,
 
     "/dev/component-library/": NotFound, // Component library
     "/dev/dbeditor/": DBEditor, // Database editor

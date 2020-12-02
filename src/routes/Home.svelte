@@ -80,10 +80,10 @@
 
     <Header>About Design Awareness</Header>
     <p>
-      <Link href="/">What does this app do?</Link>
+      <Link href="/about/appdo">What does this app do?</Link>
     </p>
     <p>
-      <Link href="/">Atman's Model</Link>
+      <Link href="/about/atmans">Atman's Model</Link>
     </p>
     <p>
       <Link href="/">Design Awareness App Tutorials</Link>
