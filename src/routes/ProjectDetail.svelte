@@ -9,17 +9,13 @@
 
   export let params: { id: string };
 
-  let project: Project;
-  async function load() {
-    project = await getProject(params.id);
-  }
-
-  $: [params, load()];
+  let projectPromise: Promise<Project>;
+  projectPromise = getProject(params.id);
 
   let active = true;
   async function remove() {
     active = false;
-    await project.remove();
+    await (await projectPromise).remove();
     pop();
   }
 </script>
@@ -30,11 +26,12 @@
 <main class="device-frame page">
   <ContentFrame>
     <BackButton href="/" />
-    <Header>{(project && project.name) || 'No project here!'}</Header>
-    {#if project}
-      <input bind:value={project.name} />
+    {#await projectPromise}
+      loading…
+    {:then project}
+      <Header>{project.name || 'No project here!'}</Header>
       <p>{project.id}</p>
       <button on:click={remove} disabled={!active}>delete</button>
-    {/if}
+    {/await}
   </ContentFrame>
 </main>
