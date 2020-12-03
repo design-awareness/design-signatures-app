@@ -27,10 +27,12 @@
     const proj = newProject();
     proj.name = name;
     proj.description = description;
-    console.log(activitySet.name);
     proj.activitySet = activitySet;
-    console.log(proj);
-    console.log(proj.activitySet && proj.activitySet.name);
+    proj.created = new Date();
+    proj.lastModified = new Date();
+    proj.notes = [];
+    proj.sessions = [];
+    proj.active = true;
     await proj.save();
     pop();
   }

@@ -309,19 +309,23 @@ function createClientObject(
       const [modelName, repeated] = dbtype;
       if (!repeated) {
         const childID = rawObj[name];
-        childResolvers.push(
-          (async () => {
-            data[name] = await getEntry(modelName, childID);
-          })()
-        );
+        if (childID) {
+          childResolvers.push(
+            (async () => {
+              data[name] = await getEntry(modelName, childID);
+            })()
+          );
+        }
       } else {
-        childResolvers.push(
-          (async () => {
-            data[name] = await Promise.all(
-              rawObj[name].map((childId) => getEntry(modelName, childId))
-            );
-          })()
-        );
+        if (rawObj[name].length) {
+          childResolvers.push(
+            (async () => {
+              data[name] = await Promise.all(
+                rawObj[name].map((childID) => getEntry(modelName, childID))
+              );
+            })()
+          );
+        }
       }
     }
     Object.defineProperty(obj, name, {
@@ -400,13 +404,9 @@ function createClientObject(
               if (data[name] === null) {
                 dbObj[name] = null;
               } else {
-                if (data[name]) {
-                  const childPromise = data[name].save();
-                  dbObj[name] = data[name].id;
-                  savingChildren.push(childPromise);
-                } else {
-                  dbObj[name] = null;
-                }
+                const childPromise = data[name].save();
+                dbObj[name] = data[name].id;
+                savingChildren.push(childPromise);
               }
             }
           }
@@ -416,7 +416,11 @@ function createClientObject(
 
         // dbObj should be well formed now
         // write to database...
-        await (isNewEntry ? add : update)(store, dbObj);
+        if (isNewEntry) {
+          await add(store, dbObj);
+        } else {
+          await update(store, dbObj);
+        }
 
         // in case any children haven't finished saving...
         await Promise.all(savingChildren);
