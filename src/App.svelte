@@ -6,8 +6,8 @@
   import NewProject from "./routes/NewProject.svelte";
   import ProjectDetail from "./routes/ProjectDetail.svelte";
   import AllProjects from "./routes/AllProjects.svelte";
-  import AppDo from "./routes/AppDo.svelte";
-  import Atmans from "./routes/Atmans.svelte";
+  import AppDo from "./routes/about/AppDo.svelte";
+  import Atmans from "./routes/about/Atmans.svelte";
 
   // create preset activity sets!
   import { presetReady } from "./data/activitySetPresets";
