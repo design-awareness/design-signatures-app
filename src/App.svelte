@@ -11,6 +11,8 @@
 
   // create preset activity sets!
   import { presetReady } from "./data/activitySetPresets";
+  import ProjectTracking from "./routes/ProjectTracking.svelte";
+  import ComponentLibrary from "./routes/dev/ComponentLibrary.svelte";
   presetReady; // noop, but keeps the linter happy :)
 
   const routes: object = {
@@ -19,15 +21,14 @@
     "/projects/": AllProjects, // Projects
     "/projects/new/": NewProject, // New project
     "/projects/:id/": ProjectDetail, // Project detail
-    "/projects/:id/track/": NotFound, // Project tracking
+    "/projects/:id/track/*": ProjectTracking, // Project tracking
 
     "/about/": NotFound, // About design awareness
     "/about/appdo": AppDo, // What does this app do?
     "/about/atmans": Atmans,
 
-    "/dev/component-library/": NotFound, // Component library
+    "/dev/component-library/": ComponentLibrary, // Component library
     "/dev/dbeditor/": DBEditor, // Database editor
-    "/dev/codethemes/": NotFound, // Theme preview
 
     "*": NotFound, // Not found
   };

@@ -50,12 +50,15 @@
     ];
   }
 
-  function remove(i) {
+  while (activities.length < 3) addItem();
+
+  function remove(i: number) {
     activities = activities.filter((_, _i) => _i !== i);
   }
 
   let ok: boolean;
   $: ok =
+    name !== "" &&
     activities.length >= 3 &&
     activities.every((activity) => activity.name && activity.code);
 
@@ -68,6 +71,7 @@
     as.activityCodes = activities.map((act) => act.code.trim());
     as.activityDescriptions = activities.map((act) => act.description.trim());
     as.colors = activities.map((act) => act.color);
+    as.wellKnown = false;
     saving = true;
     await as.save();
     activitySet = as;

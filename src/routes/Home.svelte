@@ -94,6 +94,9 @@
       <p>
         <Link href="/dev/DBEditor">Database editor</Link>
       </p>
+      <p>
+        <Link href="/dev/component-library">Component library</Link>
+      </p>
     {/if}
   </ContentFrame>
 </main>

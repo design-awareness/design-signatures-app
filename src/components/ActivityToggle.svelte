@@ -1,0 +1,120 @@
+<script lang="ts">
+  export let color: string;
+  export let checked: boolean;
+  export let activityName: string;
+
+  const id = Math.random().toString(36).substr(2, 8);
+</script>
+
+<style lang="scss">
+  @import "src/styles/tokens";
+  @import "src/styles/type";
+
+  .container {
+    display: block;
+    width: $activity-toggle-width;
+    height: $activity-toggle-height;
+    position: relative;
+  }
+
+  input {
+    pointer-events: none;
+    width: 0;
+    height: 0;
+    opacity: 0;
+  }
+
+  .toggle {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: $activity-toggle-width;
+    height: $activity-toggle-height;
+    box-sizing: border-box;
+    border-radius: $activity-toggle-height/2;
+    border: $activity-toggle-border-width solid getvar(activity-color);
+    box-shadow: 0 0 0 0 getvar(activity-color);
+    transition: box-shadow $activity-toggle-transition-speed/2;
+    &::before,
+    &::after {
+      position: absolute;
+      color: getvar(activity-color);
+      top: calc(50% - #{rem(map-get($type-activity-toggle-on, size)) / 2});
+      transition: opacity $activity-toggle-transition-speed;
+    }
+    &::before {
+      content: "on";
+      @include type-style($type-activity-toggle-on);
+      left: $activity-toggle-text-padding;
+      opacity: 0;
+    }
+    &::after {
+      content: "off";
+      @include type-style($type-activity-toggle-off);
+      right: $activity-toggle-text-padding;
+      opacity: 1;
+    }
+    .background {
+      position: absolute;
+      z-index: -1;
+      left: 0;
+      top: 0;
+      width: $activity-toggle-width;
+      height: $activity-toggle-height;
+      border-radius: $activity-toggle-height/2;
+      background: getvar(activity-color);
+      opacity: 0;
+      transition: opacity $activity-toggle-transition-speed;
+    }
+    .thumb {
+      $size: calc(
+        #{$activity-toggle-height} - #{2 * $activity-toggle-border-width} - #{2 *
+          $activity-toggle-thumb-padding}
+      );
+      $offset: $activity-toggle-thumb-padding;
+      width: $size;
+      height: $size;
+      border-radius: calc(#{$size}/ 2);
+      position: absolute;
+      left: $offset;
+      top: $offset;
+      background-color: getvar(activity-color);
+      transform: translateX(0);
+      transition: transform $activity-toggle-transition-speed;
+    }
+  }
+
+  input:focus + label .toggle {
+    box-shadow: 0 0 0 2px getvar(activity-color);
+  }
+
+  input:checked + label .toggle {
+    &::before {
+      opacity: 1;
+    }
+    &::after {
+      opacity: 0;
+    }
+    .thumb {
+      transform: translateX(
+        calc(#{$activity-toggle-width} - #{$activity-toggle-height})
+      );
+    }
+    .background {
+      opacity: $activity-toggle-background-opacity;
+    }
+  }
+</style>
+
+<div class="container">
+  <input type="checkbox" bind:checked {id} />
+  <label
+    for={id}
+    aria-label="Toggle {activityName}"
+    style="--activity-color:#{color}">
+    <div role="presentation" class="toggle">
+      <div class="thumb" />
+      <div class="background" />
+    </div>
+  </label>
+</div>

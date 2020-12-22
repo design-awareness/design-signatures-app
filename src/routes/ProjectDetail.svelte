@@ -1,10 +1,11 @@
 <script lang="ts">
-  import { pop } from "svelte-spa-router/Router.svelte";
+  import { pop, push } from "svelte-spa-router/Router.svelte";
   import BackButton from "../components/BackButton.svelte";
+  import BottomActionBar from "../components/BottomActionBar.svelte";
   import ContentFrame from "../components/layout/ContentFrame.svelte";
-  import HorizontalScrollArea from "../components/layout/HorizontalScrollArea.svelte";
-  import Link from "../components/Link.svelte";
+  // import HorizontalScrollArea from "../components/layout/HorizontalScrollArea.svelte";
   import Header from "../components/type/Header.svelte";
+  import SectionHeader from "../components/type/SectionHeader.svelte";
   import { getProject } from "../data/database";
   //import { getActivitySet } from "../data/database";
   import type { Project } from "../data/schema";
@@ -23,6 +24,10 @@
     active = false;
     await (await projectPromise).remove();
     pop();
+  }
+
+  function startTracking() {
+    push(`/projects/${params.id}/track/`);
   }
 </script>
 
@@ -55,9 +60,7 @@
     {:then project}
       <Header>{project.name || 'No project here!'}</Header>
       <p>{project.description}</p>
-      <br />
-      <p style="font-size:75%;text-align:center;"><b>TRACKING OVERVIEW</b></p>
-
+      <SectionHeader>Tracking overview</SectionHeader>
       <table>
         <tbody>
           <tr>
@@ -76,8 +79,8 @@
           </tr>
         </tbody>
       </table>
-      <br />
-      <p style="font-size:75%;text-align:center;"><b>PROJECT COMMENTS</b></p>
+
+      <SectionHeader>Project comments</SectionHeader>
 
       <table>
         {#each project.notes as note}
@@ -89,6 +92,10 @@
       </table>
 
       <button on:click={remove} disabled={!active}>delete</button>
+
+      {#if project.active}
+        <BottomActionBar label="Resume tracking" on:click={startTracking} />
+      {/if}
     {/await}
   </ContentFrame>
 </main>

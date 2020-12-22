@@ -75,3 +75,15 @@ $color-picker-spacing: 0.75rem;
 $color-picker-swatch-border-radius: 4px;
 $color-picker-swatch-check-padding: 0.5rem;
 $color-picker-swatch-check-opacity: 1;
+
+// ACTIVITY TOGGLE
+$activity-toggle-width: 4rem;
+$activity-toggle-height: 2rem;
+$activity-toggle-border-width: 1px;
+$activity-toggle-background-opacity: 0.15;
+$activity-toggle-thumb-padding: 0.25rem;
+$activity-toggle-text-padding: 0.5rem;
+$activity-toggle-transition-speed: 0.25s;
+
+// TRACKING
+$tracking-background-color: getvar(tracking-background);

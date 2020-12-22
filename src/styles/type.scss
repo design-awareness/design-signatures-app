@@ -10,6 +10,12 @@ $type-header: (
   height: 24,
 );
 
+$type-section-header: (
+  size: 12,
+  weight: 600,
+  height: 24,
+);
+
 $type-caption: (
   size: 12,
   weight: 400,
@@ -50,6 +56,28 @@ $type-token: (
   size: 14,
   weight: 600,
   height: 24,
+);
+
+$type-activity-toggle-off: (
+  size: 12,
+  weight: 400,
+  height: 12,
+);
+$type-activity-toggle-on: (
+  size: 12,
+  weight: 700,
+  height: 12,
+);
+
+$type-timer-time: (
+  size: 16,
+  weight: 600,
+  height: 20,
+);
+$type-timer-type: (
+  size: 12,
+  weight: 600,
+  height: 16,
 );
 
 @function rem($px) {

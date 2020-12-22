@@ -315,6 +315,8 @@ function createClientObject(
               data[name] = await getEntry(modelName, childID);
             })()
           );
+        } else {
+          data[name] = null;
         }
       } else {
         if (rawObj[name].length) {
@@ -325,6 +327,8 @@ function createClientObject(
               );
             })()
           );
+        } else {
+          data[name] = [];
         }
       }
     }
@@ -390,7 +394,7 @@ function createClientObject(
               if (!data[name]) data[name] = [];
               savingChildren.push(
                 Promise.all(
-                  data[name].map((child, i) => {
+                  (data[name] as any[]).map((child, i) => {
                     if (child === null) {
                       return null; // await Promise.resolve([null]) -> [null]
                     }
@@ -459,6 +463,15 @@ export function getProject(id: DBID) {
 }
 export function getSession(id: DBID) {
   return getEntry("Session", id) as Promise<Schema.Session>;
+}
+
+export function getEntityOrFail<T>(promise: Promise<T>): Promise<T> {
+  return new Promise((res, rej) =>
+    promise.then((object) => {
+      if (object !== null) res(object);
+      rej(null);
+    })
+  );
 }
 
 export function newActivitySet() {

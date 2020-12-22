@@ -1,9 +1,8 @@
 <script lang="ts">
   import Header from "../components/type/Header.svelte";
   import type { ActivitySet } from "../data/schema";
-  import { newActivitySet, newProject } from "../data/database";
-  import { pop } from "svelte-spa-router/Router.svelte";
-  import Link from "../components/Link.svelte";
+  import { newProject } from "../data/database";
+  import { replace } from "svelte-spa-router/Router.svelte";
   import BackButton from "../components/BackButton.svelte";
   import ContentFrame from "../components/layout/ContentFrame.svelte";
   import InputField from "../components/InputField.svelte";
@@ -34,7 +33,7 @@
     proj.sessions = [];
     proj.active = true;
     await proj.save();
-    pop();
+    replace(`/projects/${proj.id}/track/`);
   }
 </script>
 
