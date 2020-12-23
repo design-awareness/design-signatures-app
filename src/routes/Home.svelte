@@ -78,6 +78,13 @@
       All Projects
     </Button>
 
+    {#if location.hostname.indexOf('design') === -1}
+      <Header>Developer</Header>
+      <p>
+        <Link href="/dev/">Developer tools and configuration</Link>
+      </p>
+    {/if}
+
     <Header>About Design Awareness</Header>
     <p>
       <Link href="/about/appdo">What does this app do?</Link>
@@ -88,15 +95,5 @@
     <p>
       <Link href="/">Design Awareness App Tutorials</Link>
     </p>
-
-    {#if location.hostname.indexOf('design') === -1}
-      <Header>Developer tools</Header>
-      <p>
-        <Link href="/dev/DBEditor">Database editor</Link>
-      </p>
-      <p>
-        <Link href="/dev/component-library">Component library</Link>
-      </p>
-    {/if}
   </ContentFrame>
 </main>

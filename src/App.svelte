@@ -13,6 +13,8 @@
   import { presetReady } from "./data/activitySetPresets";
   import ProjectTracking from "./routes/ProjectTracking.svelte";
   import ComponentLibrary from "./routes/dev/ComponentLibrary.svelte";
+  import DevTools from "./routes/dev/DevTools.svelte";
+  import RedirectAddPath from "./routes/RedirectAddPath.svelte";
   presetReady; // noop, but keeps the linter happy :)
 
   const routes: object = {
@@ -22,16 +24,22 @@
     "/projects/new/": NewProject, // New project
     "/projects/:id/": ProjectDetail, // Project detail
     "/projects/:id/track/*": ProjectTracking, // Project tracking
+    "/projects/:id/track": RedirectAddPath,
 
     "/about/": NotFound, // About design awareness
     "/about/appdo": AppDo, // What does this app do?
     "/about/atmans": Atmans,
 
-    "/dev/component-library/": ComponentLibrary, // Component library
+    "/dev/": DevTools,
     "/dev/dbeditor/": DBEditor, // Database editor
+    "/dev/component-library/*": ComponentLibrary, // Component library
+    "/dev/component-library": RedirectAddPath,
 
     "*": NotFound, // Not found
   };
+
+  let home: boolean;
+  $: home = location.hash.length < 3;
 </script>
 
 <style lang="scss">
