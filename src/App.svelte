@@ -37,9 +37,6 @@
 
     "*": NotFound, // Not found
   };
-
-  let home: boolean;
-  $: home = location.hash.length < 3;
 </script>
 
 <style lang="scss">
