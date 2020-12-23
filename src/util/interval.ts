@@ -1,37 +1,51 @@
-export default function interval(
-  node: HTMLElement,
+export default function useInterval(
   {
     start,
-    duration,
     tick,
     stop,
   }: {
-    duration: number;
-    start: () => {};
-    tick: () => {};
-    stop: () => {};
+    start: () => void;
+    tick: () => void;
+    stop: () => void;
+  },
+  duration: number,
+  startImmediately = false
+): [(active: boolean) => void, () => void] {
+  let isActive = false;
+  let isDestroyed = false;
+  let handle: number;
+
+  function _start() {
+    start();
+    isActive = true;
+    handle = setInterval(tick, duration);
   }
-): {
-  update: (arg0: {
-    duration: number;
-    start: () => {};
-    tick: () => {};
-    stop: () => {};
-  }) => void;
-  destroy: () => void;
-} {
-  start();
-  let _stop = stop;
-  let handle = setInterval(tick, duration);
-  return {
-    update({ duration, tick, stop }) {
-      clearInterval(handle);
-      handle = setInterval(tick, duration);
-      _stop = stop;
+
+  function _stop() {
+    isActive = false;
+    clearInterval(handle);
+    stop();
+  }
+
+  if (startImmediately) {
+    _start();
+  }
+
+  return [
+    (active) => {
+      if (!isDestroyed && active !== isActive) {
+        if (active) {
+          _start();
+        } else {
+          _stop();
+        }
+      }
     },
-    destroy() {
-      clearInterval(handle);
-      _stop();
+    () => {
+      isDestroyed = true;
+      if (isActive) {
+        _stop();
+      }
     },
-  };
+  ];
 }

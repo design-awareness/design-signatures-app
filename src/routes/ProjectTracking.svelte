@@ -6,7 +6,8 @@
   import Modal from "../components/Modal.svelte";
   import TrackingTimer from "../components/TrackingTimer.svelte";
   import { getEntityOrFail, getProject } from "../data/database";
-  import interval from "../util/interval";
+  import { goUpSafe } from "../util/history";
+  import useInterval from "../util/interval";
 
   export let params: { id: string; wild: string };
 
@@ -41,11 +42,42 @@
     }
   }
 
+  const [enableInterval, destroyInterval] = useInterval(
+    { start: startTracking, tick, stop: stopTracking },
+    TICK_INTERVAL
+  );
+
+  // tracking is enabled when no modal is open
+  $: enableInterval(!params.wild);
+
+  // bind this to a Modal's `visible` to enable closing it via tap on scrim
+  // an inner Link[up] or closeModal() will also work!
+  let bindModalOpen = true;
+  let goingUp = false;
+
+  function closeModal() {
+    goingUp = true;
+    goUpSafe(`/projects/${params.id}/track/`).then(() => {
+      bindModalOpen = true;
+      goingUp = false;
+    });
+  }
+
+  $: if (params.wild && !bindModalOpen && !goingUp) closeModal();
+
   onDestroy(async () => {
-    stopTracking();
+    destroyInterval();
     thenProject.then((project) => project && project.save());
     console.log("destroy!");
   });
+
+  function beforeUnload(evt: BeforeUnloadEvent) {
+    if (localStorage["dev__suppressBeforeUnload"] !== "1") {
+      evt.preventDefault();
+      evt.returnValue = "You are currently tracking a project!";
+      return "You are currently tracking a project!";
+    }
+  }
 </script>
 
 <style lang="scss">
@@ -63,16 +95,10 @@
     .flex-spacer {
       flex-grow: 1;
     }
-    .tracking-active-indicator {
-      width: 0.5rem;
-      height: 0.5rem;
-      background-color: rgb(209, 68, 43);
-      border-radius: 0.25rem;
-      margin-left: 0.25rem;
-    }
   }
 </style>
 
+<svelte:window on:beforeunload={beforeUnload} />
 <main class="device-frame page">
   <ContentFrame>
     {#await getEntityOrFail(thenProject)}
@@ -82,11 +108,6 @@
         <TrackingTimer
           sessionTime={subsessionTime + pastSessionTime}
           {projectTime} />
-        {#if !params.wild}
-          <div
-            class="tracking-active-indicator"
-            use:interval={{ duration: TICK_INTERVAL, start: startTracking, tick, stop: stopTracking }} />
-        {/if}
         <div class="flex-spacer" />
         <Button small>Add note</Button>
       </div>
@@ -95,7 +116,7 @@
       {#if !params.wild}
         <Link href="/projects/{params.id}/track/x">open modal</Link>
       {:else}
-        <Modal closeWithScrim={false}>
+        <Modal bind:visible={bindModalOpen}>
           <Link up href="/projects/{params.id}/track">close modal</Link>
         </Modal>
       {/if}
