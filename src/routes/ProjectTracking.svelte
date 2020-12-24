@@ -20,6 +20,7 @@
   import DetailText from "../components/type/DetailText.svelte";
   import ButtonGroup from "../components/ButtonGroup.svelte";
   import { shortDuration } from "../util/time";
+  import ActivitySlat from "../components/ActivitySlat.svelte";
 
   export let params: { id: string; wild: string };
 
@@ -97,8 +98,10 @@
   onDestroy(async () => {
     destroyInterval();
     session.duration = pastSessionTime;
-    thenProject.then((project) => project && project.save());
-    console.log("destroy!");
+    let project = await thenProject;
+    if (!project) return;
+    project.lastModified = new Date();
+    project.save();
   });
 
   function beforeUnload(evt: BeforeUnloadEvent) {
@@ -140,8 +143,12 @@
   @import "src/styles/type";
 
   .device-frame {
-    min-height: 100%;
+    height: 100%;
     background-color: $tracking-background-color;
+    display: flex;
+    > :global(div) {
+      flex: 1;
+    }
   }
 
   .top-bar {
@@ -151,6 +158,31 @@
       flex-grow: 1;
     }
   }
+
+  .tracking-frame {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .tracking-summary-placeholder {
+    height: 6rem;
+    margin-top: $block-vertical-spacing;
+    background-color: white;
+    border-radius: 4px;
+    box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2),
+      0px 2px 2px 0px rgba(0, 0, 0, 0.12), 0px 0px 2px 0px rgba(0, 0, 0, 0.14);
+  }
+
+  .flexible-toggle-area {
+    $negative-margin-pad: -1rem;
+    margin: calc(#{$block-vertical-spacing} + #{$negative-margin-pad})
+      $negative-margin-pad $negative-margin-pad $negative-margin-pad;
+    padding: -$negative-margin-pad;
+    flex: 1;
+    overflow-x: visible;
+    overflow-y: auto;
+  }
 </style>
 
 <svelte:window on:beforeunload={beforeUnload} />
@@ -159,21 +191,37 @@
     {#await getEntityOrFail(thenProject)}
       Project loading…
     {:then project}
-      <div class="top-bar">
-        <TrackingTimer
-          sessionTime={subsessionTime + pastSessionTime}
-          {projectTime} />
-        <div class="flex-spacer" />
-        <Button small icon={createIcon} on:click={openModal('note')}>
-          Add note
-        </Button>
-      </div>
-      <p>{project.name}</p>
+      <div class="tracking-frame">
+        <div class="top-bar">
+          <TrackingTimer
+            sessionTime={subsessionTime + pastSessionTime}
+            {projectTime} />
+          <div class="flex-spacer" />
+          <Button small icon={createIcon} on:click={openModal('note')}>
+            Add note
+          </Button>
+        </div>
 
-      <ButtonGroup fill>
-        <Button on:click={openModal('paused')}>Pause</Button>
-        <Button on:click={openModal('stop')}>Stop</Button>
-      </ButtonGroup>
+        <div class="flexible-toggle-area">
+          {#each project.activitySet.activityCodes as activityCode, i (i)}
+            <ActivitySlat
+              {activityCode}
+              activityName={project.activitySet.activityNames[i]}
+              activityColor={project.activitySet.colors[i]}
+              activityDescription={project.activitySet.activityDescriptions[i]}
+              index={i}
+              time={subsessionTime + pastSessionTime}
+              bind:sessionData={session.data} />
+          {/each}
+        </div>
+
+        <div class="tracking-summary-placeholder" />
+
+        <ButtonGroup fill>
+          <Button on:click={openModal('paused')}>Pause</Button>
+          <Button on:click={openModal('stop')}>Stop</Button>
+        </ButtonGroup>
+      </div>
 
       {#if params.wild === 'note'}
         <Modal maxWidth bind:visible={bindModalOpen} closeWithScrim={false}>

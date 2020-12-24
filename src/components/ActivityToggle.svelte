@@ -56,7 +56,6 @@
     }
     .background {
       position: absolute;
-      z-index: -1;
       left: 0;
       top: 0;
       width: $activity-toggle-width;
@@ -65,6 +64,7 @@
       background: getvar(activity-color);
       opacity: 0;
       transition: opacity $activity-toggle-transition-speed;
+      pointer-events: none;
     }
     .thumb {
       $size: calc(
@@ -87,6 +87,21 @@
   input:focus + label .toggle {
     box-shadow: 0 0 0 2px getvar(activity-color);
   }
+  // @supports with selectors is pretty new, but will
+  // avoid showing focus rings without keyboard focus
+  // (native focus behavior) in modern browsers.
+  // preferring this over using :focus-visible
+  // unconditionally to avoid no focus rings in old
+  // browsers that don't support :focus-visible
+  // (how likely is this?)
+  @supports #{"selector(:focus-visible)"} {
+    input:focus + label .toggle {
+      box-shadow: 0 0 0 0 getvar(activity-color);
+    }
+    input:focus-visible + label .toggle {
+      box-shadow: 0 0 0 2px getvar(activity-color);
+    }
+  }
 
   input:checked + label .toggle {
     &::before {
@@ -107,6 +122,8 @@
 </style>
 
 <div class="container">
+  <!-- svelte-ignore empty-block -->
+  {#if true}{/if}
   <input type="checkbox" bind:checked {id} />
   <label
     for={id}

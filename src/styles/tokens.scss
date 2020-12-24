@@ -93,3 +93,8 @@ $activity-toggle-transition-speed: 0.25s;
 
 // TRACKING
 $tracking-background-color: getvar(tracking-background);
+
+// ACTIVITY SLAT
+$activity-slat-padding-vertical: 1rem;
+$activity-slat-separator-width: 1px;
+$activity-slat-separator-color: getvar(activity-slat-separator);
