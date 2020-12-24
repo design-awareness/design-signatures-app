@@ -72,7 +72,7 @@ const ProjectSchema: DBSchema = [
 ];
 
 export interface Session extends IDBObj, IDBClientObj<Session> {
-  label: string;
+  label: string; // reserved for future use
   startTime: Date;
   duration: number;
   data: readonly [number, number][][];

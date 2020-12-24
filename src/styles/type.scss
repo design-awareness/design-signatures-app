@@ -80,6 +80,12 @@ $type-timer-type: (
   height: 16,
 );
 
+$type-detail: (
+  size: 14,
+  weight: 500,
+  height: 16,
+);
+
 @function rem($px) {
   @return $px * 1rem / 16;
 }

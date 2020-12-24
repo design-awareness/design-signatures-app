@@ -5,6 +5,7 @@
   export let visible = true;
   export let title: string = null;
   export let closeWithScrim = true;
+  export let maxWidth = false;
 
   export let buttons: {
     label: string;
@@ -44,7 +45,8 @@
         $modal-min-width,
         calc(100% - #{$modal-min-gap-horizontal * 2})
       );
-    max-width: calc(100% - #{$modal-min-gap-horizontal * 2});
+    $max-width: calc(100% - #{$modal-min-gap-horizontal * 2});
+    max-width: $max-width;
     max-height: calc(100% - #{$modal-min-gap-vertical * 2});
     transform: translate(-50%, -50%);
     z-index: 1001;
@@ -53,6 +55,9 @@
     border-radius: $modal-border-radius;
     overflow-y: auto;
     box-shadow: $modal-shadow;
+    &.maxWidth {
+      width: $max-width;
+    }
   }
   .button-group {
     margin-top: $block-vertical-spacing;
@@ -64,7 +69,7 @@
 {#if visible}
   <div role="dialog" aria-labelledby="dialog__Title" use:inject>
     <div class="scrim" on:click={() => closeWithScrim && (visible = false)} />
-    <div class="modal">
+    <div class="modal" class:maxWidth>
       {#if title}
         <div id="dialog__Title">
           <Header>{title}</Header>

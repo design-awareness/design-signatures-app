@@ -7,6 +7,9 @@ $text-ghost-color: getvar(text-ghost);
 
 $block-vertical-spacing: 1.5rem;
 
+// CONTENT FRAME
+$content-frame-pad: 1rem;
+
 // BUTTON
 $button-border-color: getvar(button-border);
 $button-background-color: getvar(button-background);
@@ -26,6 +29,9 @@ $button-padding-horizontal-label: 0.5rem;
 $button-min-width-label: 3rem;
 $button-icon-spacing-label: 0.125rem;
 $button-icon-size-label: 1rem;
+
+// BUTTON GROUP
+$button-group-fill-spacing: 1.5rem;
 
 // BACK BUTTON
 $back-button-text-color: getvar(back-button);

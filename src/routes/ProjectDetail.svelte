@@ -3,26 +3,26 @@
   import BackButton from "../components/BackButton.svelte";
   import BottomActionBar from "../components/BottomActionBar.svelte";
   import ContentFrame from "../components/layout/ContentFrame.svelte";
-  // import HorizontalScrollArea from "../components/layout/HorizontalScrollArea.svelte";
   import Header from "../components/type/Header.svelte";
   import SectionHeader from "../components/type/SectionHeader.svelte";
   import { getProject } from "../data/database";
-  //import { getActivitySet } from "../data/database";
   import type { Project } from "../data/schema";
-  //import type { ActivitySet } from "../data/schema";
+  import { shortDuration } from "../util/time";
 
   export let params: { id: string };
 
   let projectPromise: Promise<Project>;
   projectPromise = getProject(params.id);
 
-  //let activitySetPromise: Promise<ActivitySet>;
-  //activitySetPromise = getActivitySet(params.id);
-
   let active = true;
   async function remove() {
     active = false;
-    await (await projectPromise).remove();
+    let project = await projectPromise;
+    const toRemove = [];
+    project.notes.forEach((note) => toRemove.push(note.remove()));
+    project.sessions.forEach((session) => toRemove.push(session.remove()));
+    toRemove.push(project.remove());
+    await Promise.all(toRemove);
     pop();
   }
 
@@ -40,15 +40,15 @@
     min-height: 100%;
   }
 
-  img {
-    list-style-type: none;
-    padding: 0;
-    display: flex;
-    width: 100%;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    justify-items: flex-start;
-    justify-content: space-around;
+  .timeline-placeholder {
+    height: 8rem;
+    background-color: rgba(black, 0.25);
+  }
+
+  .note-meta {
+    font-size: 0.8rem;
+    color: $text-secondary-color;
+    font-weight: 600;
   }
 </style>
 
@@ -61,7 +61,8 @@
       <Header>{project.name || 'No project here!'}</Header>
       <p>{project.description}</p>
       <SectionHeader>Tracking overview</SectionHeader>
-      <table>
+      <div class="timeline-placeholder" />
+      <!-- <table>
         <tbody>
           <tr>
             <td>
@@ -78,14 +79,19 @@
             <td><img src="images/videoholder.png" alt="notfound" /></td>
           </tr>
         </tbody>
-      </table>
+      </table> -->
 
       <SectionHeader>Project comments</SectionHeader>
 
       <table>
         {#each project.notes as note}
           <tr>
-            <td>{note.created}</td>
+            <td class="note-meta">
+              {note.created.toLocaleDateString()}
+              <br />
+              {note.created.toLocaleTimeString()}
+              {#if note.timed}<br /> {shortDuration(note.timestamp)}{/if}
+            </td>
             <td>{note.contents}</td>
           </tr>
         {/each}

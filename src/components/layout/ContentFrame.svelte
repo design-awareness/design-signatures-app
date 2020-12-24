@@ -1,7 +1,8 @@
 <style lang="scss">
+  @import "src/styles/tokens";
   .content-frame {
     margin: 0;
-    padding: 1rem;
+    padding: $content-frame-pad;
   }
 </style>
 

@@ -3,6 +3,7 @@
   import timeIcon from "@iconify-icons/ic/baseline-access-time";
   import caretDownIcon from "@iconify-icons/ic/baseline-keyboard-arrow-down";
   import InvisibleButton from "./InvisibleButton.svelte";
+  import { pad, splitDuration } from "../util/time";
 
   export let sessionTime: number;
   export let projectTime: number;
@@ -10,19 +11,9 @@
   let displaySession = true;
 
   let time;
-  $: time = (() => {
-    let total = displaySession ? sessionTime : sessionTime + projectTime;
-    let seconds = Math.floor(total / 1000);
-    let minutes = Math.floor(seconds / 60);
-    seconds %= 60;
-    let hours = Math.floor(minutes / 60);
-    minutes %= 60;
-    return { seconds, minutes, hours };
-  })();
-
-  function pad(n: number) {
-    return ("0" + n).substr(-2);
-  }
+  $: time = splitDuration(
+    displaySession ? sessionTime : sessionTime + projectTime
+  );
 </script>
 
 <style lang="scss">

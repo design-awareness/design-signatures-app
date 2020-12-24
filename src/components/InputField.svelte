@@ -4,6 +4,7 @@
   export let placeholder = "";
 
   export let large = false;
+  export let xlarge = false;
 </script>
 
 <style lang="scss">
@@ -42,14 +43,23 @@
           #{rem(map-get($type-input, height))} + #{$input-padding-vertical} + #{$input-border-size}
         )
     );
+    &.xlarge {
+      min-height: calc(
+        2 * (#{$input-padding-vertical} + #{$input-border-size}) + 8 * #{rem(
+            map-get($type-input, height)
+          )}
+      );
+    }
   }
 </style>
 
 <!-- svelte-ignore a11y-label-has-associated-control -->
 <label>
-  <div>{label}</div>
+  {#if label}
+    <div>{label}</div>
+  {/if}
   {#if large}
-    <textarea bind:value {placeholder} />
+    <textarea bind:value class:xlarge {placeholder} />
   {:else}
     <input type="text" bind:value {placeholder} on:input {...$$props} />
   {/if}
