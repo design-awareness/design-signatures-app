@@ -139,7 +139,7 @@ export let presetReady = Promise.all(
     const existingSet = await getActivitySet(wellKnownPrefix + id);
     if (existingSet === null) {
       const activitySet = newActivitySet();
-      for (let [prop, val] of Object.entries<any>(data)) {
+      for (let [prop, val] of Object.entries(data)) {
         activitySet[prop] = val;
       }
       activitySet.wellKnown = true;
