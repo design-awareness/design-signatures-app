@@ -11,7 +11,7 @@
   <BackButton href="/" />
   <Header>Developer tools</Header>
   <p>
-    <Link href="/dev/DBEditor">Database editor</Link>
+    <Link href="/dev/DBEditor">Database inspector</Link>
   </p>
   <p>
     <Link href="/dev/component-library/">Component library</Link>

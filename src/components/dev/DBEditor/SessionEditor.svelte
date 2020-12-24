@@ -44,6 +44,12 @@
     font-weight: 600;
     line-height: 2;
   }
+  .data-view {
+    max-width: calc(100vw - 2rem);
+  }
+  pre {
+    white-space: pre-wrap;
+  }
 </style>
 
 <p class="detail">{(dbObj && dbObj.id) || 'New Session'}</p>
@@ -52,7 +58,6 @@
     <EditorField name="label" type="string" bind:value={dbObj.label} />
     <EditorField name="startTime" type="date" bind:value={dbObj.startTime} />
     <EditorField name="duration" type="number" bind:value={dbObj.duration} />
-    <!-- data! -->
     <EditorRefField
       name="project"
       type="Project"
@@ -60,3 +65,13 @@
       {setView} />
   {/if}
 </div>
+{#if !loading && dbObj}
+  <div class="data-view">
+    <pre>{'data:\n' + dbObj.data
+          .map(
+            (pairs, i) =>
+              '[' + i + '] ' + pairs.map(([a, b]) => a + ':' + b).join(', ')
+          )
+          .join('\n')}</pre>
+  </div>
+{/if}
