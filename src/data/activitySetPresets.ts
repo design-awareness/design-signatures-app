@@ -20,10 +20,10 @@ export const presetActivitySets = [
       activityDescriptions: [
         "define the problem (identify constraints, criteria, etc.)",
         "search for and collect information",
-        "think up potential solutions",
+        "think up and brainstorm potential solutions",
         "detail how to build solution(s) to the problem",
         "compare and contrast possible solutions",
-        "",
+        "produce or construct a physical device/product/system",
       ],
       colors: ["941C7D", "A84796", "E244C3", "F3C83E", "73EADE", "077267"],
     },
@@ -47,7 +47,7 @@ export const presetActivitySets = [
       activityDescriptions: [
         "define the problem (identify constraints, criteria, etc.)",
         "search for and collect information",
-        "think up potential solutions",
+        "think up and brainstorm potential solutions",
         "detail how to build solution(s) to the problem",
         "assess workability of possible solutions",
         "compare and contrast possible solutions",
@@ -97,7 +97,7 @@ export const presetActivitySets = [
         "IMPL",
       ],
       activityDescriptions: [
-        "",
+        "identify basic needs (purpose, reason for design)",
         "define the problem (identify constraints, criteria, etc.)",
         "search for and collect information",
         "think up potential solutions",
@@ -106,7 +106,7 @@ export const presetActivitySets = [
         "compare and contrast possible solutions",
         "select idea or solution from among alternatives",
         "communicate the design to others",
-        "",
+        "produce or construct a physical device/product/system",
       ],
       colors: [
         "DB12B4",
