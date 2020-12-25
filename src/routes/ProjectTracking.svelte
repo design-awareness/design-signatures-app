@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onDestroy, beforeUpdate, afterUpdate } from "svelte";
+  import { onDestroy } from "svelte";
   import Button from "../components/Button.svelte";
   import ContentFrame from "../components/layout/ContentFrame.svelte";
   import Link from "../components/Link.svelte";
@@ -15,16 +15,16 @@
   import useInterval from "../util/interval";
   import createIcon from "@iconify-icons/ic/baseline-create";
   import { pop, push } from "svelte-spa-router/Router.svelte";
-  import Header from "../components/type/Header.svelte";
   import InputField from "../components/InputField.svelte";
   import DetailText from "../components/type/DetailText.svelte";
   import ButtonGroup from "../components/ButtonGroup.svelte";
   import { shortDuration } from "../util/time";
   import ActivitySlat from "../components/ActivitySlat.svelte";
+  import MiniTimeline from "../components/MiniTimeline.svelte";
 
   export let params: { id: string; wild: string };
 
-  const TICK_INTERVAL = 250;
+  const TIMER_TICK = 100;
 
   const session = newSession();
 
@@ -58,6 +58,7 @@
   function tick() {
     let tickTime = Date.now();
     subsessionTime = tickTime - thisSubsessionStart;
+    session.duration = pastSessionTime + subsessionTime;
   }
 
   function stopTracking() {
@@ -71,7 +72,7 @@
 
   const [enableInterval, destroyInterval] = useInterval(
     { start: startTracking, tick, stop: stopTracking },
-    TICK_INTERVAL
+    TIMER_TICK
   );
 
   // tracking is enabled when no modal is open
@@ -98,11 +99,25 @@
   onDestroy(async () => {
     destroyInterval();
     session.duration = pastSessionTime;
+    stopAllActivities(pastSessionTime);
     let project = await thenProject;
     if (!project) return;
     project.lastModified = new Date();
     project.save();
   });
+
+  function stopAllActivities(endTime: number) {
+    session.data = session.data.map((row) => {
+      if (row.length) {
+        if (row[row.length - 1][1] === -1) {
+          let newRow = row.slice();
+          newRow[row.length - 1][1] = endTime;
+          return newRow;
+        }
+      }
+      return row;
+    });
+  }
 
   function beforeUnload(evt: BeforeUnloadEvent) {
     if (localStorage["dev__suppressBeforeUnload"] !== "1") {
@@ -165,15 +180,6 @@
     height: 100%;
   }
 
-  .tracking-summary-placeholder {
-    height: 6rem;
-    margin-top: $block-vertical-spacing;
-    background-color: white;
-    border-radius: 4px;
-    box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2),
-      0px 2px 2px 0px rgba(0, 0, 0, 0.12), 0px 0px 2px 0px rgba(0, 0, 0, 0.14);
-  }
-
   .flexible-toggle-area {
     $negative-margin-pad: -1rem;
     margin: calc(#{$block-vertical-spacing} + #{$negative-margin-pad})
@@ -215,7 +221,10 @@
           {/each}
         </div>
 
-        <div class="tracking-summary-placeholder" />
+        <MiniTimeline
+          shouldUpdate={hasProject && !params.wild}
+          {session}
+          activitySet={project.activitySet} />
 
         <ButtonGroup fill>
           <Button on:click={openModal('paused')}>Pause</Button>

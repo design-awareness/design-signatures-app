@@ -98,3 +98,11 @@ $tracking-background-color: getvar(tracking-background);
 $activity-slat-padding-vertical: 1rem;
 $activity-slat-separator-width: 1px;
 $activity-slat-separator-color: getvar(activity-slat-separator);
+
+// MINI TIMELINE
+$mini-timeline-card-background-color: getvar(mini-timeline-card-background);
+$mini-timeline-card-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2),
+  0px 2px 2px 0px rgba(0, 0, 0, 0.12), 0px 0px 2px 0px rgba(0, 0, 0, 0.14);
+$mini-timeline-inactive-color: getvar(mini-timeline-inactive);
+$mini-timeline-height: 4rem;
+$mini-timeline-padding: 1rem;
