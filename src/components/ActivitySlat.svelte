@@ -19,27 +19,43 @@
   let lastToggleTime = 0;
   let lastActivityOn = false;
   let activityOn = false;
+  let hasNewActivity = false;
   $: if (lastActivityOn !== activityOn) {
+    let newDataRow = sessionData[index].slice();
+    let newSessionData = sessionData.slice();
     if (activityOn) {
       // turn activity on
-      lastActivityOn = true;
+      if (!hasNewActivity || time - lastToggleTime >= 1000) {
+        // push new activity on
+        newDataRow.push([time, -1]);
+        hasNewActivity = true;
+      } else if (hasNewActivity) {
+        // quick switch: undo last activity off
+        newDataRow[newDataRow.length - 1] = [
+          newDataRow[newDataRow.length - 1][0],
+          -1,
+        ];
+        hasNewActivity = false;
+      }
     } else {
       // turn activity off
-      // less than one second - don't track
-      if (time - lastToggleTime >= 1000) {
-        let newDataRow = [
-          ...sessionData[index],
-          [lastToggleTime, time] as [number, number],
+      if (!hasNewActivity || time - lastToggleTime >= 1000) {
+        // update last activity on
+        newDataRow[newDataRow.length - 1] = [
+          newDataRow[newDataRow.length - 1][0],
+          time,
         ];
-        let newSessionData = sessionData.slice();
-        newSessionData[index] = newDataRow;
-
-        // bound prop: push new session data back up to Session object
-        sessionData = newSessionData;
+        hasNewActivity = true;
+      } else if (hasNewActivity) {
+        // quick switch: undo last activity on
+        newDataRow = sessionData[index].slice(0, sessionData[index].length - 1);
+        hasNewActivity = false;
       }
-      lastActivityOn = false;
     }
+    newSessionData[index] = newDataRow;
+    sessionData = newSessionData;
     lastToggleTime = time;
+    lastActivityOn = activityOn;
   }
 </script>
 
