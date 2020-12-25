@@ -56,8 +56,8 @@
     }
     .background {
       position: absolute;
-      left: 0;
-      top: 0;
+      left: -$activity-toggle-border-width;
+      top: -$activity-toggle-border-width;
       width: $activity-toggle-width;
       height: $activity-toggle-height;
       border-radius: $activity-toggle-height/2;
