@@ -20,39 +20,37 @@
 </script>
 
 <style lang="scss">
-  $card-width: 8rem;
-  $card-height: 12rem;
-  $card-border-radius: 4px;
+  @import "src/styles/tokens";
+  @import "src/styles/type";
+
   .card {
-    width: $card-width;
-    height: $card-height;
-    background: white;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
-    border-radius: $card-border-radius;
+    width: $project-card-width;
+    height: $project-card-height;
+    background: $project-card-background-color;
+    box-shadow: $project-card-shadow;
+    border-radius: $project-card-border-radius;
   }
   .link {
-    $link-right-pad: 1rem;
-    margin-top: 0.5rem;
-    line-height: 1rem;
-    width: $card-width;
+    @include type-style($type-card-link);
+    margin-top: $project-card-link-margin-top;
+    width: $project-card-width;
     display: block;
-    font-size: 0.875rem;
 
     span {
       display: inline-block;
       white-space: nowrap;
       text-overflow: ellipsis;
       overflow: hidden;
-      width: calc(#{$card-width} - #{$link-right-pad});
+      max-width: calc(#{$project-card-width} - #{$project-card-link-arrow-gap});
       vertical-align: bottom;
     }
 
     &.loading {
-      width: 6rem;
-      background-color: grey;
-      height: 1rem;
+      width: $project-card-loading-ph-width;
+      height: $project-card-loading-ph-height;
+      background-color: $loading-placeholder-color;
     }
-    &::after {
+    &:not(.loading)::after {
       content: "›";
       display: inline-block;
       transform: translateX(0.5rem);
@@ -60,17 +58,14 @@
   }
   .card {
     &.new {
-      $plus-color: #4f4f4f;
-      $plus-size: 4rem;
-
       display: flex;
       align-items: center;
       justify-content: center;
       svg {
-        fill: $plus-color;
-        stroke: $plus-color;
-        width: $plus-size;
-        height: $plus-size;
+        fill: $project-card-new-plus-color;
+        stroke: $project-card-new-plus-color;
+        width: $project-card-new-plus-size;
+        height: $project-card-new-plus-size;
       }
     }
   }
