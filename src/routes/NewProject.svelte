@@ -9,6 +9,7 @@
   import BottomActionBar from "../components/BottomActionBar.svelte";
   import ActivitySetChooser from "../components/ActivitySet/Chooser.svelte";
   import BuilderFrame from "../components/ActivitySet/BuilderFrame.svelte";
+  import { pushRecentProject } from "../data/recentProjects";
 
   let name = "";
   let description = "";
@@ -33,8 +34,10 @@
     proj.sessions = [];
     proj.active = true;
     await proj.save();
-    await replace(`/projects/${proj.id}/`);
-    await push(`/projects/${proj.id}/track/`);
+    const id = proj.id;
+    pushRecentProject(id);
+    await replace(`/projects/${id}/`);
+    await push(`/projects/${id}/track/`);
   }
 </script>
 

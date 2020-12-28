@@ -1,5 +1,6 @@
 import * as Schema from "./schema";
 import defer from "../util/defer";
+import { upgradeDatabase, initializeConfiguration } from "./upgrade";
 
 const DB_NAME = "design-awareness-local-store";
 const DEBUG_DELAY = 0;
@@ -28,6 +29,8 @@ export function isOpen() {
   return dbOpen;
 }
 
+type ObjectStoreName = Schema.DBModelName | "_Config";
+
 /**
  * Get the IDB Database, opening it if it isn't open yet.
  * @param onblocked function to run if the database open blocks.
@@ -44,13 +47,19 @@ function getDb(onblocked?: (evt: any) => void) {
       }
       request.onerror = rej;
       request.onupgradeneeded = (event) => {
-        console.log("Setting up database...");
-        const db = ((event.target as unknown) as { result: IDBDatabase })
-          .result;
-        db.createObjectStore("ActivitySet", { keyPath: "id" });
-        db.createObjectStore("Note", { keyPath: "id" });
-        db.createObjectStore("Project", { keyPath: "id" });
-        db.createObjectStore("Session", { keyPath: "id" });
+        const db = ((event.target as any) as { result: IDBDatabase }).result;
+        if (event.oldVersion === 0) {
+          console.log("First visit: setting up database!");
+          db.createObjectStore("ActivitySet", { keyPath: "id" });
+          db.createObjectStore("Note", { keyPath: "id" });
+          db.createObjectStore("Project", { keyPath: "id" });
+          db.createObjectStore("Session", { keyPath: "id" });
+          db.createObjectStore("_Config", { keyPath: "key" });
+        } else {
+          console.log("Database needs upgrading: ");
+          upgradeDatabase(event.oldVersion, db);
+        }
+        initializeConfiguration(event.oldVersion, rawDatabaseOperations);
       };
       request.onsuccess = (event) => {
         dbOpen = true;
@@ -79,7 +88,7 @@ function getDb(onblocked?: (evt: any) => void) {
  *          operations can be performed.
  */
 async function transaction(
-  store: Schema.DBModelName,
+  store: ObjectStoreName,
   accessLevel = "readonly" as IDBTransactionMode
 ): Promise<{
   complete: Promise<Event>;
@@ -100,7 +109,7 @@ async function transaction(
  * Adds given new entry (data) to the given datastore. Resolves when the
  * transaction is complete. Use update to update an existing entry.
  */
-async function add(store: Schema.DBModelName, data) {
+async function add(store: ObjectStoreName, data) {
   const { complete, objectStore } = await transaction(store, "readwrite");
   objectStore.add(data);
   await complete;
@@ -110,7 +119,7 @@ async function add(store: Schema.DBModelName, data) {
  * Updates given entry in the given datastore. Resolves when the transaction
  * is complete. Use to update an entry that is already saved.
  */
-async function update(store: Schema.DBModelName, data) {
+async function update(store: ObjectStoreName, data) {
   const { complete, objectStore } = await transaction(store, "readwrite");
   objectStore.put(data);
   await complete;
@@ -119,7 +128,7 @@ async function update(store: Schema.DBModelName, data) {
 /**
  * Remove entry with given id from the given datastore.
  */
-async function remove(store: Schema.DBModelName, id: DBID) {
+async function remove(store: ObjectStoreName, id: DBID) {
   const { complete, objectStore } = await transaction(store, "readwrite");
   objectStore.delete(id);
   await complete;
@@ -128,10 +137,7 @@ async function remove(store: Schema.DBModelName, id: DBID) {
 /**
  * Resolves to the stored data for the given id from the given datastore.
  */
-async function get(
-  store: Schema.DBModelName,
-  id: DBID
-): Promise<object | null> {
+async function get(store: ObjectStoreName, id: DBID): Promise<object | null> {
   const objectStore = (await transaction(store)).objectStore;
   const request = objectStore.get(id);
   return (
@@ -141,6 +147,13 @@ async function get(
     })
   )["target"]["result"];
 }
+
+export const rawDatabaseOperations = {
+  add,
+  update,
+  remove,
+  get,
+};
 
 /**
  * keys are entry ids waiting to be loaded, mapping to promises that will

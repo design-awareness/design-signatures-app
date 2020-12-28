@@ -1,3 +1,5 @@
+export const DB_VERSION = 3;
+
 export interface IDBObj {}
 
 type SubscriptionHandler<T> = (this: T, field: string, value: any) => void;
@@ -87,7 +89,6 @@ const SessionSchema: DBSchema = [
 ];
 
 export type DBModelName = "ActivitySet" | "Note" | "Project" | "Session";
-export const DB_VERSION = 2;
 export const Schema = {
   ActivitySet: ActivitySetSchema,
   Note: NoteSchema,

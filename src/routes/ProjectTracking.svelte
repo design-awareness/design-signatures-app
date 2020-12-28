@@ -21,14 +21,15 @@
   import { shortDuration } from "../util/time";
   import ActivitySlat from "../components/ActivitySlat.svelte";
   import MiniTimeline from "../components/MiniTimeline.svelte";
-
+  import { pushRecentProject } from "../data/recentProjects";
+  import CONFIG from "../data/config";
   export let params: { id: string; wild: string };
 
   const TIMER_TICK = 100;
 
   const session = newSession();
 
-  let projectTime = 0; // 12:41, for testing - get from project!
+  let projectTime = 0;
 
   let hasProject = false;
   let thenProject = getProject(params.id);
@@ -103,6 +104,7 @@
     let project = await thenProject;
     if (!project) return;
     project.lastModified = new Date();
+    pushRecentProject(project.id);
     project.save();
   });
 
@@ -119,8 +121,13 @@
     });
   }
 
+  let suppressBeforeUnload = false;
+  (async function () {
+    suppressBeforeUnload = await CONFIG.getDevSuppressBeforeUnload();
+  })();
+
   function beforeUnload(evt: BeforeUnloadEvent) {
-    if (localStorage["dev__suppressBeforeUnload"] !== "1") {
+    if (!suppressBeforeUnload) {
       evt.preventDefault();
       evt.returnValue = "You are currently tracking a project!";
       return "You are currently tracking a project!";

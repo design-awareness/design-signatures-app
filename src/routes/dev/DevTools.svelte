@@ -3,8 +3,12 @@
   import ContentFrame from "../../components/layout/ContentFrame.svelte";
   import Link from "../../components/Link.svelte";
   import Header from "../../components/type/Header.svelte";
+  import CONFIG from "../../data/config";
 
-  let reloadSuppressed: string = localStorage["dev__suppressBeforeUnload"];
+  let reloadSuppressed = false;
+  (async function () {
+    reloadSuppressed = await CONFIG.getDevSuppressBeforeUnload();
+  })();
 </script>
 
 <ContentFrame>
@@ -22,11 +26,8 @@
     Prevent reload/close while tracking:
     <button
       on:click={() => {
-        if (reloadSuppressed === '1') {
-          reloadSuppressed = localStorage['dev__suppressBeforeUnload'] = '0';
-        } else {
-          reloadSuppressed = localStorage['dev__suppressBeforeUnload'] = '1';
-        }
-      }}>{reloadSuppressed === '1' ? 'suppressed' : 'normal'}</button>
+        reloadSuppressed = !reloadSuppressed;
+        CONFIG.setDevSuppressBeforeUnload(reloadSuppressed);
+      }}>{reloadSuppressed ? 'suppressed' : 'normal'}</button>
   </p>
 </ContentFrame>

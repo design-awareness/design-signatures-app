@@ -7,11 +7,7 @@
   import PageHeader from "../components/PageHeader.svelte";
   import ProjectCard from "../components/ProjectCard.svelte";
   import Header from "../components/type/Header.svelte";
-  import { getAll } from "../data/database";
-
-  let projects: string[] = null;
-
-  const getProjects = () => getAll("Project");
+  import { getRecentProjects } from "../data/recentProjects";
 </script>
 
 <style lang="scss">
@@ -58,7 +54,7 @@
             <ProjectCard newProjectPlaceholder />
           </a>
         </li>
-        {#await getProjects()}
+        {#await getRecentProjects()}
           <li>
             <ProjectCard loadingPlaceholder />
           </li>
