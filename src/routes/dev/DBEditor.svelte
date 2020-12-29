@@ -11,6 +11,7 @@
     getProject,
     getSession,
   } from "../../data/database";
+  import CONFIG from "../../data/config";
   let type: DBModelName, id: string;
 
   const [setView, setViewTrigger] = createTrigger<[DBModelName, string]>();
@@ -26,6 +27,7 @@
         getAll("Session"),
       ]);
       await Promise.all([
+        CONFIG.setRecentProjects([]),
         Promise.all(
           activitySets.map(async (asid) => {
             const activitySet = await getActivitySet(asid);

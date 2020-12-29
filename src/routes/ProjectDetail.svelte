@@ -6,6 +6,7 @@
   import Header from "../components/type/Header.svelte";
   import SectionHeader from "../components/type/SectionHeader.svelte";
   import { getProject } from "../data/database";
+  import { removeRecentProject } from "../data/recentProjects";
   import type { Project } from "../data/schema";
   import { shortDuration } from "../util/time";
 
@@ -19,6 +20,7 @@
     active = false;
     let project = await projectPromise;
     const toRemove = [];
+    toRemove.push(removeRecentProject(project.id));
     project.notes.forEach((note) => toRemove.push(note.remove()));
     project.sessions.forEach((session) => toRemove.push(session.remove()));
     toRemove.push(project.remove());
