@@ -70,7 +70,7 @@
       </ul>
     </HorizontalScrollArea>
 
-    <Button on:click={async () => console.log(await push('/projects/'))}>
+    <Button on:click={async () => await push('/projects/')}>
       All Projects
     </Button>
 

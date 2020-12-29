@@ -27,7 +27,6 @@
     data: session.data,
     priorDuration: priorDurations[i],
   }));
-  console.log(renderData);
 </script>
 
 <style lang="scss">
