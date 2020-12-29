@@ -28,6 +28,10 @@
     );
   }
 
+  $: if (activity.code.length > 5) {
+    activity.code = activity.code.substr(0, 5);
+  }
+
   // dragging!
   export let dragDisabled: boolean;
   function startDrag(e: Event) {
