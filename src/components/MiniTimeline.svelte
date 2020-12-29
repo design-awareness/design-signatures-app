@@ -7,10 +7,14 @@
 
   import type { ActivitySet, Session } from "../data/schema";
   import useInterval from "../util/interval";
+  import { sortBy } from "../util/sort";
+  import InvisibleButton from "./InvisibleButton.svelte";
 
   export let session: Session;
   export let activitySet: ActivitySet;
   export let shouldUpdate: boolean;
+
+  let showTimeline = true;
 
   const REDRAW_TICK = 2000;
   const noop = () => {};
@@ -27,22 +31,81 @@
   let timeline: readonly [[number, number], number[]][] = [];
   let colors: readonly string[] = activitySet.colors;
 
+  // type Rect = {
+  //   x: number;
+  //   y: number;
+  //   width: number;
+  //   height: number;
+  //   color: string;
+  // };
+  // let rects: Rect[] = [];
+  let activityDurations: {
+    duration: number;
+    color: string;
+    previousDuration: number;
+  }[] = [];
+  let totalDuration = 0;
+
   function calc() {
     duration = session.duration;
-    timeline = toActiveActivitiesTimeline(
-      toStateDurationTimeline(
-        session.data,
+    if (showTimeline) {
+      timeline = toActiveActivitiesTimeline(
+        toStateDurationTimeline(
+          session.data,
+          duration,
+          Math.max(1000, duration / 100)
+        )
+      );
+    } else {
+      let durations = session.data.map((events) =>
+        events.reduce((a, [s, e]) => a + (e === -1 ? duration - s : e - s), 0)
+      );
+      totalDuration = durations.reduce((a, b) => a + b, 0);
+
+      let previousDuration = 0;
+      activityDurations = sortBy(
+        "duration",
+        durations
+          .map((duration, i) => ({ duration, color: colors[i] }))
+          .filter(({ duration }) => duration !== 0),
+        false
+      ).map(({ duration, color }) => ({
+        color,
         duration,
-        Math.max(1000, duration / 100)
-      )
-    );
+        previousDuration: (() => {
+          let d = previousDuration;
+          previousDuration += duration;
+          return d;
+        })(),
+      }));
+    }
+  }
+
+  let svgElement: Element;
+  let width = 0;
+  let height = 0;
+  function setSvgElement(el: Element) {
+    svgElement = el;
+    resize();
+  }
+  function resize() {
+    if (svgElement) {
+      width = svgElement.clientWidth;
+      height = svgElement.clientHeight;
+      console.log(width, height);
+    }
+  }
+
+  function toggleDisplayType() {
+    showTimeline = !showTimeline;
+    calc();
   }
 </script>
 
 <style lang="scss">
   @import "src/styles/tokens";
 
-  .container {
+  .container > :global(button) {
     margin-top: $block-vertical-spacing;
     background-color: $mini-timeline-card-background-color;
     border-radius: 4px;
@@ -58,20 +121,35 @@
   }
 </style>
 
+<svelte:window on:resize={resize} />
 <div class="container">
-  <svg
-    preserveAspectRatio="none"
-    viewBox="0 0 {duration} 1"
-    xmlns="http://www.w3.org/2000/svg">
-    {#each timeline as [[start, end], active]}
-      {#each active as actId, i}
-        <rect
-          x={start - 1}
-          width={Math.max(0, end - start)}
-          y={i / active.length}
-          height={1 / active.length}
-          fill="#{colors[actId]}" />
-      {/each}
-    {/each}
-  </svg>
+  <InvisibleButton on:click={toggleDisplayType}>
+    <svg
+      preserveAspectRatio="none"
+      viewBox="0 0 {showTimeline ? duration : totalDuration} 1"
+      xmlns="http://www.w3.org/2000/svg"
+      use:setSvgElement>
+      {#if showTimeline}
+        {#each timeline as [[start, end], active]}
+          {#each active as actId, i}
+            <rect
+              x={start - 1}
+              width={Math.max(0, end - start)}
+              y={i / active.length}
+              height={1 / active.length}
+              fill="#{colors[actId]}" />
+          {/each}
+        {/each}
+      {:else}
+        {#each activityDurations as { color, duration, previousDuration }}
+          <rect
+            x={previousDuration}
+            y={0}
+            width={duration}
+            height={1}
+            fill="#{color}" />
+        {/each}
+      {/if}
+    </svg>
+  </InvisibleButton>
 </div>
