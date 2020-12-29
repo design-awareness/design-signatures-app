@@ -37,7 +37,6 @@
     const id = proj.id;
     pushRecentProject(id);
     await replace(`/projects/${id}/`);
-    // await push(`/projects/${id}/track/`);
   }
 </script>
 

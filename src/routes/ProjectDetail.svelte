@@ -102,7 +102,9 @@
       <button on:click={remove} disabled={!active}>delete</button>
 
       {#if project.active}
-        <BottomActionBar label="Resume tracking" on:click={startTracking} />
+        <BottomActionBar
+          label={project.sessions?.length ? 'Resume tracking' : 'Start tracking'}
+          on:click={startTracking} />
       {/if}
     {/await}
   </ContentFrame>
