@@ -42,7 +42,7 @@
   {#if project.sessions?.length}
     <svg
       preserveAspectRatio="none"
-      viewBox="{Math.max(0, duration - MAX_DURATION) / 1000} 0 {duration / 1000} {colors.length - 1}"
+      viewBox="{Math.max(0, duration - MAX_DURATION) / 1000} 0 {duration / 1000} {colors.length}"
       xmlns="http://www.w3.org/2000/svg">
       {#each renderData as { data, priorDuration }}
         {#each data as points, i}
