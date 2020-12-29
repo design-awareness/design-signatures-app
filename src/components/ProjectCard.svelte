@@ -1,6 +1,7 @@
 <script lang="ts">
   import { getProject } from "../data/database";
   import type { Project } from "../data/schema";
+  import CardTimeline from "./CardTimeline.svelte";
 
   export let newProjectPlaceholder = false;
   export let loadingPlaceholder = false;
@@ -68,6 +69,7 @@
         height: $project-card-new-plus-size;
       }
     }
+    overflow: hidden;
   }
 </style>
 
@@ -88,7 +90,11 @@
           stroke="none" /></svg>
     </div>
   {:else}
-    <div class="card" />
+    <div class="card">
+      {#if !loading && project.sessions?.length}
+        <CardTimeline {project} />
+      {/if}
+    </div>
   {/if}
 
   <div class="link" class:loading class:new={newProjectPlaceholder}>
