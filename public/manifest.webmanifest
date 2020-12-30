@@ -1,7 +1,7 @@
 {
   "name": "Design Awareness",
   "short_name": "Design Awareness",
-  "start_url": ".",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#000",
   "description": "App for tracking your design process",
