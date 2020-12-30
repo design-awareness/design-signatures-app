@@ -23,6 +23,7 @@
   import MiniTimeline from "../components/MiniTimeline.svelte";
   import { pushRecentProject } from "../data/recentProjects";
   import CONFIG from "../data/config";
+  import { delay } from "../util/delay";
   export let params: { id: string; wild: string };
 
   const TIMER_TICK = 100;
@@ -137,6 +138,10 @@
   async function stopTrackingButton() {
     if (params.wild) {
       await pop();
+
+      // in safari, we seem to need an extra event cycle
+      // to do the two navigation actions in a row. whatever.
+      await delay(0);
     }
     goUpSafe(`/projects/${params.id}/`);
   }
