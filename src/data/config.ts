@@ -5,7 +5,7 @@ const CONFIG_STORE = "_Config";
 const configCache = new Map<String, any>();
 const promiseCache = new Map<String, Promise<any>>();
 
-async function getConfig(key: string): Promise<any> {
+async function getConfig<T>(key: string, defaultValue: T = null): Promise<T> {
   if (configCache.has(key)) {
     return configCache.get(key);
   }
@@ -13,7 +13,8 @@ async function getConfig(key: string): Promise<any> {
     return await promiseCache.get(key);
   }
 
-  return (await rawDatabaseOperations.get(CONFIG_STORE, key))["value"];
+  let data = await rawDatabaseOperations.get(CONFIG_STORE, key);
+  return data?.["value"] ?? defaultValue;
 }
 
 function setConfig(key: string, value: any): Promise<void> {
@@ -23,14 +24,14 @@ function setConfig(key: string, value: any): Promise<void> {
 
 const CONFIG = {
   getRecentProjects(): Promise<string[]> {
-    return getConfig("recent_projects");
+    return getConfig<string[]>("recent_projects", []);
   },
   setRecentProjects(v: string[]) {
     return setConfig("recent_projects", v);
   },
 
   getDevSuppressBeforeUnload(): Promise<boolean> {
-    return getConfig("dev__suppress_before_unload");
+    return getConfig<boolean>("dev__suppress_before_unload", false);
   },
   setDevSuppressBeforeUnload(v: boolean) {
     return setConfig("dev__suppress_before_unload", v);
