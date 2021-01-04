@@ -43,6 +43,10 @@
     .map((s) => s.duration)
     .reduce((a, b) => a + b, 0);
 
+  if (!totalDuration) {
+    totalDuration = 1;
+  }
+
   if (scale === -1) {
     scale = totalDuration / 270;
   }
