@@ -1,15 +1,30 @@
 {
-  "name": "Design Awareness",
   "short_name": "Design Awareness",
+  "name": "Design Awareness",
+  "description": "Track your design process",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
-  "background_color": "#000",
-  "description": "App for tracking your design process",
+  "theme_color": "#4f4f4f",
+  "background_color": "#f5f5f5",
   "icons": [
     {
-      "src": "./favicon.png",
-      "sizes": "128x128",
-      "type": "image/png"
+      "src": "/icons/precomp-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/precomp-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/maskable-icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }
