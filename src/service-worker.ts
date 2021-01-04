@@ -41,27 +41,29 @@ registerRoute(
   })
 );
 
-// Cache static webapp resources
-registerRoute(
-  ({ url }) =>
-    url.origin === self.location.origin &&
-    (STATIC_PREFIXES.some((prefix) => url.pathname.startsWith(prefix)) ||
-      STATIC_RESOURCES.includes(url.pathname)),
-  new StaleWhileRevalidate({
-    cacheName: "webapp",
-  })
-);
+if (self.location.hostname !== "localhost") {
+  // Cache static webapp resources
+  registerRoute(
+    ({ url }) =>
+      url.origin === self.location.origin &&
+      (STATIC_PREFIXES.some((prefix) => url.pathname.startsWith(prefix)) ||
+        STATIC_RESOURCES.includes(url.pathname)),
+    new StaleWhileRevalidate({
+      cacheName: "webapp",
+    })
+  );
 
-// Network first strategy for page resources
-registerRoute(
-  ({ request }) => request.mode === "navigate",
-  new NetworkFirst({
-    networkTimeoutSeconds: PAGE_TIMEOUT_SECONDS,
-    cacheName: "page",
-    plugins: [
-      new CacheableResponsePlugin({
-        statuses: [0, 200],
-      }),
-    ],
-  })
-);
+  // Network first strategy for page resources
+  registerRoute(
+    ({ request }) => request.mode === "navigate",
+    new NetworkFirst({
+      networkTimeoutSeconds: PAGE_TIMEOUT_SECONDS,
+      cacheName: "page",
+      plugins: [
+        new CacheableResponsePlugin({
+          statuses: [0, 200],
+        }),
+      ],
+    })
+  );
+}
