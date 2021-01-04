@@ -37,7 +37,6 @@
     const id = proj.id;
     pushRecentProject(id);
     await replace(`/projects/${id}/`);
-    await push(`/projects/${id}/track/`);
   }
 </script>
 
@@ -64,7 +63,7 @@
         createNew={() => (newSetOverlay = true)} />
     </ContentFrame>
     <BottomActionBar
-      label="Begin tracking"
+      label="Create project"
       on:click={go}
       disabled={!beginEnabled} />
   {:else}
