@@ -107,7 +107,7 @@
           {#each colors as color, i}
             <text
               text-anchor="middle"
-              alignment-baseline="middle"
+              alignment-baseline="central"
               fill="#{color}"
               x="50%"
               y={padding + i * (barHeight + barGap) + barHeight / 2}>
