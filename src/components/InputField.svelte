@@ -45,7 +45,7 @@
     );
     &.xlarge {
       min-height: calc(
-        2 * (#{$input-padding-vertical} + #{$input-border-size}) + 8 * #{rem(
+        2 * (#{$input-padding-vertical} + #{$input-border-size}) + 4 * #{rem(
             map-get($type-input, height)
           )}
       );

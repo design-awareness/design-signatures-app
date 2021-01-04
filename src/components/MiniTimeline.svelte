@@ -92,7 +92,6 @@
     if (svgElement) {
       width = svgElement.clientWidth;
       height = svgElement.clientHeight;
-      console.log(width, height);
     }
   }
 

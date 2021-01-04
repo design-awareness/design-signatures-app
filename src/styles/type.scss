@@ -92,6 +92,12 @@ $type-detail: (
   height: 16,
 );
 
+$type-note-meta: (
+  size: 12,
+  weight: 400,
+  height: map-get($type-body, height),
+);
+
 @function rem($px) {
   @return $px * 1rem / 16;
 }

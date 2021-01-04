@@ -32,6 +32,8 @@
   function startTracking() {
     push(`/projects/${params.id}/track/`);
   }
+
+  let showProjectTimestamps = false;
 </script>
 
 <style lang="scss">
@@ -43,19 +45,28 @@
     min-height: 100%;
   }
 
+  td {
+    vertical-align: baseline;
+    padding-bottom: 0.5rem;
+  }
+
   .note-meta {
-    font-size: 0.8rem;
+    white-space: nowrap;
+    padding-right: 0.5rem;
+    @include type-style($type-note-meta);
     color: $text-secondary-color;
-    font-weight: 600;
   }
 </style>
 
 <main class="device-frame page">
   <ContentFrame>
-    <BackButton href="/" />
     {#await projectPromise}
-      loading…
+      <BackButton href="/" />
+      <p>loading…</p>
     {:then project}
+      <div class="top-bar">
+        <BackButton href="/" />
+      </div>
       <Header>{project.name || 'No project here!'}</Header>
       <p>{project.description}</p>
       <SectionHeader>Tracking overview</SectionHeader>
@@ -66,11 +77,22 @@
       <table>
         {#each project.notes as note}
           <tr>
-            <td class="note-meta">
-              {note.created.toLocaleDateString()}
-              <br />
-              {note.created.toLocaleTimeString()}
-              {#if note.timed}<br /> {shortDuration(note.timestamp)}{/if}
+            <td
+              class="note-meta"
+              on:click={() => (showProjectTimestamps = !showProjectTimestamps)}>
+              {#if showProjectTimestamps}
+                {note.timed ? shortDuration(note.timestamp) : '—'}
+              {:else}
+                {note.created.toLocaleDateString(undefined, {
+                  day: 'numeric',
+                  month: 'numeric',
+                  year: '2-digit',
+                })}
+                {note.created.toLocaleString(undefined, {
+                  hour: 'numeric',
+                  minute: '2-digit',
+                })}
+              {/if}
             </td>
             <td>{note.contents}</td>
           </tr>
