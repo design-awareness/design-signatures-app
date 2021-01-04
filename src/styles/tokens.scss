@@ -121,3 +121,7 @@ $project-card-loading-ph-width: 6rem;
 $project-card-loading-ph-height: 1rem;
 $project-card-new-plus-size: 4rem;
 $project-card-new-plus-color: $text-ghost-color;
+
+// TIMELINE
+$timeline-background-color: getvar(timeline-background);
+$timeline-gridline-color: getvar(timeline-gridline);

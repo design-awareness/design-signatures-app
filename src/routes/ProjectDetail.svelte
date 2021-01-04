@@ -3,6 +3,7 @@
   import BackButton from "../components/BackButton.svelte";
   import BottomActionBar from "../components/BottomActionBar.svelte";
   import ContentFrame from "../components/layout/ContentFrame.svelte";
+  import RichTimeline from "../components/RichTimeline.svelte";
   import Header from "../components/type/Header.svelte";
   import SectionHeader from "../components/type/SectionHeader.svelte";
   import { getProject } from "../data/database";
@@ -42,11 +43,6 @@
     min-height: 100%;
   }
 
-  .timeline-placeholder {
-    height: 8rem;
-    background-color: rgba(black, 0.25);
-  }
-
   .note-meta {
     font-size: 0.8rem;
     color: $text-secondary-color;
@@ -63,25 +59,7 @@
       <Header>{project.name || 'No project here!'}</Header>
       <p>{project.description}</p>
       <SectionHeader>Tracking overview</SectionHeader>
-      <div class="timeline-placeholder" />
-      <!-- <table>
-        <tbody>
-          <tr>
-            <td>
-              <ul style="list-style-type:none">
-                {#each project.activitySet.activityCodes as activityCode, i}
-                  <li>
-                    <p style="color:#{project.activitySet.colors[i]};">
-                      <b>{activityCode}</b>
-                    </p>
-                  </li>
-                {/each}
-              </ul>
-            </td>
-            <td><img src="images/videoholder.png" alt="notfound" /></td>
-          </tr>
-        </tbody>
-      </table> -->
+      <RichTimeline {project} scalable />
 
       <SectionHeader>Project comments</SectionHeader>
 
