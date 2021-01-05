@@ -88,8 +88,8 @@
     <p>
       <Link href="/about/atmans">Atman's Model</Link>
     </p>
-    <p>
+    <!-- <p>
       <Link href="/">Design Awareness App Tutorials</Link>
-    </p>
+    </p> -->
   </ContentFrame>
 </main>
