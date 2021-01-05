@@ -27,6 +27,10 @@
       margin-right: $button-icon-spacing;
       font-size: $button-icon-size;
     }
+    &:disabled {
+      color: $button-disabled-color;
+      border-color: $button-disabled-color;
+    }
   }
 
   .small {
