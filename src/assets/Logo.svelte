@@ -6,6 +6,7 @@
 <style lang="scss">
   svg {
     width: 100%;
+    vertical-align: bottom;
   }
 </style>
 

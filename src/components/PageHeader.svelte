@@ -1,5 +1,8 @@
 <script lang="ts">
+  import Icon from "@iconify/svelte/dist/Icon.svelte";
   import Logo from "../assets/Logo.svelte";
+  import settingsIcon from "@iconify-icons/ic/baseline-settings";
+  import Link from "./Link.svelte";
 </script>
 
 <style lang="scss">
@@ -21,9 +24,26 @@
     color: white;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
   }
+
+  .btn {
+    font-size: 1.5rem;
+    :global(a) {
+      color: inherit;
+      display: block;
+      padding: 0.5rem;
+      border-radius: 2px;
+    }
+    :global(svg) {
+      vertical-align: bottom;
+    }
+  }
 </style>
 
 <header>
   <Logo width="8rem" />
-  User
+  <div class="btn">
+    <Link href="/settings/">
+      <Icon icon={settingsIcon} />
+    </Link>
+  </div>
 </header>

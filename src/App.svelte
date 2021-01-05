@@ -15,6 +15,7 @@
   import ComponentLibrary from "./routes/dev/ComponentLibrary.svelte";
   import DevTools from "./routes/dev/DevTools.svelte";
   import RedirectAddPath from "./routes/RedirectAddPath.svelte";
+  import Settings from "./routes/Settings.svelte";
   presetReady; // noop, but keeps the linter happy :)
 
   const routes: object = {
@@ -29,6 +30,8 @@
     "/about/": NotFound, // About design awareness
     "/about/appdo": AppDo, // What does this app do?
     "/about/atmans": Atmans,
+
+    "/settings/": Settings, // Settings
 
     "/dev/": DevTools,
     "/dev/dbeditor/": DBEditor, // Database editor
