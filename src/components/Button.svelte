@@ -23,6 +23,7 @@
     padding: calc(#{$button-padding-vertical} - #{$button-border-size})
       calc(#{$button-padding-horizontal} - #{$button-border-size});
     min-width: $button-min-width;
+    white-space: nowrap;
     :global(svg) {
       margin-right: $button-icon-spacing;
       font-size: $button-icon-size;
