@@ -1,6 +1,6 @@
 import { getActivitySet, newActivitySet } from "./database";
 
-const wellKnownPrefix = "_well-known.";
+export const ACTIVITY_SET_WELL_KNOWN_PREFIX = "_well-known.";
 
 export const presetActivitySets = [
   [
@@ -25,14 +25,7 @@ export const presetActivitySets = [
         "compare and contrast possible solutions",
         "produce or construct a physical device/product/system",
       ],
-      colors: [
-        "AE1E60",
-        "DE1B54",
-        "EF403B",
-        "DCD65B",
-        "00B5AC",
-        "18445F",
-      ],
+      colors: ["AE1E60", "DE1B54", "EF403B", "DCD65B", "00B5AC", "18445F"],
     },
   ],
   [
@@ -143,7 +136,9 @@ export const presetActivitySets = [
 
 export let presetReady = Promise.all(
   presetActivitySets.map(async ([id, data]) => {
-    const existingSet = await getActivitySet(wellKnownPrefix + id);
+    const existingSet = await getActivitySet(
+      ACTIVITY_SET_WELL_KNOWN_PREFIX + id
+    );
     if (existingSet === null) {
       const activitySet = newActivitySet();
       for (let [prop, val] of Object.entries(data)) {
@@ -151,7 +146,7 @@ export let presetReady = Promise.all(
       }
       activitySet.wellKnown = true;
       await (activitySet.save as (id: string) => Promise<void>)(
-        wellKnownPrefix + id
+        ACTIVITY_SET_WELL_KNOWN_PREFIX + id
       );
     }
   })
