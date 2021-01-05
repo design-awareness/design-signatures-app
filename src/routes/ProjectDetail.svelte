@@ -3,6 +3,7 @@
   import BackButton from "../components/BackButton.svelte";
   import BottomActionBar from "../components/BottomActionBar.svelte";
   import ContentFrame from "../components/layout/ContentFrame.svelte";
+  import PopupMenu from "../components/PopupMenu.svelte";
   import RichTimeline from "../components/RichTimeline.svelte";
   import Header from "../components/type/Header.svelte";
   import SectionHeader from "../components/type/SectionHeader.svelte";
@@ -11,10 +12,23 @@
   import type { Project } from "../data/schema";
   import { shortDuration } from "../util/time";
 
+  import editIcon from "@iconify-icons/ic/baseline-edit";
+  import compareIcon from "@iconify-icons/ic/baseline-compare-arrows";
+  import completeIcon from "@iconify-icons/ic/baseline-check";
+  import exportIcon from "@iconify-icons/ic/baseline-share";
+  import deleteIcon from "@iconify-icons/ic/baseline-delete";
+  import Modal from "../components/Modal.svelte";
+  import InputField from "../components/InputField.svelte";
+  import ButtonGroup from "../components/ButtonGroup.svelte";
+  import Button from "../components/Button.svelte";
+
   export let params: { id: string };
 
   let projectPromise: Promise<Project>;
   projectPromise = getProject(params.id);
+
+  let project: Project;
+  projectPromise.then((p) => (project = p));
 
   let active = true;
   async function remove() {
@@ -34,6 +48,43 @@
   }
 
   let showProjectTimestamps = false;
+
+  let editProjectOpen = false;
+  let otherOpen = false;
+  let deleteProjectOpen = false;
+
+  const menuDescriptor = [
+    { label: "Edit", icon: editIcon, action: () => (editProjectOpen = true) },
+    { label: "Compare", icon: compareIcon, action: () => (otherOpen = true) },
+    {
+      label: "Mark as completed",
+      icon: completeIcon,
+      action: () => (otherOpen = true),
+    },
+    { label: "Export", icon: exportIcon, action: () => (otherOpen = true) },
+    { separator: true, label: null, action: null },
+    {
+      label: "Delete",
+      icon: deleteIcon,
+      class: "danger",
+      action: () => (deleteProjectOpen = true),
+    },
+  ];
+
+  let editName: string;
+  let editDescription: string;
+  projectPromise.then(() => {
+    editName = project.name;
+    editDescription = project.description;
+  });
+  function saveInfo() {
+    editName = editName.trim();
+    if (!editName) editName = project.name;
+    project.name = editName;
+    project.description = editDescription;
+    editProjectOpen = false;
+    project.save();
+  }
 </script>
 
 <style lang="scss">
@@ -50,6 +101,11 @@
     padding-bottom: 0.5rem;
   }
 
+  .top-bar {
+    display: flex;
+    justify-content: space-between;
+  }
+
   .note-meta {
     white-space: nowrap;
     padding-right: 0.5rem;
@@ -63,9 +119,13 @@
     {#await projectPromise}
       <BackButton href="/" />
       <p>loading…</p>
-    {:then project}
+    {:then _}
       <div class="top-bar">
         <BackButton href="/" />
+        <PopupMenu
+          label="Options"
+          descriptor={menuDescriptor}
+          alignment="right" />
       </div>
       <Header>{project.name || 'No project here!'}</Header>
       <p>{project.description}</p>
@@ -99,13 +159,43 @@
         {/each}
       </table>
 
-      <button on:click={remove} disabled={!active}>delete</button>
-
       {#if project.active}
         <BottomActionBar
           label={project.sessions?.length ? 'Resume tracking' : 'Start tracking'}
           on:click={startTracking} />
       {/if}
+
+      <Modal bind:visible={editProjectOpen} title="Edit project">
+        <InputField label="Name" placeholder="" bind:value={editName} />
+        <InputField label="Description" large bind:value={editDescription} />
+        <ButtonGroup>
+          <Button on:click={saveInfo}>Close</Button>
+        </ButtonGroup>
+      </Modal>
+
+      <Modal bind:visible={deleteProjectOpen} title="Delete project">
+        <p>
+          The project
+          <strong>{project.name}</strong>
+          and all its data will be removed.
+        </p>
+        <p>You can’t undo this action.</p>
+        <ButtonGroup>
+          <Button
+            on:click={() => (deleteProjectOpen = false)}
+            disabled={!active}>
+            Cancel
+          </Button>
+          <Button on:click={remove} disabled={!active}>Delete</Button>
+        </ButtonGroup>
+      </Modal>
+
+      <Modal bind:visible={otherOpen} title="Not available">
+        This feature isn't ready yet. Hold tight!
+        <ButtonGroup>
+          <Button on:click={() => (otherOpen = false)}>Close</Button>
+        </ButtonGroup>
+      </Modal>
     {/await}
   </ContentFrame>
 </main>

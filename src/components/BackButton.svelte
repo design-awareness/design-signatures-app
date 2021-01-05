@@ -8,18 +8,18 @@
 
 <style lang="scss">
   @import "src/styles/tokens";
+  @import "src/styles/type";
 
   .back-button :global(a),
-  .back-button :global(button) {
+  .back-button button {
+    @include type-style($type-back-button);
     border: none;
     background: transparent;
-    font: inherit;
-    display: inline-block;
     color: $back-button-text-color;
     text-decoration: none;
     font-weight: 600;
-    padding: 0.5rem 1rem;
-    border-radius: 2rem;
+    padding: $back-button-padding-vertical $back-button-padding-horizontal;
+    border-radius: $back-button-border-radius;
     display: inline-flex;
     align-items: center;
     &:focus,

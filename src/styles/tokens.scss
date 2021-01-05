@@ -38,6 +38,23 @@ $button-group-fill-spacing: 1.5rem;
 
 // BACK BUTTON
 $back-button-text-color: getvar(back-button);
+$back-button-padding-vertical: 0.5rem;
+$back-button-padding-horizontal: 1rem;
+$back-button-border-radius: 2rem;
+
+// POPUP
+$popup-menu-background-color: getvar(popup-background);
+$popup-menu-shadow: 0px 0px 8px rgba(37, 40, 43, 0.12);
+$popup-menu-padding: 0.25rem;
+$popup-menu-dropdown-gap: 0.25rem;
+$popup-menu-border-radius: 8px;
+$popup-menu-item-padding: 0.5rem 1rem;
+$popup-menu-icon-spacing: 0.75rem;
+$popup-menu-icon-size: 1.25rem;
+$popup-menu-separator-spacing: 3px 0;
+$popup-menu-separator-width: 2px;
+$popup-menu-separator-color: getvar(popup-separator);
+$popup-menu-item-selected-color: getvar(active-selection-background);
 
 // INPUT
 $input-border-color: getvar(input-border);

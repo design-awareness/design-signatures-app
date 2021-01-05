@@ -28,6 +28,12 @@ $type-card-link: (
   height: 16,
 );
 
+$type-back-button: (
+  size: 16,
+  weight: 400,
+  height: 24,
+);
+
 $type-button: (
   size: 16,
   weight: 300,
@@ -38,6 +44,17 @@ $type-button-small: (
   size: 14,
   weight: 300,
   height: 20,
+);
+
+$type-popup-button: (
+  size: 14,
+  weight: 400,
+  height: 24,
+);
+$type-popup-item: (
+  size: 14,
+  weight: 400,
+  height: 24,
 );
 
 $type-input-label: (
