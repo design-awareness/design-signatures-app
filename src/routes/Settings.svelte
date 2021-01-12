@@ -1,5 +1,8 @@
 <script lang="ts">
+  import { replace } from "svelte-spa-router/Router.svelte";
+
   import BackButton from "../components/BackButton.svelte";
+  import Button from "../components/Button.svelte";
   import ContentFrame from "../components/layout/ContentFrame.svelte";
   import Link from "../components/Link.svelte";
   import Header from "../components/type/Header.svelte";
@@ -50,6 +53,16 @@
       location.reload();
     }
   }
+
+  async function update() {
+    if (!navigator.onLine) {
+      alert(
+        "Your device doesn't seem to be online.\nConnect to a network and try again."
+      );
+    } else {
+      await replace("/update/3");
+    }
+  }
 </script>
 
 <style lang="scss">
@@ -65,11 +78,18 @@
     <BackButton href="/" />
     <Header>Settings</Header>
 
+    <SectionHeader>Update</SectionHeader>
+    <p>
+      <Button on:click={update}>Force update and reload</Button>
+    </p>
+
     <SectionHeader>Activity sets</SectionHeader>
     <p>
-      <button on:click={deleteUnusedAS}>Remove unused activity sets</button>
+      <Button on:click={deleteUnusedAS}>Remove unused activity sets</Button>
     </p>
-    <p><button on:click={resetWKAS}>Reset well known activity sets</button></p>
+    <p>
+      <Button on:click={resetWKAS}>Reset well known activity sets</Button>
+    </p>
 
     {#if !~location.hostname.indexOf('design') || ~location.hostname.indexOf('staging')}
       <SectionHeader>Developer</SectionHeader>
