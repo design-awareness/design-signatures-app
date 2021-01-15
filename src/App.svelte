@@ -1,22 +1,23 @@
 <script lang="ts">
-  import Router from "svelte-spa-router/Router.svelte";
-  import Home from "./routes/Home.svelte";
-  import NotFound from "./routes/NotFound.svelte";
-  import DBEditor from "./routes/dev/DBEditor.svelte";
-  import NewProject from "./routes/NewProject.svelte";
-  import ProjectDetail from "./routes/ProjectDetail.svelte";
   import AllProjects from "./routes/AllProjects.svelte";
   import AppDo from "./routes/about/AppDo.svelte";
   import Atmans from "./routes/about/Atmans.svelte";
+  import ComponentLibrary from "./routes/dev/ComponentLibrary.svelte";
+  import DBEditor from "./routes/dev/DBEditor.svelte";
+  import DevTools from "./routes/dev/DevTools.svelte";
+  import Home from "./routes/Home.svelte";
+  import NewProject from "./routes/NewProject.svelte";
+  import NotFound from "./routes/NotFound.svelte";
+  import ProjectDetail from "./routes/ProjectDetail.svelte";
+  import ProjectExport from "./routes/ProjectExport.svelte";
+  import ProjectTracking from "./routes/ProjectTracking.svelte";
+  import RedirectAddPath from "./routes/RedirectAddPath.svelte";
+  import Router from "svelte-spa-router/Router.svelte";
+  import Settings from "./routes/Settings.svelte";
+  import Update from "./routes/Update.svelte";
 
   // create preset activity sets!
   import { presetReady } from "./data/activitySetPresets";
-  import ProjectTracking from "./routes/ProjectTracking.svelte";
-  import ComponentLibrary from "./routes/dev/ComponentLibrary.svelte";
-  import DevTools from "./routes/dev/DevTools.svelte";
-  import RedirectAddPath from "./routes/RedirectAddPath.svelte";
-  import Settings from "./routes/Settings.svelte";
-  import Update from "./routes/Update.svelte";
   presetReady; // noop, but keeps the linter happy :)
 
   const routes: object = {
@@ -25,6 +26,7 @@
     "/projects/": AllProjects, // Projects
     "/projects/new/": NewProject, // New project
     "/projects/:id/": ProjectDetail, // Project detail
+    "/projects/:id/export": ProjectExport,
     "/projects/:id/track/*": ProjectTracking, // Project tracking
     "/projects/:id/track": RedirectAddPath,
 

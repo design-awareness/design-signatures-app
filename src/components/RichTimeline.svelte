@@ -25,6 +25,14 @@
   export let scale = -1;
   export let rescaleFactor = 1.5;
 
+  // set nonzero to use fixed with instead of scale
+  export let width = 0;
+
+  // when true, codes fixed at left when scrolling
+  export let fixedCodes = true;
+  // when fixedCodes is false, sets width of codes area
+  export let codeWidth = 48;
+
   let displayHeight: number;
   $: displayHeight =
     colors.length * (barHeight + barGap) - barGap + padding * 2;
@@ -49,6 +57,10 @@
 
   if (scale === -1) {
     scale = totalDuration / 270;
+  }
+
+  $: if (width !== 0) {
+    scale = totalDuration / width;
   }
 
   let priorDuration = 0;
@@ -78,10 +90,6 @@
     & svg {
       width: 3rem;
     }
-    text {
-      font-size: 0.8rem;
-      font-weight: 500;
-    }
   }
   .timeline-scrollable {
     flex: 1;
@@ -93,12 +101,16 @@
     .grid-line {
       fill: $timeline-gridline-color;
     }
+    text {
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
   }
 </style>
 
 <div class="rich-timeline-container">
   <div class="timeline">
-    {#if activityNames}
+    {#if activityNames && fixedCodes}
       <div class="activity-names">
         <svg
           height={displayHeight}
@@ -120,8 +132,20 @@
     <div class="timeline-scrollable">
       <svg
         height={displayHeight}
-        viewBox="0 0 {totalDuration / scale} {displayHeight}"
+        viewBox="{!fixedCodes && activityNames ? -codeWidth : 0} 0 {totalDuration / scale} {displayHeight}"
         xmlns="http://www.w3.org/2000/svg">
+        {#if !fixedCodes && activityNames}
+          {#each colors as color, i}
+            <text
+              text-anchor="middle"
+              alignment-baseline="central"
+              fill="#{color}"
+              x={-codeWidth / 2}
+              y={padding + i * (barHeight + barGap) + barHeight / 2}>
+              {project.activitySet.activityCodes[i]}
+            </text>
+          {/each}
+        {/if}
         {#if activityLines}
           {#each colors as _, i}
             <rect

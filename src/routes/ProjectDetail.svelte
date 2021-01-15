@@ -61,7 +61,11 @@
       icon: completeIcon,
       action: () => (otherOpen = true),
     },
-    { label: "Export", icon: exportIcon, action: () => (otherOpen = true) },
+    {
+      label: "Export",
+      icon: exportIcon,
+      action: () => push(`/projects/${params.id}/export`),
+    },
     { separator: true, label: null, action: null },
     {
       label: "Delete",
