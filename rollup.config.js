@@ -7,8 +7,11 @@ import preprocess from "svelte-preprocess";
 import replace from "@rollup/plugin-replace";
 import typescript from "@rollup/plugin-typescript";
 import ts from "typescript";
+import copy from "rollup-plugin-copy";
 
 const production = !process.env.ROLLUP_WATCH;
+
+const ENV = !production ? "dev" : process.env.ENV_STAGING ? "stage" : "prod";
 
 function serve() {
   let server;
@@ -39,10 +42,10 @@ export default [
   {
     input: "src/main.ts",
     output: {
-      sourcemap: !production,
+      file: "build/build/bundle.js",
       format: "iife",
       name: "app",
-      file: "public/build/bundle.js",
+      sourcemap: !production,
     },
     plugins: [
       svelte({
@@ -84,6 +87,13 @@ export default [
       // If we're building for production (npm run build
       // instead of npm run dev), minify
       production && terser(),
+
+      copy({
+        targets: [
+          { src: "public/*", dest: "build/" },
+          { src: `icons/icons-${ENV}/*`, dest: "build/icons" },
+        ],
+      }),
     ],
     watch: {
       clearScreen: false,
@@ -95,7 +105,7 @@ export default [
       sourcemap: !production,
       format: "iife",
       name: "workbox",
-      file: "public/service-worker.js",
+      file: "build/service-worker.js",
     },
     plugins: [
       resolve(),

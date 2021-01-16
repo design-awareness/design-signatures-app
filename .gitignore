@@ -4,3 +4,7 @@
 /public/service-worker.js.map
 
 .DS_Store
+build
+
+# Local Netlify folder
+.netlify
