@@ -19,11 +19,12 @@ export function toEventTimeline(
 
 export function toStateTimeline(
   data: readonly [number, number][][],
-  coalesceThreshold: number = 0
+  coalesceThreshold: number = 0,
+  startOffset: number = 0
 ): [number, boolean[]][] {
   const eventTimeline = toEventTimeline(data);
   let lastState: [number, boolean[]] = [
-    0,
+    startOffset,
     new Array<boolean>(data.length).fill(false),
   ];
   let states = [lastState];
@@ -46,9 +47,10 @@ export function toStateTimeline(
 export function toStateDurationTimeline(
   data: readonly [number, number][][],
   duration: number,
-  coalesceThreshold: number = 0
+  coalesceThreshold: number = 0,
+  startOffset: number = 0
 ): [[number, number], boolean[]][] {
-  let stateTimeline = toStateTimeline(data, coalesceThreshold);
+  let stateTimeline = toStateTimeline(data, coalesceThreshold, startOffset);
   let lastEvent = stateTimeline.length - 1;
   return stateTimeline.map(([startTime, state], i) =>
     i < lastEvent
