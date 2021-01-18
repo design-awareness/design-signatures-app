@@ -54,7 +54,7 @@
       <BackButton href="/" />
       <Header>Create project</Header>
       <InputField
-        label="Name"
+        label="Project Name"
         placeholder="My cool project"
         bind:value={name} />
       <InputField label="Description" large bind:value={description} />

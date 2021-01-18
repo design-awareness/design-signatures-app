@@ -77,16 +77,16 @@
     {#if location.hostname.indexOf('design') === -1}
       <Header>Developer</Header>
       <p>
-        <Link href="/dev/">Developer tools and configuration</Link>
+        <Link href="/dev/">Developer tools and configuration ›</Link>
       </p>
     {/if}
 
     <Header>About Design Awareness</Header>
     <p>
-      <Link href="/about/appdo">What does this app do?</Link>
+      <Link href="/about/appdo">What does this app do? ›</Link>
     </p>
     <p>
-      <Link href="/about/atmans">Atman's Model</Link>
+      <Link href="/about/atmans">Atman's Model ›</Link>
     </p>
     <!-- <p>
       <Link href="/">Design Awareness App Tutorials</Link>

@@ -9,13 +9,12 @@
   @import "src/styles/type";
 
   .page {
-    background-image: url("/images/bg.png");
     min-height: 100%;
   }
 
   img {
     list-style-type: none;
-    padding: 0;
+    padding: 1rem 0;
     display: flex;
     width: 100%;
     flex-wrap: wrap;

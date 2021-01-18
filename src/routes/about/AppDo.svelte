@@ -6,7 +6,6 @@
 
 <style lang="scss">
   .page {
-    background-image: url("/images/bg.png");
     min-height: 100%;
   }
 
@@ -19,6 +18,13 @@
     align-items: flex-start;
     justify-items: flex-start;
     justify-content: space-around;
+  }
+
+  a {
+    color: black;
+    text-decoration: none;
+    font-weight: 700;
+    background-color: #f1c258;
   }
 </style>
 

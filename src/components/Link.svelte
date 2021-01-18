@@ -35,6 +35,14 @@
   }
 </script>
 
+<style lang="scss">
+  @import "src/styles/colors";
+  a {
+    color: $neutral-60;
+    text-decoration: none;
+  }
+</style>
+
 <a href={'#' + href} on:click={click}>
   <slot />
 </a>
