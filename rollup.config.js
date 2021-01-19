@@ -76,6 +76,12 @@ export default [
         inlineSources: !production,
       }),
 
+      replace({
+        BUILDVAR__BUILD_TIME: Date.now(),
+        BUILDVAR__VERSION: JSON.stringify(process.env.npm_package_version),
+        BUILDVAR__BUILD_ENV: JSON.stringify(ENV),
+      }),
+
       // In dev mode, call `npm run start` once
       // the bundle has been generated
       !production && serve(),

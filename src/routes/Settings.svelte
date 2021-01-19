@@ -8,6 +8,7 @@
   import Header from "../components/type/Header.svelte";
   import SectionHeader from "../components/type/SectionHeader.svelte";
   import { ACTIVITY_SET_WELL_KNOWN_PREFIX } from "../data/activitySetPresets";
+  import { BUILD_ENV, BUILD_TIME, VERSION } from "../data/buildData";
   import { getActivitySet, getAll, getProject } from "../data/database";
   import type { ActivitySet } from "../data/schema";
 
@@ -71,6 +72,9 @@
     background-color: $background-color;
     min-height: 100%;
   }
+  .small {
+    font-size: 0.8em;
+  }
 </style>
 
 <main class="device-frame page">
@@ -78,17 +82,14 @@
     <BackButton href="/" />
     <Header>Settings</Header>
 
-    <SectionHeader>Update</SectionHeader>
-    <p>
-      <Button on:click={update}>Force update and reload</Button>
-    </p>
-
     <SectionHeader>Activity sets</SectionHeader>
     <p>
-      <Button on:click={deleteUnusedAS}>Remove unused activity sets</Button>
+      <Button small on:click={deleteUnusedAS}>
+        Remove unused activity sets
+      </Button>
     </p>
     <p>
-      <Button on:click={resetWKAS}>Reset well known activity sets</Button>
+      <Button small on:click={resetWKAS}>Reset built-in activity sets</Button>
     </p>
 
     {#if !~location.hostname.indexOf('design') || ~location.hostname.indexOf('staging')}
@@ -97,5 +98,18 @@
         <Link href="/dev/">Developer tools</Link>
       </p>
     {/if}
+
+    <SectionHeader>About app</SectionHeader>
+    <p class="small">
+      <strong>Version:</strong>
+      {VERSION}
+      <br /><strong>Last built:</strong>
+      {new Date(BUILD_TIME).toLocaleString()}
+      <br /><strong>Build environment:</strong>
+      {{ dev: 'Development', stage: 'Staging', prod: 'Production' }[BUILD_ENV]}
+    </p>
+    <p>
+      <Button small on:click={update}>Force update and reload</Button>
+    </p>
   </ContentFrame>
 </main>
