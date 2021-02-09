@@ -1,15 +1,16 @@
 import { sortBy, sortWith } from "../util/sort";
 
 export function toEventTimeline(
-  data: readonly [number, number][][]
+  data: readonly [number, number][][],
+  startOffset: number = 0
 ): [number, number, boolean][] {
   let timeline: [number, number, boolean][] = [];
 
   data.forEach((activityEvents, i) => {
     activityEvents.forEach(([timeOn, timeOff]) => {
-      timeline.push([i, timeOn, true]);
+      timeline.push([i, timeOn + startOffset, true]);
       if (timeOff !== -1) {
-        timeline.push([i, timeOff, false]);
+        timeline.push([i, timeOff + startOffset, false]);
       }
     });
   });
@@ -32,10 +33,10 @@ export function toStateTimeline(
   eventTimeline.forEach(([idx, time, val]) => {
     let newState = lastState[1].slice();
     newState[idx] = val;
-    if (time - lastState[0] <= coalesceThreshold) {
+    if (time + startOffset - lastState[0] <= coalesceThreshold) {
       lastState[1] = newState;
     } else {
-      let newPair = [time, newState] as [number, boolean[]];
+      let newPair = [time + startOffset, newState] as [number, boolean[]];
       lastState = newPair;
       states.push(newPair);
     }

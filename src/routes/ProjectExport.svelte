@@ -7,7 +7,13 @@
   import Header from "../components/type/Header.svelte";
   import SectionHeader from "../components/type/SectionHeader.svelte";
   import { getProject } from "../data/database";
-  import type { Project } from "../data/schema";
+  import {
+    toActiveActivitiesTimeline,
+    toEventTimeline,
+    toStateTimeline,
+  } from "../data/dataTransformers";
+  import type { Project, Session } from "../data/schema";
+  import { knownCodes } from "../util/activityCode";
   import download from "../util/download";
 
   export let params: { id: string };
@@ -22,82 +28,100 @@
 
   let imageSize = 500;
 
-  let appendSessions = 0;
+  let combineSessions = false;
+  let annotateSessions = false;
+  let projectTime = false;
+  $: if (combineSessions) {
+    annotateSessions = false;
+    projectTime = true;
+  }
   let dataFormat = 0;
-  let timestampFormat = 0;
+  let asFormat = 0;
 
-  $: if (appendSessions === 2 && timestampFormat === 0) {
-    timestampFormat = 1;
+  /**
+   * export full data
+   */
+  function createFullDataExport(): object {
+    const sessionData = exportData();
+    if (asFormat === 0) {
+      return sessionData;
+    } else {
+      return {
+        data: sessionData,
+        activitySet: asExport(),
+      };
+    }
   }
 
-  let summary = "";
-  $: if (exportType === "data") {
-    summary = "Your data will have the shape:\n  ";
-    if (appendSessions === 0) {
-      summary += "SessionData[]";
-    } else if (appendSessions === 1) {
-      summary += `{
-    data: SessionData,
-    duration: number,
-    startTime: string (ISO date)
-  }[]`;
-    } else if (appendSessions === 2) {
-      summary += "SessionData";
+  /**
+   * export session data
+   */
+  function exportData(): object {
+    if (combineSessions) {
+      // TODO: combine sessions output
+      return { error: "Combined sessions not available yet!" };
+    } else {
+      let data = [];
+      let elapsedTime = 0;
+      project.sessions.forEach((session) => {
+        let sessionData = exportSession(session, elapsedTime);
+        if (annotateSessions) {
+          data.push({
+            duration: session.duration,
+            startTime: session.startTime.toISOString(),
+            data: sessionData,
+          });
+        } else {
+          data.push(sessionData);
+        }
+        elapsedTime += session.duration;
+      });
+      return data;
     }
-    summary += "\nwhere SessionData has the shape:\n  ";
-    // [0, 'Raw (on/off pairs by activity)'], [1, 'Raw event timeline'], [2, 'State timeline (Boolean array)'], [3, 'State timeline (Boolean array with durations)'], [4, 'State timeline (Active activity list)'], [5, 'State timeline (Active activity list with durations)']
+  }
+
+  function exportSession(session: Session, prevTime: number): readonly any[] {
     if (dataFormat === 0) {
-      summary += "[onTime: Timestamp, offTime: Timestamp][][]";
+      return session.data;
     } else if (dataFormat === 1) {
-      summary += "[activity: number, time: Timestamp, onOrOff: boolean][]";
+      return toEventTimeline(session.data, projectTime ? prevTime : 0);
     } else if (dataFormat === 2) {
-      summary += "[time: Timestamp, state: boolean[]][]";
+      return toStateTimeline(session.data, 0, projectTime ? prevTime : 0);
     } else if (dataFormat === 3) {
-      summary += `[
-    [time: Timestamp, duration: number],
-    state: boolean[]
-  ][]`;
-    } else if (dataFormat === 4) {
-      summary += `[
-    time: Timestamp,
-    activeActivityIndexes: number[]
-  ][]`;
-    } else if (dataFormat === 5) {
-      summary += `[
-    [time: Timestamp, duration: number],
-    activeActivityIndexes: number[]
-  ][]`;
-    }
-    // [0, 'Session time (ms)'], [1, 'Project time (ms)'], [2, 'Absolute (ISO string)'], [3, 'Absolute (Unix ms)']
-    summary += "\nwhere Timestamp is:\n  ";
-
-    if (timestampFormat === 0) {
-      summary += "number (session time, in ms)";
-    } else if (timestampFormat === 1) {
-      summary += "number (project time, in ms)";
-    } else if (timestampFormat === 2) {
-      summary += "string (ISO timestamp)";
-    } else if (timestampFormat === 3) {
-      summary += "number (ms since Unix epoch)";
+      const stateTimeline = toStateTimeline(
+        session.data,
+        0,
+        projectTime ? prevTime : 0
+      );
+      return toActiveActivitiesTimeline(stateTimeline);
     }
   }
 
-  function transformTime(
-    format: number,
-    sessionEventTimestamp: number,
-    sessionStartAbsolute: Date,
-    projectPriorDuration: number
-  ): number | string {
-    if (format === 0) {
-      return sessionEventTimestamp;
-    } else if (format === 1) {
-      return projectPriorDuration + sessionEventTimestamp;
-    } else if (format === 2) {
-      return new Date(
-        sessionStartAbsolute.getTime() + sessionEventTimestamp
-      ).toISOString();
-    } else if (format === 3) {
-      return sessionStartAbsolute.getTime() + sessionEventTimestamp;
+  function asExport(): object {
+    let as = project.activitySet;
+    if (asFormat === 1) {
+      // group by activity;
+      let activities = [];
+      as.activityCodes.forEach((code, i) => {
+        activities.push({
+          code,
+          name: as.activityNames[i],
+          description: as.activityDescriptions[i],
+          color: as.colors[i],
+        });
+      });
+      return {
+        name: as.name,
+        activities,
+      };
+    } else {
+      return {
+        name: as.name,
+        activityCodes: as.activityCodes,
+        activityNames: as.activityNames,
+        activityDescriptions: as.activityDescriptions,
+        colors: as.colors,
+      };
     }
   }
 
@@ -106,7 +130,7 @@
     timelineRef = ref;
   }
 
-  function doExport() {
+  async function doExport() {
     if (exportType === "image") {
       download(
         "export.svg",
@@ -120,18 +144,15 @@
           )
       );
     } else if (exportType === "data") {
+      if (!project) await projectPromise;
+      download(
+        "export.json",
+        "application/json",
+        JSON.stringify(createFullDataExport())
+      );
     }
   }
 </script>
-
-<style lang="scss">
-  @import "src/styles/tokens";
-  @import "src/styles/type";
-
-  pre {
-    white-space: pre-wrap;
-  }
-</style>
 
 <main class="device-frame page">
   <ContentFrame>
@@ -143,34 +164,67 @@
       <SelectField
         label="Type"
         bind:value={exportType}
-        options={[['image', 'Timeline image (SVG)'], ['data', 'Session data (JSON)']]} />
+        options={[['image', 'Timeline image (SVG)'], ['data', 'Session data (JSON)']]}
+      />
       {#if exportType === 'image'}
         <SelectField
           label="Size"
           bind:value={imageSize}
-          options={[[200, 'Super short'], [350, 'Short'], [500, 'Normal'], [750, 'Long'], [1000, 'Super long']]} />
+          options={[[200, 'Super short'], [350, 'Short'], [500, 'Normal'], [750, 'Long'], [1000, 'Super long']]}
+        />
         <SectionHeader>Preview</SectionHeader>
         <div use:setTimeline>
           <RichTimeline {project} width={imageSize} fixedCodes={false} />
         </div>
       {:else if exportType === 'data'}
-        <p>JSON export is coming soon!</p>
-        <SelectField
-          label="Session handling"
-          bind:value={appendSessions}
-          options={[[0, 'Separate (data only)'], [1, 'Separate (annotated)'], [2, 'Append']]} />
+        <SectionHeader>Sessions</SectionHeader>
+        <label><input
+            type="checkbox"
+            bind:checked={combineSessions}
+            disabled
+          />Combine sessions</label>
+        <label><input
+            type="checkbox"
+            bind:checked={annotateSessions}
+            disabled={combineSessions}
+          />Include session metadata</label>
+        <SectionHeader>Timestamps</SectionHeader>
+        <label><input
+            type="checkbox"
+            bind:checked={projectTime}
+            disabled={combineSessions}
+          />Use project time</label>
         <SelectField
           label="Format"
           bind:value={dataFormat}
-          options={[[0, 'Raw (on/off pairs by activity)'], [1, 'Raw event timeline'], [2, 'State timeline (Boolean array)'], [3, 'State timeline (Boolean array with durations)'], [4, 'State timeline (Active activity list)'], [5, 'State timeline (Active activity list with durations)']]} />
+          options={[[0, 'Raw on/off pairs'], [1, 'Raw event timeline'], [2, 'State timeline (all)'], [3, 'State timeline (active IDs)']]}
+        />
+        <SelectField
+          label="Activity set"
+          bind:value={asFormat}
+          options={[[0, "Don't export Activity Set"], [1, 'Group by activity'], [2, 'Group by field']]}
+        />
+        <!--<SelectField
+          label="Format"
+          bind:value={dataFormat}
+          options={[[0, 'Raw (on/off pairs by activity)'], [1, 'Raw event timeline'], [2, 'State timeline (Boolean array)'], [3, 'State timeline (Boolean array with durations)'], [4, 'State timeline (Active activity list)'], [5, 'State timeline (Active activity list with durations)']]}
+        />
         <SelectField
           label="Timestamps"
           bind:value={timestampFormat}
-          options={appendSessions === 2 ? [[1, 'Project time (ms)'], [2, 'Absolute (ISO string)'], [3, 'Absolute (Unix ms)']] : [[0, 'Session time (ms)'], [1, 'Project time (ms)'], [2, 'Absolute (ISO string)'], [3, 'Absolute (Unix ms)']]} />
-        <SectionHeader>Summary</SectionHeader>
-        <pre>{summary}</pre>
+          options={appendSessions === 2 ? [[1, 'Project time (ms)'], [2, 'Absolute (ISO string)'], [3, 'Absolute (Unix ms)']] : [[0, 'Session time (ms)'], [1, 'Project time (ms)'], [2, 'Absolute (ISO string)'], [3, 'Absolute (Unix ms)']]}
+        /> -->
       {/if}
       <BottomActionBar label="Export" on:click={doExport} />
     {/await}
   </ContentFrame>
 </main>
+
+<style lang="scss">
+  @import "src/styles/tokens";
+  @import "src/styles/type";
+
+  label {
+    display: block;
+  }
+</style>
