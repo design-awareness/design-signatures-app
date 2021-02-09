@@ -80,6 +80,7 @@ export default [
         BUILDVAR__BUILD_TIME: Date.now(),
         BUILDVAR__VERSION: JSON.stringify(process.env.npm_package_version),
         BUILDVAR__BUILD_ENV: JSON.stringify(ENV),
+        BUILDVAR__BRANCH: JSON.stringify(process.env.BRANCH),
       }),
 
       // In dev mode, call `npm run start` once
