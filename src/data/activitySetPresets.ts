@@ -122,6 +122,34 @@ export const presetActivitySets = [
       ],
     },
   ],
+  [
+    "diverge_converge",
+    {
+      name: "Diverge-Converge",
+      description: "",
+      activityNames: ["Diverging", "Converging"],
+      activityCodes: ["DIV", "CONV"],
+      activityDescriptions: [
+        "Conceptualizing and creatively negotiating proposed concepts/ Inductive, creative and non-judgemental idea generating",
+        "Narrowing ideas with reductive, deliberative, analytical decision making during assesment and implementation",
+      ],
+      colors: ["EF403B", "530D17"],
+    },
+  ],
+  [
+    "problem_solution",
+    {
+      name: "Problem-Solution",
+      description: "",
+      activityNames: ["Problem Space", "Solution Space"],
+      activityCodes: ["PROB", "SOL"],
+      activityDescriptions: [
+        "Working on understanding and/or defining the design challenge ",
+        "Working on ideas to tackle or solve the design challenge/ problem",
+      ],
+      colors: ["00B5AC", "18445F"],
+    },
+  ],
 ] as [
   string,
   {
