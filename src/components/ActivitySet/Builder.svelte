@@ -50,7 +50,7 @@
     ];
   }
 
-  while (activities.length < 3) addItem();
+  while (activities.length < 2) addItem();
 
   function remove(i: number) {
     activities = activities.filter((_, _i) => _i !== i);
@@ -59,7 +59,7 @@
   let ok: boolean;
   $: ok =
     name !== "" &&
-    activities.length >= 3 &&
+    activities.length >= 2 &&
     activities.every((activity) => activity.name && activity.code);
 
   let saving = false;
