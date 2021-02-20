@@ -87,7 +87,9 @@ $token-text-color: $token-text-color-light;
 // MODAL
 $modal-scrim-opacity: 0.35;
 $modal-background-color: white;
-$modal-padding-vertical: 2rem;
+$modal-status-background: getvar(modal-status-background);
+$modal-status-text: getvar(modal-status-text);
+$modal-padding-vertical: 1.5rem;
 $modal-padding-horizontal: 1.25rem;
 $modal-border-radius: 4px;
 $modal-min-width: 16rem;

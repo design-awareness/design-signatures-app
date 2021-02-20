@@ -69,6 +69,12 @@ $type-button-inlabel: (
   height: map-get($type-input-label, height),
 );
 
+$type-modal-status: (
+  size: 12,
+  weight: 500,
+  height: 24,
+);
+
 $type-input: (
   size: 14,
   weight: 400,
