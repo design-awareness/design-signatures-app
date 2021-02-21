@@ -206,6 +206,54 @@
   }
 </script>
 
+<div class="popup-container" class:open={opened}>
+  <button
+    id="{id}_button"
+    class="button"
+    type="button"
+    aria-haspopup="true"
+    aria-controls="{id}_menu"
+    aria-expanded={opened}
+    on:keydown={onButtonKeydown}
+    on:click={onButtonClick}
+    use:setButton
+  >
+    {label}
+    <Icon icon={opened ? caretUpIcon : caretDownIcon} />
+  </button>
+  <ul
+    id="{id}_menu"
+    class="menu {alignment}"
+    role="menu"
+    aria-labelledby="{id}_button"
+    style="display: {opened ? 'block' : 'none'}"
+  >
+    {#each descriptor as item, i}
+      {#if item.separator}
+        <li class="separator" role="separator" tabindex="-1" />
+      {:else}
+        <li
+          class="item {item.class || ''}"
+          role="menuitem"
+          tabindex={i === selectedItem ? 0 : -1}
+          use:setRef={i}
+          on:keydown={onItemKeydown(i)}
+          on:click={onItemClick(i)}
+          on:mouseover={onItemMouseover(i)}
+        >
+          {#if item.icon}
+            <Icon icon={item.icon} />
+          {/if}
+          {item.label}
+        </li>
+      {/if}
+    {/each}
+  </ul>
+  {#if opened}
+    <div class="scrim" role="presentation" on:click={close} />
+  {/if}
+</div>
+
 <style lang="scss">
   @import "src/styles/type.scss";
   @import "src/styles/tokens.scss";
@@ -225,6 +273,7 @@
     align-items: center;
     justify-content: center;
     background-color: $button-background-color;
+    color: $text-primary-color;
     border: $button-border-size solid $button-border-color;
     box-sizing: border-box;
     border-radius: $button-border-radius;
@@ -304,48 +353,3 @@
     z-index: 0;
   }
 </style>
-
-<div class="popup-container" class:open={opened}>
-  <button
-    id="{id}_button"
-    class="button"
-    type="button"
-    aria-haspopup="true"
-    aria-controls="{id}_menu"
-    aria-expanded={opened}
-    on:keydown={onButtonKeydown}
-    on:click={onButtonClick}
-    use:setButton>
-    {label}
-    <Icon icon={opened ? caretUpIcon : caretDownIcon} />
-  </button>
-  <ul
-    id="{id}_menu"
-    class="menu {alignment}"
-    role="menu"
-    aria-labelledby="{id}_button"
-    style="display: {opened ? 'block' : 'none'}">
-    {#each descriptor as item, i}
-      {#if item.separator}
-        <li class="separator" role="separator" tabindex="-1" />
-      {:else}
-        <li
-          class="item {item.class || ''}"
-          role="menuitem"
-          tabindex={i === selectedItem ? 0 : -1}
-          use:setRef={i}
-          on:keydown={onItemKeydown(i)}
-          on:click={onItemClick(i)}
-          on:mouseover={onItemMouseover(i)}>
-          {#if item.icon}
-            <Icon icon={item.icon} />
-          {/if}
-          {item.label}
-        </li>
-      {/if}
-    {/each}
-  </ul>
-  {#if opened}
-    <div class="scrim" role="presentation" on:click={close} />
-  {/if}
-</div>
