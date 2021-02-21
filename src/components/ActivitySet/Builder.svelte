@@ -131,7 +131,10 @@
 
 <Header>Create a Design Activity Set</Header>
 {#if !saving}
-  <InputField label="Title" bind:value={name} />
+  <InputField
+    label="Title"
+    helptext="This will name the activity set you create below and will allow you to identify and use it on other projects."
+    bind:value={name} />
   <div class="label">Activities</div>
   <ul
     use:dndzone={{ items: activities, dragDisabled, dropTargetStyle: {} }}
