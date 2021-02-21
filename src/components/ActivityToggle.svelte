@@ -32,13 +32,12 @@
     height: $activity-toggle-height;
     box-sizing: border-box;
     border-radius: $activity-toggle-height/2;
-    border: $activity-toggle-border-width solid getvar(activity-color);
+    border: $activity-toggle-border-width solid;
     box-shadow: 0 0 0 0 getvar(activity-color);
     transition: box-shadow $activity-toggle-transition-speed/2;
     &::before,
     &::after {
       position: absolute;
-      color: getvar(activity-color);
       top: calc(50% - #{rem(map-get($type-activity-toggle-on, size)) / 2});
       transition: opacity $activity-toggle-transition-speed;
     }
@@ -78,7 +77,7 @@
       position: absolute;
       left: $offset;
       top: $offset;
-      background-color: getvar(activity-color);
+      background-color: $activity-toggle-neutral-color;
       transform: translateX(0);
       transition: transform $activity-toggle-transition-speed;
     }
@@ -114,9 +113,10 @@
       transform: translateX(
         calc(#{$activity-toggle-width} - #{$activity-toggle-height})
       );
+      background-color: $background-color;
     }
     .background {
-      opacity: $activity-toggle-background-opacity;
+      opacity: .8;
     }
   }
 </style>
@@ -130,8 +130,8 @@
     aria-label="Toggle {activityName}"
     style="--activity-color:#{color}">
     <div role="presentation" class="toggle">
-      <div class="thumb" />
       <div class="background" />
+      <div class="thumb" />
     </div>
   </label>
 </div>
