@@ -25,7 +25,7 @@
     display: block;
     width: 100%;
     box-sizing: border-box;
-    margin: 0 0 $block-vertical-spacing 0;
+    margin: 0 0 0.5rem 0;
     font-size: 0.875rem;
     color: $text-primary-color;
     @include type-style($type-input);
@@ -63,7 +63,7 @@
   p {
     margin-top: 0;
     @include type-style($type-input);
-    opacity: 0.6;
+    opacity: 0.5;
   }
 </style>
 
