@@ -11,6 +11,9 @@
   export let buttons: {
     label: string;
     onClick: (arg0: Event) => void;
+    icon?: {
+      body: string;
+    };
   }[] = [];
 
   function inject(node: HTMLElement) {
@@ -40,8 +43,8 @@
         <slot />
         {#if buttons.length}
           <div class="button-group" class:one={buttons.length === 1}>
-            {#each buttons as { label, onClick }}
-              <Button small on:click={onClick}>{label}</Button>
+            {#each buttons as { label, onClick, icon }}
+              <Button small on:click={onClick} {icon}>{label}</Button>
             {/each}
           </div>
         {/if}
