@@ -100,11 +100,6 @@
     min-height: 100%;
   }
 
-  td {
-    vertical-align: baseline;
-    padding-bottom: 0.5rem;
-  }
-
   .top-bar {
     display: flex;
     justify-content: space-between;
@@ -115,6 +110,9 @@
     padding-right: 0.5rem;
     @include type-style($type-note-meta);
     color: $text-secondary-color;
+  }
+  .content {
+    margin-bottom: 1rem;
   }
 </style>
 
@@ -138,30 +136,26 @@
 
       <SectionHeader>Project comments</SectionHeader>
 
-      <table>
-        {#each project.notes as note}
-          <tr>
-            <td
-              class="note-meta"
-              on:click={() => (showProjectTimestamps = !showProjectTimestamps)}>
-              {#if showProjectTimestamps}
-                {note.timed ? shortDuration(note.timestamp) : '—'}
-              {:else}
-                {note.created.toLocaleDateString(undefined, {
-                  day: 'numeric',
-                  month: 'numeric',
-                  year: '2-digit',
-                })}
-                {note.created.toLocaleString(undefined, {
-                  hour: 'numeric',
-                  minute: '2-digit',
-                })}
-              {/if}
-            </td>
-            <td>{note.contents}</td>
-          </tr>
-        {/each}
-      </table>
+      {#each project.notes as note}
+        <div
+          class="note-meta"
+          on:click={() => (showProjectTimestamps = !showProjectTimestamps)}>
+          {#if showProjectTimestamps}
+            {note.timed ? shortDuration(note.timestamp) : '—'}
+          {:else}
+            {note.created.toLocaleDateString(undefined, {
+              day: 'numeric',
+              month: 'numeric',
+              year: '2-digit',
+            })}
+            {note.created.toLocaleString(undefined, {
+              hour: 'numeric',
+              minute: '2-digit',
+            })}
+          {/if}
+        </div>
+        <div class="content">{note.contents}</div>
+      {/each}
 
       {#if project.active}
         <BottomActionBar
