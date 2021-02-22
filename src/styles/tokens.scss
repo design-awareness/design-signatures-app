@@ -113,10 +113,13 @@ $activity-toggle-neutral-color: getvar(toggle-switch-neutral);
 $tracking-background-color: getvar(tracking-background);
 
 // ACTIVITY SLAT
-$activity-slat-padding-vertical: 1rem;
+$activity-slat-padding-vertical: 0.5rem;
 $activity-slat-spacing: 1rem;
-$activity-slat-separator-width: 1px;
-$activity-slat-separator-color: getvar(activity-slat-separator);
+$activity-slat-accent-width: 6px;
+$activity-slat-accent-spacing: 0.75rem;
+$activity-slat-icon-text-spacing: 1rem;
+$activity-slat-right-padding: 0.5rem;
+$activity-slat-right-radius: 5px;
 
 // MINI TIMELINE
 $mini-timeline-card-background-color: getvar(mini-timeline-card-background);

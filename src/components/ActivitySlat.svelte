@@ -1,20 +1,16 @@
 <script lang="ts">
+  import Icon from "@iconify/svelte/dist/Icon.svelte";
   import ActivityToggle from "./ActivityToggle.svelte";
-  import ActivityToken from "./ActivityToken.svelte";
-  import Button from "./Button.svelte";
-  import ButtonGroup from "./ButtonGroup.svelte";
   import InvisibleButton from "./InvisibleButton.svelte";
-  import Modal from "./Modal.svelte";
 
-  export let activityCode: string;
+  import infoIcon from "@iconify-icons/ic/baseline-info";
+
   export let activityName: string;
   export let activityColor: [string, string];
-  export let activityDescription: string;
   export let index: number;
   export let time: number;
   export let sessionData: readonly [number, number][][];
-
-  let modalOpen = false;
+  export let showInfo: () => void;
 
   let lastToggleTime = 0;
   let lastActivityOn = false;
@@ -64,17 +60,11 @@
   class:active={activityOn}
   style="--activity-color-light: #{activityColor[0]}; --activity-color-dark: #{activityColor[1]}"
 >
-  <InvisibleButton on:click={() => (modalOpen = true)}>
-    <ActivityToken fixWidth code={activityCode} color={activityColor} />
+  <InvisibleButton on:click={showInfo}>
+    <Icon icon={infoIcon} />
   </InvisibleButton>
   <div class="name">{activityName}</div>
   <ActivityToggle {activityName} bind:checked={activityOn} />
-  <Modal bind:visible={modalOpen} title={activityName}>
-    <p>{activityDescription || 'No description available.'}</p>
-    <ButtonGroup>
-      <Button small on:click={() => (modalOpen = false)}>Close</Button>
-    </ButtonGroup>
-  </Modal>
 </div>
 
 <style lang="scss">
@@ -88,8 +78,14 @@
     align-items: center;
     :global(button) {
       width: fit-content;
+      padding: 0.25rem;
+      margin-right: $activity-slat-icon-text-spacing;
     }
-    padding: $activity-slat-padding-vertical 0.5rem;
+    position: relative;
+    border-left: 8px solid var(--activity-color);
+    margin-bottom: $activity-slat-spacing;
+    padding: $activity-slat-padding-vertical $activity-slat-right-padding
+      $activity-slat-padding-vertical $activity-slat-accent-spacing;
 
     --activity-color: var(--activity-color-light);
     @media (prefers-color-scheme: dark) {
@@ -97,21 +93,33 @@
     }
 
     position: relative;
-    &.active::before {
+    &::before {
       content: "";
-      background-color: var(--activity-color);
-      opacity: 0.15;
+      border-radius: 0 $activity-slat-right-radius $activity-slat-right-radius 0;
       position: absolute;
       left: 0;
       top: 0;
       width: 100%;
       height: 100%;
+      background-color: var(--activity-color);
+      opacity: 0;
+      transition: opacity 0.15s ease;
+      pointer-events: none;
+    }
+    &.active::before {
+      content: "";
+      opacity: 0.15;
+    }
+
+    :global(svg) {
+      color: var(--activity-color);
+      font-size: 1.5rem;
+      vertical-align: bottom;
     }
   }
   .name {
     flex: 1;
     width: 0;
-    text-align: center;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;

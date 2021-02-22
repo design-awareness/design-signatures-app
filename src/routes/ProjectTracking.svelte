@@ -5,12 +5,7 @@
   import Link from "../components/Link.svelte";
   import Modal from "../components/Modal.svelte";
   import TrackingTimer from "../components/TrackingTimer.svelte";
-  import {
-    getEntityOrFail,
-    getProject,
-    newNote,
-    newSession,
-  } from "../data/database";
+  import { getProject, newNote, newSession } from "../data/database";
   import { goUpSafe } from "../util/history";
   import useInterval from "../util/interval";
   import createIcon from "@iconify-icons/ic/baseline-create";
@@ -28,6 +23,10 @@
   import CONFIG from "../data/config";
   import { delay } from "../util/delay";
   import SelectField from "../components/SelectField.svelte";
+  import type { Project } from "../data/schema";
+  import ActivityToken from "../components/ActivityToken.svelte";
+  import ColorPicker from "../components/ActivitySet/ColorPicker.svelte";
+
   export let params: { id: string; wild: string };
 
   const TIMER_TICK = 100;
@@ -39,10 +38,16 @@
   let visualizationMode: "timeline" | "bundle" | "none" = "timeline";
   let singleActivityMode = false;
 
+  let errorLoading = false;
   let hasProject = false;
   let thenProject = getProject(params.id);
-  thenProject.then((project) => {
-    if (!project) return;
+  let project: Project;
+  thenProject.then((_project) => {
+    if (!_project) {
+      errorLoading = true;
+      return;
+    }
+    project = _project;
     hasProject = true;
     session.startTime = new Date();
     session.project = project;
@@ -102,6 +107,84 @@
   const openModal = (modalName: string) => () => {
     push(`/projects/${params.id}/track/${modalName}`);
   };
+
+  interface ActivitySpec {
+    name: string;
+    code: string;
+    description: string;
+    color: [string, string];
+    index: number;
+  }
+  let editingActivity = false;
+  let selectedActivity: ActivitySpec, selectedActivityTemp: ActivitySpec;
+  const openInfo = (i: number) => () => {
+    editingActivity = false;
+    const as = project.activitySet;
+    selectedActivity = {
+      name: as.name,
+      code: as.activityCodes[i],
+      description: as.activityDescriptions[i],
+      color: as.colors[i],
+      index: i,
+    };
+    openModal("info")();
+  };
+  const infoButtons = [
+    {
+      label: "Edit",
+      onClick: function () {
+        selectedActivityTemp = { ...selectedActivity };
+        editingActivity = true;
+      },
+    },
+    {
+      label: "Close",
+      onClick: closeModal,
+    },
+  ];
+  const infoButtonsEditing = [
+    {
+      label: "Cancel",
+      onClick: function () {
+        editingActivity = false;
+      },
+    },
+    {
+      label: "Save",
+      onClick: function () {
+        const as = project.activitySet;
+        const i = selectedActivity.index;
+        as.activityDescriptions = setInArray(
+          as.activityDescriptions,
+          i,
+          selectedActivityTemp.description
+        );
+        as.activityNames = setInArray(
+          as.activityNames,
+          i,
+          selectedActivityTemp.name
+        );
+        as.activityCodes = setInArray(
+          as.activityCodes,
+          i,
+          selectedActivityTemp.code.toUpperCase()
+        );
+        as.colors = setInArray(as.colors, i, selectedActivityTemp.color);
+        as.save();
+        project.activitySet = project.activitySet;
+        editingActivity = false;
+      },
+    },
+  ];
+  $: if (params.wild === "info" && !selectedActivity) {
+    closeModal();
+  }
+
+  function setInArray<T>(arr: readonly T[], i: number, v: T): T[] {
+    const newArr = arr.slice();
+    newArr[i] = v;
+    return newArr;
+  }
 
   $: if (params.wild && !bindModalOpen && !goingUp) closeModal();
 
@@ -175,9 +258,7 @@
 <svelte:window on:beforeunload={beforeUnload} />
 <main class="device-frame page">
   <ContentFrame>
-    {#await getEntityOrFail(thenProject)}
-      Project loading…
-    {:then project}
+    {#if hasProject}
       <div class="tracking-frame">
         <div class="top-bar">
           <TrackingTimer
@@ -192,14 +273,13 @@
         </div>
 
         <div class="flexible-toggle-area">
-          {#each project.activitySet.activityCodes as activityCode, i (i)}
+          {#each project.activitySet.activityNames as activityName, i (i)}
             <ActivitySlat
-              {activityCode}
-              activityName={project.activitySet.activityNames[i]}
+              {activityName}
               activityColor={project.activitySet.colors[i]}
-              activityDescription={project.activitySet.activityDescriptions[i]}
               index={i}
               time={subsessionTime + pastSessionTime}
+              showInfo={openInfo(i)}
               bind:sessionData={session.data}
             />
           {/each}
@@ -280,11 +360,57 @@
               disabled
             />Single activity mode</label>
         </Modal>
+      {:else if params.wild === 'info' && selectedActivity}
+        <Modal
+          bind:visible={bindModalOpen}
+          status="Tracking is paused"
+          title={editingActivity ? 'Edit activity' : selectedActivity.name}
+          buttons={editingActivity ? infoButtonsEditing : infoButtons}
+        >
+          {#if editingActivity}
+            {#if !project.activitySet.wellKnown}
+              <InputField
+                label="Activity name"
+                bind:value={selectedActivityTemp.name}
+              />
+              <InputField
+                label="Activity code"
+                bind:value={selectedActivityTemp.code}
+                maxlength="5"
+                style="text-transform: uppercase"
+              />
+            {/if}
+            <ColorPicker bind:color={selectedActivityTemp.color} />
+
+            {#if !project.activitySet.wellKnown}
+              <InputField
+                large
+                label="Description"
+                bind:value={selectedActivityTemp.description}
+              />
+              <p class="hint">
+                Changes will also apply to any other projects using the same
+                Activity Set.
+              </p>
+            {:else}
+              <p class="hint">
+                Activity names, codes, and descriptions cannot be changed for
+                built-in Activity Sets.
+              </p>
+            {/if}
+          {:else}
+            <ActivityToken
+              code={selectedActivity.code}
+              color={selectedActivity.color}
+            />
+            <p>{selectedActivity.description || 'No description provided.'}</p>
+          {/if}
+        </Modal>
       {/if}
-    {:catch}
+    {:else if errorLoading}
       This project does not exist.
       <Link href="/" up>Go home</Link>
-    {/await}
+    {:else}Loading…{/if}
   </ContentFrame>
 </main>
 
@@ -299,6 +425,11 @@
     > :global(div) {
       flex: 1;
     }
+  }
+
+  .hint {
+    @include type-style($type-detail);
+    color: $text-secondary-color;
   }
 
   .top-bar {
