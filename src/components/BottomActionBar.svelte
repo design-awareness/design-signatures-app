@@ -2,8 +2,13 @@
   import Button from "./Button.svelte";
 
   export let disabled = false;
-  export let label;
+  export let label: string;
 </script>
+
+<div class="spacer" role="presentation" />
+<div class="bar" class:disabled>
+  <Button on:click {disabled}>{label}</Button>
+</div>
 
 <style type="scss">
   @import "src/styles/tokens";
@@ -26,8 +31,3 @@
     height: $action-bar-height;
   }
 </style>
-
-<div class="spacer" role="presentation" />
-<div class="bar" class:disabled>
-  <Button on:click {disabled}>{label}</Button>
-</div>

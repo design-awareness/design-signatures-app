@@ -2,7 +2,7 @@
   import Header from "../components/type/Header.svelte";
   import type { ActivitySet } from "../data/schema";
   import { newProject } from "../data/database";
-  import { pop, push, replace } from "svelte-spa-router/Router.svelte";
+  import { replace } from "svelte-spa-router/Router.svelte";
   import BackButton from "../components/BackButton.svelte";
   import ContentFrame from "../components/layout/ContentFrame.svelte";
   import InputField from "../components/InputField.svelte";
@@ -40,14 +40,6 @@
   }
 </script>
 
-<style lang="scss">
-  @import "src/styles/tokens";
-  .page {
-    background-color: $background-color;
-    min-height: 100%;
-  }
-</style>
-
 <main class="device-frame page">
   {#if !newSetOverlay}
     <ContentFrame>
@@ -56,18 +48,29 @@
       <InputField
         label="Project Name"
         placeholder="My cool project"
-        bind:value={name} />
+        bind:value={name}
+      />
       <InputField label="Description" large bind:value={description} />
       <ActivitySetChooser
         bind:activitySet
-        createNew={() => (newSetOverlay = true)} />
+        createNew={() => (newSetOverlay = true)}
+      />
     </ContentFrame>
     <BottomActionBar
       label="Create project"
       on:click={go}
-      disabled={!beginEnabled} />
+      disabled={!beginEnabled}
+    />
   {:else}
     <!-- newSetOverlay -->
     <BuilderFrame bind:visible={newSetOverlay} bind:activitySet />
   {/if}
 </main>
+
+<style lang="scss">
+  @import "src/styles/tokens";
+  .page {
+    background-color: $background-color;
+    min-height: 100%;
+  }
+</style>

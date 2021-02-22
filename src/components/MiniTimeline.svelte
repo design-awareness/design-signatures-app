@@ -81,7 +81,7 @@
     }
   }
 
-  let lastMode;
+  let lastMode: "timeline" | "bundle" | "none";
   $: if (timelineMode !== lastMode) {
     lastMode = timelineMode;
     calc();

@@ -99,7 +99,7 @@
     goingUp = false;
   }
 
-  const openModal = (modalName) => () => {
+  const openModal = (modalName: string) => () => {
     push(`/projects/${params.id}/track/${modalName}`);
   };
 

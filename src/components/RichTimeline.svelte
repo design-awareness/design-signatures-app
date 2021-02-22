@@ -4,7 +4,6 @@
   import ButtonGroup from "./ButtonGroup.svelte";
   import iconZoomOut from "@iconify-icons/ic/baseline-zoom-out";
   import iconZoomIn from "@iconify-icons/ic/baseline-zoom-in";
-  import type { text } from "svelte/internal";
 
   export let project: Project;
 

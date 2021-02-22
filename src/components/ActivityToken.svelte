@@ -1,6 +1,5 @@
 <script lang="ts">
   import type { ActivitySet } from "../data/schema";
-  import ActivitySetEditor from "./dev/DBEditor/ActivitySetEditor.svelte";
 
   export let forEach: ActivitySet = null;
   let activitySet: ActivitySet;

@@ -10,7 +10,7 @@
 
   export let displayMode: "project" | "session" | "none";
 
-  let time;
+  let time: { hours: number; minutes: number; seconds: number };
   $: time = splitDuration(
     displayMode === "session" ? sessionTime : sessionTime + projectTime
   );

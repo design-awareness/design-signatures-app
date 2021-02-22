@@ -1,6 +1,5 @@
 <script lang="ts">
   import ContentFrame from "../components/layout/ContentFrame.svelte";
-  import Link from "../components/Link.svelte";
   import ProjectCard from "../components/ProjectCard.svelte";
   import BackButton from "../components/BackButton.svelte";
   import Header from "../components/type/Header.svelte";
@@ -9,9 +8,35 @@
   let getProjects = () => getAll("Project");
 </script>
 
+<main class="device-frame page">
+  <ContentFrame>
+    <BackButton href="/" />
+    <Header>View projects</Header>
+    <ul>
+      {#await getProjects()}
+        <!-- loading placeholder? -->
+        {#each [1, 2, 3, 4] as _}
+          <li>
+            <ProjectCard loadingPlaceholder />
+          </li>
+        {/each}
+      {:then projects}
+        {#each projects as id}
+          <li>
+            <a href={'#/projects/' + id}>
+              <ProjectCard {id} />
+            </a>
+          </li>
+        {/each}
+      {/await}
+    </ul>
+  </ContentFrame>
+</main>
+
 <style lang="scss">
+  @import "src/styles/tokens";
   .page {
-    background-color: #e5e5e5;
+    background-color: $background-color;
     min-height: 100%;
   }
   ul {
@@ -39,28 +64,3 @@
     }
   }
 </style>
-
-<main class="device-frame page">
-  <ContentFrame>
-    <BackButton href="/" />
-    <Header>View projects</Header>
-    <ul>
-      {#await getProjects()}
-        <!-- loading placeholder? -->
-        {#each [1, 2, 3, 4] as i}
-          <li>
-            <ProjectCard loadingPlaceholder />
-          </li>
-        {/each}
-      {:then projects}
-        {#each projects as id}
-          <li>
-            <a href={'#/projects/' + id}>
-              <ProjectCard {id} />
-            </a>
-          </li>
-        {/each}
-      {/await}
-    </ul>
-  </ContentFrame>
-</main>

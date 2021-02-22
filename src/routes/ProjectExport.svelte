@@ -13,7 +13,6 @@
     toStateTimeline,
   } from "../data/dataTransformers";
   import type { Project, Session } from "../data/schema";
-  import { knownCodes } from "../util/activityCode";
   import download from "../util/download";
 
   export let params: { id: string };

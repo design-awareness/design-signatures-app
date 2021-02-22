@@ -14,7 +14,7 @@
   function blur() {
     dispatch("set", this.value);
   }
-  const blurS = (i) =>
+  const blurS = (i: number) =>
     function () {
       value[i] = this.value;
       dispatch("set", value);

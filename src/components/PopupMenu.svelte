@@ -65,7 +65,6 @@
   }
 
   function onButtonKeydown(event: KeyboardEvent) {
-    let target = event.currentTarget;
     let key = event.key;
     let flag = false;
 
@@ -99,7 +98,7 @@
     }
   }
 
-  function onButtonClick(event: MouseEvent) {
+  function onButtonClick() {
     if (opened) {
       close();
     } else {
@@ -121,7 +120,6 @@
   const onItemClick = (i: number) => (_: MouseEvent) => dispatch(i);
 
   const onItemKeydown = (i: number) => (event: KeyboardEvent) => {
-    let target = event.currentTarget;
     let key = event.key;
     let flag = false;
 
@@ -183,8 +181,7 @@
     }
   };
 
-  const onItemMouseover = (i: number) => (event: MouseEvent) =>
-    refs[i]?.focus();
+  const onItemMouseover = (i: number) => () => refs[i]?.focus();
 
   const refs: HTMLElement[] = descriptor.map(() => null);
   function setRef(el: HTMLElement, i: number) {
@@ -193,16 +190,6 @@
   let button: HTMLButtonElement;
   function setButton(el: HTMLButtonElement) {
     button = el;
-  }
-
-  function inject(node: HTMLElement) {
-    document.body.appendChild(node);
-
-    return {
-      destroy() {
-        node.remove();
-      },
-    };
   }
 </script>
 

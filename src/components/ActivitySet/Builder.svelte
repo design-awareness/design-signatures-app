@@ -79,7 +79,9 @@
   }
 
   let dragDisabled = true;
-  function handleDragConsider(e) {
+  function handleDragConsider(e: {
+    detail: { items: any; info: { source: any; trigger: any } };
+  }) {
     const {
       items: newItems,
       info: { source, trigger },
@@ -89,7 +91,9 @@
       dragDisabled = true;
     }
   }
-  function handleDragFinalize(e) {
+  function handleDragFinalize(e: {
+    detail: { items: any; info: { source: any } };
+  }) {
     const {
       items: newItems,
       info: { source },

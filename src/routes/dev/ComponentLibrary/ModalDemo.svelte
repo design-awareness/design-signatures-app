@@ -1,5 +1,4 @@
 <script lang="ts">
-  import ActivityToggle from "../../../components/ActivityToggle.svelte";
   import BackButton from "../../../components/BackButton.svelte";
   import Button from "../../../components/Button.svelte";
   import InvisibleButton from "../../../components/InvisibleButton.svelte";
