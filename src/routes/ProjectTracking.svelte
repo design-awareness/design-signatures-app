@@ -121,7 +121,7 @@
     editingActivity = false;
     const as = project.activitySet;
     selectedActivity = {
-      name: as.name,
+      name: as.activityNames[i],
       code: as.activityCodes[i],
       description: as.activityDescriptions[i],
       color: as.colors[i],
