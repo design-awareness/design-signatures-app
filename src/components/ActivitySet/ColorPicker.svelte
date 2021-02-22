@@ -3,10 +3,31 @@
   import check from "@iconify-icons/ic/baseline-check";
   import colorPresets from "../../data/colorPresets";
 
-  export let color: string;
+  export let color: [string, string];
 
   let idPrefix = Math.random().toString(36).substr(2);
 </script>
+
+<div class="label">Color</div>
+<div class="color-group">
+  {#each colorPresets as colorPreset, id}
+    <input
+      type="radio"
+      id="{idPrefix}{id}"
+      bind:group={color}
+      value={colorPreset}
+    />
+    <label
+      for="{idPrefix}{id}"
+      class="swatch"
+      style="--swatch-light: #{colorPreset[0]}; --swatch-dark: #{colorPreset[1]}"
+    >
+      {#if colorPreset[0] === color[0] && colorPreset[1] === color[1]}
+        <Icon icon={check} />
+      {/if}
+    </label>
+  {/each}
+</div>
 
 <style lang="scss">
   @import "src/styles/tokens";
@@ -34,29 +55,19 @@
       justify-content: center;
       font-size: $color-picker-swatch-size -
         (2 * $color-picker-swatch-check-padding);
-      color: rgba(white, $color-picker-swatch-check-opacity);
+      color: $text-opposing-color;
       &:not(:nth-child(10n)) {
         margin: 0 $color-picker-spacing $color-picker-spacing 0;
+      }
+
+      :global(svg) {
+        opacity: $color-picker-swatch-check-opacity;
+      }
+
+      background-color: getvar(swatch-light);
+      @media (prefers-color-scheme: dark) {
+        background-color: getvar(swatch-dark);
       }
     }
   }
 </style>
-
-<div class="label">Color</div>
-<div class="color-group">
-  {#each colorPresets as colorPreset, id}
-    <input
-      type="radio"
-      id="{idPrefix}{id}"
-      bind:group={color}
-      value={colorPreset} />
-    <label
-      for="{idPrefix}{id}"
-      class="swatch"
-      style="background-color: #{colorPreset}">
-      {#if colorPreset === color}
-        <Icon icon={check} />
-      {/if}
-    </label>
-  {/each}
-</div>

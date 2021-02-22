@@ -1,6 +1,7 @@
 import * as Schema from "./schema";
 import defer from "../util/defer";
-import { upgradeDatabase, initializeConfiguration } from "./upgrade";
+import { upgradeDatabase, initializeConfiguration } from "./upgradeDatabase";
+import { createTrigger } from "../util/trigger";
 
 const DB_NAME = "design-awareness-local-store";
 const DEBUG_DELAY = 0;
@@ -28,6 +29,9 @@ let dbOpenAttempted = false;
 export function isOpen() {
   return dbOpen;
 }
+
+const [_onUpgradeNeeded, requestUpgrade] = defer<number>();
+export const onUpgradeNeeded = _onUpgradeNeeded;
 
 type ObjectStoreName = Schema.DBModelName | "_Config";
 
@@ -58,6 +62,9 @@ function getDb(onblocked?: (evt: any) => void) {
         } else {
           console.log("Database needs upgrading: ");
           upgradeDatabase(event.oldVersion, db);
+          dbPromise.then(() => {
+            requestUpgrade(event.oldVersion);
+          });
         }
         initializeConfiguration(event.oldVersion, rawDatabaseOperations);
       };

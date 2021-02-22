@@ -29,20 +29,13 @@
   }));
 </script>
 
-<style lang="scss">
-  .timeline,
-  svg {
-    width: 100%;
-    height: 100%;
-  }
-</style>
-
 <div class="timeline">
   {#if project.sessions?.length}
     <svg
       preserveAspectRatio="none"
       viewBox="{Math.max(0, duration - MAX_DURATION) / 1000} 0 {duration / 1000} {colors.length}"
-      xmlns="http://www.w3.org/2000/svg">
+      xmlns="http://www.w3.org/2000/svg"
+    >
       {#each renderData as { data, priorDuration }}
         {#each data as points, i}
           {#each points as [start, end]}
@@ -51,10 +44,25 @@
               width={(end - start) / 1000}
               y={i}
               height={1}
-              fill="#{colors[i]}" />
+              style="--color-light: #{colors[i][0]}; --color-dark: #{colors[i][1]}"
+            />
           {/each}
         {/each}
       {/each}
     </svg>
   {/if}
 </div>
+
+<style lang="scss">
+  .timeline,
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+  rect {
+    fill: var(--color-light);
+    @media (prefers-color-scheme: dark) {
+      fill: var(--color-dark);
+    }
+  }
+</style>

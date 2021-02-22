@@ -15,10 +15,11 @@
   import Router from "svelte-spa-router/Router.svelte";
   import Settings from "./routes/Settings.svelte";
   import Update from "./routes/Update.svelte";
+  import { createPresets } from "./data/activitySetPresets";
+  import { awaitObjectUpgradeIfNeeded } from "./data/upgradeObjects";
 
-  // create preset activity sets!
-  import { presetReady } from "./data/activitySetPresets";
-  presetReady; // noop, but keeps the linter happy :)
+  awaitObjectUpgradeIfNeeded();
+  createPresets(); // noop, but keeps the linter happy :)
 
   const routes: object = {
     "/": Home, // Home
@@ -47,6 +48,8 @@
   };
 </script>
 
+<Router {routes} />
+
 <style lang="scss">
   @import "styles/colors";
   @import "styles/tokens";
@@ -65,5 +68,3 @@
     color: $text-primary-color;
   }
 </style>
-
-<Router {routes} />

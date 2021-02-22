@@ -25,7 +25,14 @@ export const presetActivitySets = [
         "compare and contrast possible solutions",
         "produce or construct a physical device/product/system",
       ],
-      colors: ["AE1E60", "DE1B54", "EF403B", "DCD65B", "00B5AC", "18445F"],
+      colors: [
+        ["AE1E60", "D93FC0"],
+        ["DE1B54", "FF4D70"],
+        ["F06E0A", "FF8324"],
+        ["B3820F", "EFC31A"],
+        ["0C8375", "14B8A5"],
+        ["401073", "A93BF1"],
+      ],
     },
   ],
   [
@@ -55,14 +62,14 @@ export const presetActivitySets = [
         "communicate the design to others",
       ],
       colors: [
-        "AE1E60",
-        "DE1B54",
-        "EF403B",
-        "DCD65B",
-        "BFE6EC",
-        "00B5AC",
-        "018F77",
-        "24599A",
+        ["AE1E60", "D93FC0"],
+        ["DE1B54", "FF4D70"],
+        ["F06E0A", "FF8324"],
+        ["B3820F", "EFC31A"],
+        ["935FA7", "999999"],
+        ["0C8375", "14B8A5"],
+        ["567321", "87BB25"],
+        ["3761A4", "3884FF"],
       ],
     },
   ],
@@ -109,16 +116,16 @@ export const presetActivitySets = [
         "produce or construct a physical device/product/system",
       ],
       colors: [
-        "530D17",
-        "AE1E60",
-        "DE1B54",
-        "EF403B",
-        "DCD65B",
-        "BFE6EC",
-        "00B5AC",
-        "018F77",
-        "24599A",
-        "18445F",
+        ["530D17", "FF9EA5"],
+        ["AE1E60", "D93FC0"],
+        ["DE1B54", "FF4D70"],
+        ["F06E0A", "FF8324"],
+        ["B3820F", "EFC31A"],
+        ["935FA7", "999999"],
+        ["0C8375", "14B8A5"],
+        ["567321", "87BB25"],
+        ["3761A4", "3884FF"],
+        ["401073", "A93BF1"],
       ],
     },
   ],
@@ -133,7 +140,10 @@ export const presetActivitySets = [
         "Conceptualizing and creatively negotiating proposed concepts/ Inductive, creative and non-judgemental idea generating",
         "Narrowing ideas with reductive, deliberative, analytical decision making during assesment and implementation",
       ],
-      colors: ["EF403B", "530D17"],
+      colors: [
+        ["F06E0A", "FF8324"],
+        ["530D17", "FF9EA5"],
+      ],
     },
   ],
   [
@@ -147,7 +157,10 @@ export const presetActivitySets = [
         "Working on understanding and/or defining the design challenge ",
         "Working on ideas to tackle or solve the design challenge/ problem",
       ],
-      colors: ["00B5AC", "18445F"],
+      colors: [
+        ["0C8375", "14B8A5"],
+        ["401073", "A93BF1"],
+      ],
     },
   ],
 ] as [
@@ -158,24 +171,26 @@ export const presetActivitySets = [
     activityNames: string[];
     activityCodes: string[];
     activityDescriptions: string[];
-    colors: string[];
+    colors: [string, string][];
   }
 ][];
 
-export let presetReady = Promise.all(
-  presetActivitySets.map(async ([id, data]) => {
-    const existingSet = await getActivitySet(
-      ACTIVITY_SET_WELL_KNOWN_PREFIX + id
-    );
-    if (existingSet === null) {
-      const activitySet = newActivitySet();
-      for (let [prop, val] of Object.entries(data)) {
-        activitySet[prop] = val;
-      }
-      activitySet.wellKnown = true;
-      await (activitySet.save as (id: string) => Promise<void>)(
+export function createPresets(): Promise<void[]> {
+  return Promise.all(
+    presetActivitySets.map(async ([id, data]) => {
+      const existingSet = await getActivitySet(
         ACTIVITY_SET_WELL_KNOWN_PREFIX + id
       );
-    }
-  })
-);
+      if (existingSet === null) {
+        const activitySet = newActivitySet();
+        for (let [prop, val] of Object.entries(data)) {
+          activitySet[prop] = val;
+        }
+        activitySet.wellKnown = true;
+        await (activitySet.save as (id: string) => Promise<void>)(
+          ACTIVITY_SET_WELL_KNOWN_PREFIX + id
+        );
+      }
+    })
+  );
+}

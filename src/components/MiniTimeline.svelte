@@ -29,7 +29,7 @@
 
   let duration: number;
   let timeline: readonly [[number, number], number[]][] = [];
-  let colors: readonly string[] = activitySet.colors;
+  let colors: readonly [string, string][] = activitySet.colors;
 
   // type Rect = {
   //   x: number;
@@ -41,7 +41,7 @@
   // let rects: Rect[] = [];
   let activityDurations: {
     duration: number;
-    color: string;
+    color: [string, string];
     previousDuration: number;
   }[] = [];
   let totalDuration = 0;
@@ -124,7 +124,7 @@
               width={Math.max(0, end - start)}
               y={i / active.length}
               height={1 / active.length}
-              fill="#{colors[actId]}"
+              style="--color-light: #{colors[actId][0]}; --color-dark: #{colors[actId][1]}"
             />
           {/each}
         {/each}
@@ -135,7 +135,7 @@
             y={0}
             width={duration}
             height={1}
-            fill="#{color}"
+            style="--color-light: #{color[0]}; --color-dark: #{color[1]}"
           />
         {/each}
       {/if}
@@ -159,5 +159,12 @@
     height: $mini-timeline-height;
     background-color: $mini-timeline-inactive-color;
     vertical-align: bottom;
+  }
+
+  rect {
+    fill: var(--color-light);
+    @media (prefers-color-scheme: dark) {
+      fill: var(--color-dark);
+    }
   }
 </style>

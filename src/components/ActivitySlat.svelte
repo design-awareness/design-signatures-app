@@ -8,7 +8,7 @@
 
   export let activityCode: string;
   export let activityName: string;
-  export let activityColor: string;
+  export let activityColor: [string, string];
   export let activityDescription: string;
   export let index: number;
   export let time: number;
@@ -59,16 +59,15 @@
   }
 </script>
 
-<div class="slat">
+<div
+  class="slat"
+  style="--activity-color-light: #{activityColor[0]}; --activity-color-dark: #{activityColor[1]}"
+>
   <InvisibleButton on:click={() => (modalOpen = true)}>
     <ActivityToken fixWidth code={activityCode} color={activityColor} />
   </InvisibleButton>
   <div class="name">{activityName}</div>
-  <ActivityToggle
-    color={activityColor}
-    {activityName}
-    bind:checked={activityOn}
-  />
+  <ActivityToggle {activityName} bind:checked={activityOn} />
   <Modal bind:visible={modalOpen} title={activityName}>
     <p>{activityDescription || 'No description available.'}</p>
     <ButtonGroup>
@@ -89,6 +88,11 @@
       width: fit-content;
     }
     padding: $activity-slat-padding-vertical 0;
+
+    --activity-color: var(--activity-color-light);
+    @media (prefers-color-scheme: dark) {
+      --activity-color: var(--activity-color-dark);
+    }
   }
   .name {
     flex: 1;

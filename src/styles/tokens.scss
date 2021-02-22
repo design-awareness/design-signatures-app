@@ -78,12 +78,6 @@ $token-vertical-spacing: 0;
 $token-horizontal-spacing: 1rem;
 $token-border-radius: 40px;
 $token-fixed-width: 3rem;
-$token-text-color-light: white;
-$token-text-color-dark: black;
-// remove once token is rewritten to calculate correct color
-// or, remove options if we ensure all colors are legible
-// with one color of text
-$token-text-color: $token-text-color-light;
 
 // MODAL
 $modal-scrim-opacity: 0.35;
