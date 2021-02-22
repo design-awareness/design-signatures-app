@@ -10,8 +10,9 @@
 </script>
 
 <style lang="scss">
+    @import "src/styles/tokens";
   .page {
-    background-color: #e5e5e5;
+    background-color: $background-color;
     min-height: 100%;
   }
   ul {
