@@ -7,6 +7,15 @@
   export let empty = false;
 </script>
 
+<div class="item" class:selected>
+  {#if empty}
+    <p>Start from scratch</p>
+  {:else}
+    <p>{activitySet.name}</p>
+    <ActivityToken forEach={activitySet} />
+  {/if}
+</div>
+
 <style lang="scss">
   @import "src/styles/tokens";
 
@@ -19,14 +28,6 @@
   }
   p {
     margin: 0;
+    color: $text-primary-color;
   }
 </style>
-
-<div class="item" class:selected>
-  {#if empty}
-    <p>Start from scratch</p>
-  {:else}
-    <p>{activitySet.name}</p>
-    <ActivityToken forEach={activitySet} />
-  {/if}
-</div>
