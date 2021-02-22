@@ -22,6 +22,7 @@ $neutral-90: #000000;
       text-primary: $neutral-90,
       text-secondary: $neutral-60,
       text-ghost: $neutral-40,
+      text-opposing: $neutral-00,
       project-card-background: $neutral-00,
       loading-placeholder: $neutral-50,
       button-background: $neutral-00,
@@ -41,7 +42,7 @@ $neutral-90: #000000;
       mini-timeline-inactive: $neutral-20,
       timeline-background: $neutral-00,
       timeline-gridline: $neutral-20,
-      toggle-switch-neutral: $neutral-90,
+      toggle-switch-neutral: $neutral-50,
     )
   );
 }
@@ -56,6 +57,7 @@ $neutral-90: #000000;
       text-primary: $neutral-10,
       text-secondary: $neutral-30,
       text-ghost: $neutral-50,
+      text-opposing: $neutral-90,
       project-card-background: $neutral-60,
       loading-placeholder: $neutral-30,
       button-background: $neutral-00,
