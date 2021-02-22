@@ -61,6 +61,7 @@
 
 <div
   class="slat"
+  class:active={activityOn}
   style="--activity-color-light: #{activityColor[0]}; --activity-color-dark: #{activityColor[1]}"
 >
   <InvisibleButton on:click={() => (modalOpen = true)}>
@@ -83,15 +84,28 @@
   .slat {
     display: flex;
     width: 100%;
+    box-sizing: border-box;
     align-items: center;
     :global(button) {
       width: fit-content;
     }
-    padding: $activity-slat-padding-vertical 0;
+    padding: $activity-slat-padding-vertical 0.5rem;
 
     --activity-color: var(--activity-color-light);
     @media (prefers-color-scheme: dark) {
       --activity-color: var(--activity-color-dark);
+    }
+
+    position: relative;
+    &.active::before {
+      content: "";
+      background-color: var(--activity-color);
+      opacity: 0.15;
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
     }
   }
   .name {
