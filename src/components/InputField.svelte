@@ -2,11 +2,26 @@
   export let value: string;
   export let label: string;
   export let placeholder = "";
-  export let helptext: string;
+  export let helptext: string = null;
 
   export let large = false;
   export let xlarge = false;
 </script>
+
+<!-- svelte-ignore a11y-label-has-associated-control -->
+<label>
+  {#if label}
+    <div>{label}</div>
+  {/if}
+  {#if large}
+    <textarea bind:value class:xlarge {placeholder} />
+  {:else}
+    <input type="text" bind:value {placeholder} on:input {...$$props} />
+  {/if}
+  {#if helptext}
+    <p>{helptext}</p>
+  {/if}
+</label>
 
 <style lang="scss">
   @import "src/styles/tokens";
@@ -52,10 +67,6 @@
           )}
       );
     }
-    .helptext {
-      font-size: 12;
-      font-weight: 300;
-    }
   }
   label:first-child > div {
     margin-top: 0;
@@ -66,18 +77,3 @@
     opacity: 0.5;
   }
 </style>
-
-<!-- svelte-ignore a11y-label-has-associated-control -->
-<label>
-  {#if label}
-    <div>{label}</div>
-  {/if}
-  {#if large}
-    <textarea bind:value class:xlarge {placeholder} />
-  {:else}
-    <input type="text" bind:value {placeholder} on:input {...$$props} />
-  {/if}
-  {#if helptext}
-    <p>{helptext}</p>
-  {/if}
-</label>

@@ -59,6 +59,24 @@
   }
 </script>
 
+<div class="slat">
+  <InvisibleButton on:click={() => (modalOpen = true)}>
+    <ActivityToken fixWidth code={activityCode} color={activityColor} />
+  </InvisibleButton>
+  <div class="name">{activityName}</div>
+  <ActivityToggle
+    color={activityColor}
+    {activityName}
+    bind:checked={activityOn}
+  />
+  <Modal bind:visible={modalOpen} title={activityName}>
+    <p>{activityDescription || 'No description available.'}</p>
+    <ButtonGroup>
+      <Button small on:click={() => (modalOpen = false)}>Close</Button>
+    </ButtonGroup>
+  </Modal>
+</div>
+
 <style lang="scss">
   @import "src/styles/tokens";
   @import "src/styles/type";
@@ -71,13 +89,6 @@
       width: fit-content;
     }
     padding: $activity-slat-padding-vertical 0;
-    border-bottom: $activity-slat-separator-width solid
-      $activity-slat-separator-color;
-
-    &:first-child {
-      border-top: $activity-slat-separator-width solid
-        $activity-slat-separator-color;
-    }
   }
   .name {
     flex: 1;
@@ -88,20 +99,3 @@
     white-space: nowrap;
   }
 </style>
-
-<div class="slat">
-  <InvisibleButton on:click={() => (modalOpen = true)}>
-    <ActivityToken fixWidth code={activityCode} color={activityColor} />
-  </InvisibleButton>
-  <div class="name">{activityName}</div>
-  <ActivityToggle
-    color={activityColor}
-    {activityName}
-    bind:checked={activityOn} />
-  <Modal bind:visible={modalOpen} title={activityName}>
-    <p>{activityDescription || 'No description available.'}</p>
-    <ButtonGroup>
-      <Button small on:click={() => (modalOpen = false)}>Close</Button>
-    </ButtonGroup>
-  </Modal>
-</div>
