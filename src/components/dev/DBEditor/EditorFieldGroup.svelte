@@ -11,6 +11,8 @@
   export let value: readonly any[] = [];
   export let setView: TriggerInvoker<[DBModelName, string]> = () => {};
 
+  export let isSpecialColor = false;
+
   $: if (!Array.isArray(value)) value = [];
 
   function getDefault() {
@@ -53,6 +55,36 @@
   }
 </script>
 
+<div class="field">
+  <p>{name}</p>
+  <div class="group">
+    {#each value as entry, i}
+      {#if type.hasOwnProperty('primitive')}
+        <EditorField
+          type={type['primitive']}
+          value={entry}
+          on:set={set(i)}
+          on:remove={remove(i)}
+          hasRemove={true}
+          name={'' + i}
+          {isSpecialColor}
+        />
+      {:else}
+        <EditorRefField
+          type={type['entity']}
+          value={entry}
+          on:set={set(i)}
+          on:remove={remove(i)}
+          hasRemove={true}
+          name={'' + i}
+          {setView}
+        />
+      {/if}
+    {/each}
+    <button on:click={addOne}>+</button>
+  </div>
+</div>
+
 <style lang="scss">
   .field {
     display: table-row;
@@ -67,30 +99,3 @@
     margin-bottom: 0.25rem;
   }
 </style>
-
-<div class="field">
-  <p>{name}</p>
-  <div class="group">
-    {#each value as entry, i}
-      {#if type.hasOwnProperty('primitive')}
-        <EditorField
-          type={type['primitive']}
-          value={entry}
-          on:set={set(i)}
-          on:remove={remove(i)}
-          hasRemove={true}
-          name={'' + i} />
-      {:else}
-        <EditorRefField
-          type={type['entity']}
-          value={entry}
-          on:set={set(i)}
-          on:remove={remove(i)}
-          hasRemove={true}
-          name={'' + i}
-          {setView} />
-      {/if}
-    {/each}
-    <button on:click={addOne}>+</button>
-  </div>
-</div>

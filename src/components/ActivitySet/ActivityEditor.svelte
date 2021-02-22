@@ -14,7 +14,7 @@
     name: string;
     code: string;
     description: string;
-    color: string;
+    color: [string, string];
   };
 
   export let activity: Activity;
@@ -46,6 +46,45 @@
     }
   }
 </script>
+
+<div class="item">
+  <div
+    class="drag-handle"
+    tabindex={dragDisabled ? 0 : -1}
+    aria-label="drag-handle"
+    style={dragDisabled ? 'cursor: grab' : 'cursor: grabbing'}
+    on:mousedown={startDrag}
+    on:touchstart={startDrag}
+    on:keydown={handleKeyDown}
+  >
+    <Icon icon={dragIcon} />
+  </div>
+  <input bind:value={activity.name} on:input={setCode} />
+  <InvisibleButton on:click={() => (editorVisible = true)}>
+    <ActivityToken fixWidth color={activity.color} code={activity.code} />
+    <Icon icon={down} />
+  </InvisibleButton>
+  <InvisibleButton on:click={remove}>
+    <div class="remove">
+      <Icon icon={deleteIcon} />
+    </div>
+  </InvisibleButton>
+
+  <Modal
+    bind:visible={editorVisible}
+    title={activity.name}
+    buttons={[{ label: 'Done', onClick: () => (editorVisible = false) }]}
+  >
+    <InputField
+      label="Activity code"
+      bind:value={activity.code}
+      maxlength="5"
+      style="text-transform: uppercase"
+    />
+    <ColorPicker bind:color={activity.color} />
+    <InputField large label="Description" bind:value={activity.description} />
+  </Modal>
+</div>
 
 <style lang="scss">
   @import "src/styles/tokens";
@@ -94,39 +133,3 @@
     }
   }
 </style>
-
-<div class="item">
-  <div
-    class="drag-handle"
-    tabindex={dragDisabled ? 0 : -1}
-    aria-label="drag-handle"
-    style={dragDisabled ? 'cursor: grab' : 'cursor: grabbing'}
-    on:mousedown={startDrag}
-    on:touchstart={startDrag}
-    on:keydown={handleKeyDown}>
-    <Icon icon={dragIcon} />
-  </div>
-  <input bind:value={activity.name} on:input={setCode} />
-  <InvisibleButton on:click={() => (editorVisible = true)}>
-    <ActivityToken fixWidth color={activity.color} code={activity.code} />
-    <Icon icon={down} />
-  </InvisibleButton>
-  <InvisibleButton on:click={remove}>
-    <div class="remove">
-      <Icon icon={deleteIcon} />
-    </div>
-  </InvisibleButton>
-
-  <Modal
-    bind:visible={editorVisible}
-    title={activity.name}
-    buttons={[{ label: 'Done', onClick: () => (editorVisible = false) }]}>
-    <InputField
-      label="Activity code"
-      bind:value={activity.code}
-      maxlength="5"
-      style="text-transform: uppercase" />
-    <ColorPicker bind:color={activity.color} />
-    <InputField large label="Description" bind:value={activity.description} />
-  </Modal>
-</div>

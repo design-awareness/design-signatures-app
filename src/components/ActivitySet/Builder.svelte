@@ -17,7 +17,7 @@
     name: string;
     code: string;
     description: string;
-    color: string;
+    color: [string, string];
     id: number;
   };
 
@@ -102,6 +102,41 @@
   }
 </script>
 
+<Header>Create a Design Activity Set</Header>
+{#if !saving}
+  <InputField
+    label="Title"
+    helptext="This will name the activity set you create below and will allow you to identify and use it on other projects."
+    bind:value={name}
+  />
+  <div class="label">Activities</div>
+  <ul
+    use:dndzone={{ items: activities, dragDisabled, dropTargetStyle: {} }}
+    on:consider={handleDragConsider}
+    on:finalize={handleDragFinalize}
+  >
+    {#each activities as activity, i (activity.id)}
+      <li>
+        <ActivityEditor
+          bind:activity
+          bind:dragDisabled
+          remove={() => remove(i)}
+        />
+      </li>
+    {/each}
+  </ul>
+
+  {#if activities.length < 10}
+    <div class="add-button">
+      <Button small on:click={addItem} icon={add}>Add activity</Button>
+    </div>
+  {/if}
+{:else}
+  <p>Saving…</p>
+{/if}
+
+<BottomActionBar label="Save and use" disabled={!ok} on:click={build} />
+
 <style lang="scss">
   @import "src/styles/tokens";
   @import "src/styles/type";
@@ -128,35 +163,3 @@
     margin: $input-spacing-inner 0;
   }
 </style>
-
-<Header>Create a Design Activity Set</Header>
-{#if !saving}
-  <InputField
-    label="Title"
-    helptext="This will name the activity set you create below and will allow you to identify and use it on other projects."
-    bind:value={name} />
-  <div class="label">Activities</div>
-  <ul
-    use:dndzone={{ items: activities, dragDisabled, dropTargetStyle: {} }}
-    on:consider={handleDragConsider}
-    on:finalize={handleDragFinalize}>
-    {#each activities as activity, i (activity.id)}
-      <li>
-        <ActivityEditor
-          bind:activity
-          bind:dragDisabled
-          remove={() => remove(i)} />
-      </li>
-    {/each}
-  </ul>
-
-  {#if activities.length < 10}
-    <div class="add-button">
-      <Button small on:click={addItem} icon={add}>Add activity</Button>
-    </div>
-  {/if}
-{:else}
-  <p>Saving…</p>
-{/if}
-
-<BottomActionBar label="Save and use" disabled={!ok} on:click={build} />
