@@ -9,6 +9,7 @@ $neutral-30: #929292;
 $neutral-40: #515151;
 $neutral-50: #4f4f4f;
 $neutral-60: #313131;
+$neutral-70: #282828;
 $neutral-80: #212121;
 $neutral-90: #000000;
 
@@ -27,7 +28,7 @@ $neutral-90: #000000;
       loading-placeholder: $neutral-50,
       button-background: $neutral-00,
       button-disabled: $neutral-60,
-      back-button: $neutral-20,
+      back-button: $neutral-40,
       button-border: $neutral-20,
       popup-background: $neutral-00,
       popup-separator: $neutral-20,
@@ -37,7 +38,6 @@ $neutral-90: #000000;
       action-bar-background: #f1c258,
       action-bar-background_disabled: #f1c258,
       tracking-background: $neutral-00,
-      activity-slat-separator: $neutral-20,
       mini-timeline-card-background: $neutral-00,
       mini-timeline-inactive: $neutral-20,
       timeline-background: $neutral-00,
@@ -51,28 +51,27 @@ $neutral-90: #000000;
   @include setvars(
     (
       background: $neutral-80,
-      modal-background: $neutral-60,
-      modal-status-background: $neutral-50,
-      modal-status-text: $neutral-10,
-      text-primary: $neutral-10,
-      text-secondary: $neutral-30,
-      text-ghost: $neutral-50,
+      modal-background: $neutral-70,
+      modal-status-background: $neutral-30,
+      modal-status-text: $neutral-90,
+      text-primary: $neutral-00,
+      text-secondary: $neutral-20,
+      text-ghost: $neutral-40,
       text-opposing: $neutral-90,
       project-card-background: $neutral-60,
       loading-placeholder: $neutral-30,
-      button-background: $neutral-00,
-      button-disabled: $neutral-20,
-      back-button: $neutral-40,
-      button-border: $neutral-40,
-      popup-background: $neutral-00,
-      popup-separator: $neutral-20,
-      input-background: $neutral-00,
-      input-border: $neutral-20,
+      button-background: $neutral-60,
+      button-disabled: $neutral-40,
+      back-button: $neutral-30,
+      button-border: $neutral-30,
+      popup-background: $neutral-70,
+      popup-separator: $neutral-50,
+      input-background: $neutral-60,
+      input-border: $neutral-50,
       active-selection-background: #fbefd4,
       action-bar-background: #f1c258,
       action-bar-background_disabled: #f1c258,
       tracking-background: $neutral-80,
-      activity-slat-separator: $neutral-20,
       mini-timeline-card-background: $neutral-60,
       mini-timeline-inactive: $neutral-20,
       timeline-background: $neutral-60,

@@ -87,7 +87,7 @@ $token-text-color: $token-text-color-light;
 
 // MODAL
 $modal-scrim-opacity: 0.35;
-$modal-background-color: white;
+$modal-background-color: getvar(modal-background);
 $modal-status-background: getvar(modal-status-background);
 $modal-status-text: getvar(modal-status-text);
 $modal-padding-vertical: 1.5rem;
@@ -120,6 +120,7 @@ $tracking-background-color: getvar(tracking-background);
 
 // ACTIVITY SLAT
 $activity-slat-padding-vertical: 1rem;
+$activity-slat-spacing: 1rem;
 $activity-slat-separator-width: 1px;
 $activity-slat-separator-color: getvar(activity-slat-separator);
 

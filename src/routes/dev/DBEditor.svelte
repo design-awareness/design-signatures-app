@@ -9,24 +9,27 @@
   const [setView, setViewTrigger] = createTrigger<[DBModelName, string]>();
 </script>
 
+<BackButton href="/" />
+<div class="editor">
+  <EntityChooser
+    bind:selectedType={type}
+    bind:selectedId={id}
+    {setViewTrigger}
+  />
+  <EntityEditor entityType={type} {id} {setView} />
+</div>
+
 <style lang="scss">
+  @import "src/styles/tokens.scss";
+
   .editor {
     max-width: 32rem;
     width: fit-content;
     margin: 2rem auto;
-    background: white;
+    background: $modal-background-color;
     border-radius: 4px;
     box-shadow: 0 4px 20px -10px rgba(black, 0.35);
     padding: 1rem;
     margin-top: 1rem;
   }
 </style>
-
-<BackButton href="/" />
-<div class="editor">
-  <EntityChooser
-    bind:selectedType={type}
-    bind:selectedId={id}
-    {setViewTrigger} />
-  <EntityEditor entityType={type} {id} {setView} />
-</div>
