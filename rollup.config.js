@@ -70,17 +70,17 @@ export default [
         browser: true,
         dedupe: ["svelte"],
       }),
-      commonjs(),
-      typescript({
-        sourceMap: !production,
-        inlineSources: !production,
-      }),
-
       replace({
         BUILDVAR__BUILD_TIME: Date.now(),
         BUILDVAR__VERSION: JSON.stringify(process.env.npm_package_version),
         BUILDVAR__BUILD_ENV: JSON.stringify(ENV),
         BUILDVAR__BRANCH: JSON.stringify(process.env.BRANCH),
+        preventAssignment: true,
+      }),
+      commonjs(),
+      typescript({
+        sourceMap: !production,
+        inlineSources: !production,
       }),
 
       // In dev mode, call `npm run start` once
@@ -116,13 +116,14 @@ export default [
     },
     plugins: [
       resolve(),
+      replace({
+        "process.env.NODE_ENV": production ? "'production'" : "'development'",
+        preventAssignment: true,
+      }),
       commonjs(),
       typescript({
         sourceMap: !production,
         inlineSources: !production,
-      }),
-      replace({
-        "process.env.NODE_ENV": production ? "'production'" : "'development'",
       }),
       production && terser(),
     ],
