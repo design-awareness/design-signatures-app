@@ -8,13 +8,17 @@
   import Header from "../components/type/Header.svelte";
   import SectionHeader from "../components/type/SectionHeader.svelte";
   import { getProject } from "../data/database";
-  import { removeRecentProject } from "../data/recentProjects";
+  import {
+    pushRecentProject,
+    removeRecentProject,
+  } from "../data/recentProjects";
   import type { Project } from "../data/schema";
   import { shortDuration } from "../util/time";
 
   import editIcon from "@iconify-icons/ic/baseline-edit";
   import compareIcon from "@iconify-icons/ic/baseline-compare-arrows";
-  import completeIcon from "@iconify-icons/ic/baseline-check";
+  import archiveIcon from "@iconify-icons/ic/baseline-archive";
+  import unarchiveIcon from "@iconify-icons/ic/baseline-unarchive";
   import exportIcon from "@iconify-icons/ic/baseline-share";
   import deleteIcon from "@iconify-icons/ic/baseline-delete";
   import Modal from "../components/Modal.svelte";
@@ -50,23 +54,24 @@
   let showProjectTimestamps = false;
 
   let editProjectOpen = false;
+  let toggleProjectCompleteOpen = false;
   let otherOpen = false;
   let deleteProjectOpen = false;
 
-  const menuDescriptor = [
+  const menuDescriptor = () => [
     { label: "Edit", icon: editIcon, action: () => (editProjectOpen = true) },
     { label: "Compare", icon: compareIcon, action: () => (otherOpen = true) },
-    {
-      label: "Mark as completed",
-      icon: completeIcon,
-      action: () => (otherOpen = true),
-    },
     {
       label: "Export",
       icon: exportIcon,
       action: () => push(`/projects/${params.id}/export`),
     },
     { separator: true, label: null, action: null },
+    {
+      label: project.active ? "Archive" : "Unarchive",
+      icon: project.active ? archiveIcon : unarchiveIcon,
+      action: () => (toggleProjectCompleteOpen = true),
+    },
     {
       label: "Delete",
       icon: deleteIcon,
@@ -89,7 +94,129 @@
     editProjectOpen = false;
     project.save();
   }
+
+  async function toggleProjectComplete() {
+    toggleProjectCompleteOpen = false;
+    if (project.active) {
+      project.active = false;
+      removeRecentProject(project.id);
+      project.save();
+    } else {
+      project.active = true;
+      pushRecentProject(project.id);
+      project.save();
+    }
+  }
 </script>
+
+<main class="device-frame page">
+  <ContentFrame>
+    {#await projectPromise}
+      <BackButton href="/" />
+      <p>loading…</p>
+    {:then _}
+      <div class="top-bar">
+        <BackButton href="/" />
+        <PopupMenu
+          label="Options"
+          descriptor={menuDescriptor()}
+          alignment="right"
+        />
+      </div>
+      <Header>{project.name || "No project here!"}</Header>
+      <p>{project.description}</p>
+      <SectionHeader>Tracking overview</SectionHeader>
+      <RichTimeline {project} scalable />
+
+      <SectionHeader>Project comments</SectionHeader>
+
+      {#each project.notes as note}
+        <div
+          class="note-meta"
+          on:click={() => (showProjectTimestamps = !showProjectTimestamps)}
+        >
+          {#if showProjectTimestamps}
+            {note.timed ? shortDuration(note.timestamp) : "—"}
+          {:else}
+            {note.created.toLocaleDateString(undefined, {
+              day: "numeric",
+              month: "numeric",
+              year: "2-digit",
+            })}
+            {note.created.toLocaleString(undefined, {
+              hour: "numeric",
+              minute: "2-digit",
+            })}
+          {/if}
+        </div>
+        <div class="content">{note.contents}</div>
+      {/each}
+
+      {#if project.active}
+        <BottomActionBar
+          label={project.sessions?.length
+            ? "Resume tracking"
+            : "Start tracking"}
+          on:click={startTracking}
+        />
+      {/if}
+
+      <Modal bind:visible={editProjectOpen} title="Edit project">
+        <InputField label="Name" placeholder="" bind:value={editName} />
+        <InputField label="Description" large bind:value={editDescription} />
+        <ButtonGroup>
+          <Button on:click={saveInfo}>Close</Button>
+        </ButtonGroup>
+      </Modal>
+
+      <Modal bind:visible={deleteProjectOpen} title="Delete project">
+        <p>
+          The project
+          <strong>{project.name}</strong>
+          and all its data will be removed.
+        </p>
+        <p>You can’t undo this action.</p>
+        <ButtonGroup>
+          <Button
+            on:click={() => (deleteProjectOpen = false)}
+            disabled={!active}
+          >
+            Cancel
+          </Button>
+          <Button on:click={remove} disabled={!active}>Delete</Button>
+        </ButtonGroup>
+      </Modal>
+
+      <Modal
+        bind:visible={toggleProjectCompleteOpen}
+        title="{project.active ? 'Archive' : 'Unarchive'} this project?"
+        buttons={[
+          {
+            label: "Cancel",
+            onClick: () => (toggleProjectCompleteOpen = false),
+          },
+          { label: "OK", onClick: toggleProjectComplete },
+        ]}
+      >
+        {#if project.active}
+          This project will be removed from your recent projects and you won't
+          be able to track for this project anymore. You can stil find it under
+          "All projects" on the home screen.
+        {:else}
+          This project will move back to your recent projects and you'll be able
+          to continue tracking.
+        {/if}
+      </Modal>
+
+      <Modal bind:visible={otherOpen} title="Not available">
+        This feature isn't ready yet. Hold tight!
+        <ButtonGroup>
+          <Button on:click={() => (otherOpen = false)}>Close</Button>
+        </ButtonGroup>
+      </Modal>
+    {/await}
+  </ContentFrame>
+</main>
 
 <style lang="scss">
   @import "src/styles/tokens";
@@ -115,85 +242,3 @@
     margin-bottom: 1rem;
   }
 </style>
-
-<main class="device-frame page">
-  <ContentFrame>
-    {#await projectPromise}
-      <BackButton href="/" />
-      <p>loading…</p>
-    {:then _}
-      <div class="top-bar">
-        <BackButton href="/" />
-        <PopupMenu
-          label="Options"
-          descriptor={menuDescriptor}
-          alignment="right" />
-      </div>
-      <Header>{project.name || 'No project here!'}</Header>
-      <p>{project.description}</p>
-      <SectionHeader>Tracking overview</SectionHeader>
-      <RichTimeline {project} scalable />
-
-      <SectionHeader>Project comments</SectionHeader>
-
-      {#each project.notes as note}
-        <div
-          class="note-meta"
-          on:click={() => (showProjectTimestamps = !showProjectTimestamps)}>
-          {#if showProjectTimestamps}
-            {note.timed ? shortDuration(note.timestamp) : '—'}
-          {:else}
-            {note.created.toLocaleDateString(undefined, {
-              day: 'numeric',
-              month: 'numeric',
-              year: '2-digit',
-            })}
-            {note.created.toLocaleString(undefined, {
-              hour: 'numeric',
-              minute: '2-digit',
-            })}
-          {/if}
-        </div>
-        <div class="content">{note.contents}</div>
-      {/each}
-
-      {#if project.active}
-        <BottomActionBar
-          label={project.sessions?.length ? 'Resume tracking' : 'Start tracking'}
-          on:click={startTracking} />
-      {/if}
-
-      <Modal bind:visible={editProjectOpen} title="Edit project">
-        <InputField label="Name" placeholder="" bind:value={editName} />
-        <InputField label="Description" large bind:value={editDescription} />
-        <ButtonGroup>
-          <Button on:click={saveInfo}>Close</Button>
-        </ButtonGroup>
-      </Modal>
-
-      <Modal bind:visible={deleteProjectOpen} title="Delete project">
-        <p>
-          The project
-          <strong>{project.name}</strong>
-          and all its data will be removed.
-        </p>
-        <p>You can’t undo this action.</p>
-        <ButtonGroup>
-          <Button
-            on:click={() => (deleteProjectOpen = false)}
-            disabled={!active}>
-            Cancel
-          </Button>
-          <Button on:click={remove} disabled={!active}>Delete</Button>
-        </ButtonGroup>
-      </Modal>
-
-      <Modal bind:visible={otherOpen} title="Not available">
-        This feature isn't ready yet. Hold tight!
-        <ButtonGroup>
-          <Button on:click={() => (otherOpen = false)}>Close</Button>
-        </ButtonGroup>
-      </Modal>
-    {/await}
-  </ContentFrame>
-</main>

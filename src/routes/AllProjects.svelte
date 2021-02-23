@@ -11,7 +11,7 @@
 <main class="device-frame page">
   <ContentFrame>
     <BackButton href="/" />
-    <Header>View projects</Header>
+    <Header>All projects</Header>
     <ul>
       {#await getProjects()}
         <!-- loading placeholder? -->
@@ -23,7 +23,7 @@
       {:then projects}
         {#each projects as id}
           <li>
-            <a href={'#/projects/' + id}>
+            <a href={"#/projects/" + id}>
               <ProjectCard {id} />
             </a>
           </li>
@@ -47,8 +47,7 @@
     width: 100%;
     flex-wrap: wrap;
     align-items: flex-start;
-    justify-items: flex-start;
-    justify-content: space-around;
+    justify-content: flex-start;
   }
   li {
     margin: 1rem;
