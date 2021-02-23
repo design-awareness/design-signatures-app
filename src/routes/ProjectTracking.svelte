@@ -253,6 +253,10 @@
     noteText = "";
     noteSaving = false;
   }
+  function closeNote() {
+    closeModal();
+    noteText = "";
+  }
 </script>
 
 <svelte:window on:beforeunload={beforeUnload} />
@@ -267,7 +271,7 @@
             {projectTime}
           />
           <div class="flex-spacer" />
-          <Button small icon={settingsIcon} on:click={openModal('options')}>
+          <Button small icon={settingsIcon} on:click={openModal("options")}>
             Options
           </Button>
         </div>
@@ -285,7 +289,7 @@
           {/each}
         </div>
 
-        {#if visualizationMode !== 'none'}
+        {#if visualizationMode !== "none"}
           <MiniTimeline
             bind:timelineMode={visualizationMode}
             shouldUpdate={hasProject && !params.wild}
@@ -295,76 +299,92 @@
         {/if}
 
         <ButtonGroup fill>
-          <Button icon={createIcon} on:click={openModal('note')}>
+          <Button icon={createIcon} on:click={openModal("note")}>
             Add note
           </Button>
-          <Button icon={pauseIcon} on:click={openModal('paused')}>Pause</Button>
+          <Button icon={pauseIcon} on:click={openModal("paused")}>Pause</Button>
         </ButtonGroup>
       </div>
 
-      {#if params.wild === 'note'}
+      {#if params.wild === "note"}
         <Modal
           maxWidth
           bind:visible={bindModalOpen}
           closeWithScrim={false}
           status="Tracking is paused."
+          buttons={[
+            { label: "Cancel", onClick: closeNote, disabled: noteSaving },
+            {
+              label: "Save",
+              onClick: saveNote,
+              disabled: noteSaving || !noteText,
+            },
+          ]}
         >
           <InputField
             large
             xlarge
             bind:value={noteText}
-            label={timerDisplayMode === 'none' ? 'Add note' : 'Add note at ' + shortDuration(timerDisplayMode === 'project' ? pastSessionTime + projectTime : pastSessionTime)}
+            label={timerDisplayMode === "none"
+              ? "Add note"
+              : "Add note at " +
+                shortDuration(
+                  timerDisplayMode === "project"
+                    ? pastSessionTime + projectTime
+                    : pastSessionTime
+                )}
           />
-          <ButtonGroup>
-            <Button small on:click={closeModal} disabled={noteSaving}>
-              Cancel
-            </Button>
-            <Button
-              small
-              on:click={saveNote}
-              disabled={noteSaving || !noteText}
-            >
-              Save
-            </Button>
-          </ButtonGroup>
         </Modal>
-      {:else if params.wild === 'paused'}
+      {:else if params.wild === "paused"}
         <Modal
           bind:visible={bindModalOpen}
           status="Tracking is paused."
-          buttons={[{ label: 'Stop', onClick: stopTrackingButton, icon: stopIcon }, { label: 'Resume', onClick: closeModal, icon: playIcon }]}
+          buttons={[
+            { label: "Stop", onClick: stopTrackingButton, icon: stopIcon },
+            { label: "Resume", onClick: closeModal, icon: playIcon },
+          ]}
         >
           Resume your project to continue tracking. If you stop tracking now,
           you can always continue later.
         </Modal>
-      {:else if params.wild === 'options'}
+      {:else if params.wild === "options"}
         <Modal
           bind:visible={bindModalOpen}
           status="Tracking is paused."
           title="Tracking options"
-          buttons={[{ label: 'Done', onClick: closeModal }]}
+          buttons={[{ label: "Done", onClick: closeModal }]}
         >
           <SelectField
             label="Timer"
             bind:value={timerDisplayMode}
-            options={[['session', 'Session time'], ['project', 'Project time'], ['none', 'None (hide timer)']]}
+            options={[
+              ["session", "Session time"],
+              ["project", "Project time"],
+              ["none", "None (hide timer)"],
+            ]}
           />
           <SelectField
             label="Visualization"
             bind:value={visualizationMode}
-            options={[['timeline', 'Mini timeline'], ['bundle', 'Tree map'], ['none', 'None (hide visualization)']]}
+            options={[
+              ["timeline", "Mini timeline"],
+              ["bundle", "Tree map"],
+              ["none", "None (hide visualization)"],
+            ]}
           />
-          <label><input
+          <label
+            ><input
               type="checkbox"
               bind:checked={singleActivityMode}
               disabled
-            />Single activity mode</label>
+            />Single activity mode</label
+          >
         </Modal>
-      {:else if params.wild === 'info' && selectedActivity}
+      {:else if params.wild === "info" && selectedActivity}
         <Modal
           bind:visible={bindModalOpen}
           status="Tracking is paused"
-          title={editingActivity ? 'Edit activity' : selectedActivity.name}
+          title={editingActivity ? "Edit activity" : selectedActivity.name}
           buttons={editingActivity ? infoButtonsEditing : infoButtons}
         >
           {#if editingActivity}
@@ -403,7 +423,7 @@
               code={selectedActivity.code}
               color={selectedActivity.color}
             />
-            <p>{selectedActivity.description || 'No description provided.'}</p>
+            <p>{selectedActivity.description || "No description provided."}</p>
           {/if}
         </Modal>
       {/if}
