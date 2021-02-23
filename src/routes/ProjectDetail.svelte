@@ -23,8 +23,6 @@
   import deleteIcon from "@iconify-icons/ic/baseline-delete";
   import Modal from "../components/Modal.svelte";
   import InputField from "../components/InputField.svelte";
-  import ButtonGroup from "../components/ButtonGroup.svelte";
-  import Button from "../components/Button.svelte";
 
   export let params: { id: string };
 
@@ -161,30 +159,33 @@
         />
       {/if}
 
-      <Modal bind:visible={editProjectOpen} title="Edit project">
+      <Modal
+        bind:visible={editProjectOpen}
+        title="Edit project"
+        buttons={[{ label: "Close", onClick: saveInfo }]}
+      >
         <InputField label="Name" placeholder="" bind:value={editName} />
         <InputField label="Description" large bind:value={editDescription} />
-        <ButtonGroup>
-          <Button on:click={saveInfo}>Close</Button>
-        </ButtonGroup>
       </Modal>
 
-      <Modal bind:visible={deleteProjectOpen} title="Delete project">
+      <Modal
+        bind:visible={deleteProjectOpen}
+        title="Delete project"
+        buttons={[
+          {
+            label: "Cancel",
+            onClick: () => (deleteProjectOpen = false),
+            disabled: !active,
+          },
+          { label: "Delete", onClick: remove, disabled: !active },
+        ]}
+      >
         <p>
           The project
           <strong>{project.name}</strong>
           and all its data will be removed.
         </p>
         <p>You can’t undo this action.</p>
-        <ButtonGroup>
-          <Button
-            on:click={() => (deleteProjectOpen = false)}
-            disabled={!active}
-          >
-            Cancel
-          </Button>
-          <Button on:click={remove} disabled={!active}>Delete</Button>
-        </ButtonGroup>
       </Modal>
 
       <Modal
@@ -208,11 +209,12 @@
         {/if}
       </Modal>
 
-      <Modal bind:visible={otherOpen} title="Not available">
+      <Modal
+        bind:visible={otherOpen}
+        title="Not available"
+        buttons={[{ label: "Close", onClick: () => (otherOpen = false) }]}
+      >
         This feature isn't ready yet. Hold tight!
-        <ButtonGroup>
-          <Button on:click={() => (otherOpen = false)}>Close</Button>
-        </ButtonGroup>
       </Modal>
     {/await}
   </ContentFrame>

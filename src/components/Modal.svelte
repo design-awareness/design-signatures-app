@@ -14,6 +14,7 @@
     icon?: {
       body: string;
     };
+    disabled?: boolean;
   }[] = [];
 
   function inject(node: HTMLElement) {
@@ -43,8 +44,9 @@
         <slot />
         {#if buttons.length}
           <div class="button-group" class:one={buttons.length === 1}>
-            {#each buttons as { label, onClick, icon }}
-              <Button small on:click={onClick} {icon}>{label}</Button>
+            {#each buttons as { label, onClick, icon, disabled }}
+              <Button small on:click={onClick} {disabled} {icon}>{label}</Button
+              >
             {/each}
           </div>
         {/if}
