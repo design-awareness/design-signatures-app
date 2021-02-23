@@ -4,6 +4,9 @@ $background-color: getvar(background);
 $text-primary-color: getvar(text-primary);
 $text-secondary-color: getvar(text-secondary);
 $text-ghost-color: getvar(text-ghost);
+$text-opposing-color: getvar(text-opposing);
+
+$accent-danger-color: getvar(accent-danger);
 
 $loading-placeholder-color: getvar(loading-placeholder);
 
@@ -77,17 +80,13 @@ $token-vertical-spacing: 0;
 $token-horizontal-spacing: 1rem;
 $token-border-radius: 40px;
 $token-fixed-width: 3rem;
-$token-text-color-light: white;
-$token-text-color-dark: black;
-// remove once token is rewritten to calculate correct color
-// or, remove options if we ensure all colors are legible
-// with one color of text
-$token-text-color: $token-text-color-light;
 
 // MODAL
 $modal-scrim-opacity: 0.35;
-$modal-background-color: white;
-$modal-padding-vertical: 2rem;
+$modal-background-color: getvar(modal-background);
+$modal-status-background: getvar(modal-status-background);
+$modal-status-text: getvar(modal-status-text);
+$modal-padding-vertical: 1.5rem;
 $modal-padding-horizontal: 1.25rem;
 $modal-border-radius: 4px;
 $modal-min-width: 16rem;
@@ -110,14 +109,19 @@ $activity-toggle-background-opacity: 0.15;
 $activity-toggle-thumb-padding: 0.25rem;
 $activity-toggle-text-padding: 0.5rem;
 $activity-toggle-transition-speed: 0.25s;
+$activity-toggle-neutral-color: getvar(toggle-switch-neutral);
 
 // TRACKING
 $tracking-background-color: getvar(tracking-background);
 
 // ACTIVITY SLAT
-$activity-slat-padding-vertical: 1rem;
-$activity-slat-separator-width: 1px;
-$activity-slat-separator-color: getvar(activity-slat-separator);
+$activity-slat-padding-vertical: 0.5rem;
+$activity-slat-spacing: 1rem;
+$activity-slat-accent-width: 6px;
+$activity-slat-accent-spacing: 0.75rem;
+$activity-slat-icon-text-spacing: 1rem;
+$activity-slat-right-padding: 0.5rem;
+$activity-slat-right-radius: 5px;
 
 // MINI TIMELINE
 $mini-timeline-card-background-color: getvar(mini-timeline-card-background);
@@ -138,7 +142,7 @@ $project-card-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
 $project-card-loading-ph-width: 6rem;
 $project-card-loading-ph-height: 1rem;
 $project-card-new-plus-size: 4rem;
-$project-card-new-plus-color: $text-ghost-color;
+$project-card-new-plus-color: $text-secondary-color;
 
 // TIMELINE
 $timeline-background-color: getvar(timeline-background);

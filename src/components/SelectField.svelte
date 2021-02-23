@@ -4,6 +4,18 @@
   export let options: [any, string][];
 </script>
 
+<!-- svelte-ignore a11y-label-has-associated-control -->
+<label>
+  {#if label}
+    <div>{label}</div>
+  {/if}
+  <select bind:value on:input {...$$props}>
+    {#each options as option}
+      <option value={option[0]}>{option[1]}</option>
+    {/each}
+  </select>
+</label>
+
 <style lang="scss">
   @import "src/styles/tokens";
   @import "src/styles/type";
@@ -12,6 +24,7 @@
     margin: $block-vertical-spacing 0 $input-spacing-inner 0;
   }
   select {
+    color: $text-primary-color;
     border: $input-border-size solid $input-border-color;
     border-radius: $input-border-radius;
     background-color: $input-background-color;
@@ -25,15 +38,3 @@
     @include type-style($type-input);
   }
 </style>
-
-<!-- svelte-ignore a11y-label-has-associated-control -->
-<label>
-  {#if label}
-    <div>{label}</div>
-  {/if}
-  <select bind:value on:input {...$$props}>
-    {#each options as option}
-      <option value={option[0]}>{option[1]}</option>
-    {/each}
-  </select>
-</label>

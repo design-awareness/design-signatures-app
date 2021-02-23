@@ -24,9 +24,37 @@
   function set(as: ActivitySet) {
     activitySet = as;
   }
-
-  let showNew = false;
 </script>
+
+<div class="label">
+  <span>{label}</span>
+  {#if createNew}
+    <Button inlabel on:click={createNew} icon={add}>Create new</Button>
+  {/if}
+</div>
+{#await allActivitySets}
+  <div>Loading activity sets…</div>
+{:then activitySets}
+  <ul class="container">
+    {#if withEmpty}
+      <li>
+        <InvisibleButton on:click={() => set(newActivitySet())}>
+          <Item empty />
+        </InvisibleButton>
+      </li>
+    {/if}
+    {#each sortBy('wellKnown', sortBy('name', activitySets)) as activitySetItem}
+      <li>
+        <InvisibleButton on:click={() => set(activitySetItem)}>
+          <Item
+            activitySet={activitySetItem}
+            selected={activitySetItem === activitySet}
+          />
+        </InvisibleButton>
+      </li>
+    {/each}
+  </ul>
+{/await}
 
 <style lang="scss">
   @import "src/styles/tokens";
@@ -54,32 +82,3 @@
     }
   }
 </style>
-
-<div class="label">
-  <span>{label}</span>
-  {#if createNew}
-    <Button inlabel on:click={createNew} icon={add}>Create new</Button>
-  {/if}
-</div>
-{#await allActivitySets}
-  <div>Loading activity sets…</div>
-{:then activitySets}
-  <ul class="container">
-    {#if withEmpty}
-      <li>
-        <InvisibleButton on:click={() => set(newActivitySet())}>
-          <Item empty />
-        </InvisibleButton>
-      </li>
-    {/if}
-    {#each sortBy('wellKnown', sortBy('name', activitySets)) as activitySetItem}
-      <li>
-        <InvisibleButton on:click={() => set(activitySetItem)}>
-          <Item
-            activitySet={activitySetItem}
-            selected={activitySetItem === activitySet} />
-        </InvisibleButton>
-      </li>
-    {/each}
-  </ul>
-{/await}

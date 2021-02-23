@@ -3,13 +3,18 @@
   import Header from "./type/Header.svelte";
 
   export let visible = true;
+  export let status: string = null;
   export let title: string = null;
   export let closeWithScrim = true;
   export let maxWidth = false;
 
   export let buttons: {
     label: string;
-    onClick: (arg0: Event) => {};
+    onClick: (arg0: Event) => void;
+    icon?: {
+      body: string;
+    };
+    disabled?: boolean;
   }[] = [];
 
   function inject(node: HTMLElement) {
@@ -23,8 +28,36 @@
   }
 </script>
 
+{#if visible}
+  <div role="dialog" aria-labelledby="dialog__Title" use:inject>
+    <div class="scrim" on:click={() => closeWithScrim && (visible = false)} />
+    <div class="modal" class:maxWidth>
+      {#if status}
+        <div class="status">{status}</div>
+      {/if}
+      <div class="content-container">
+        {#if title}
+          <div id="dialog__Title">
+            <Header>{title}</Header>
+          </div>
+        {/if}
+        <slot />
+        {#if buttons.length}
+          <div class="button-group" class:one={buttons.length === 1}>
+            {#each buttons as { label, onClick, icon, disabled }}
+              <Button small on:click={onClick} {disabled} {icon}>{label}</Button
+              >
+            {/each}
+          </div>
+        {/if}
+      </div>
+    </div>
+  </div>
+{/if}
+
 <style lang="scss">
   @import "src/styles/tokens.scss";
+  @import "src/styles/type.scss";
 
   .scrim {
     position: fixed;
@@ -51,7 +84,6 @@
     transform: translate(-50%, -50%);
     z-index: 1001;
     background-color: $modal-background-color;
-    padding: $modal-padding-vertical $modal-padding-horizontal;
     border-radius: $modal-border-radius;
     overflow-y: auto;
     box-shadow: $modal-shadow;
@@ -59,30 +91,22 @@
       width: $max-width;
     }
   }
+  .content-container {
+    padding: $modal-padding-vertical $modal-padding-horizontal;
+  }
   .button-group {
     margin-top: $block-vertical-spacing;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
+    &.one {
+      justify-content: center;
+    }
+  }
+
+  .status {
+    background: $modal-status-background;
+    color: $modal-status-text;
+    @include type-style($type-modal-status);
+    text-align: center;
   }
 </style>
-
-{#if visible}
-  <div role="dialog" aria-labelledby="dialog__Title" use:inject>
-    <div class="scrim" on:click={() => closeWithScrim && (visible = false)} />
-    <div class="modal" class:maxWidth>
-      {#if title}
-        <div id="dialog__Title">
-          <Header>{title}</Header>
-        </div>
-      {/if}
-      <slot />
-      {#if buttons.length}
-        <div class="button-group">
-          {#each buttons as { label, onClick }}
-            <Button on:click={onClick}>{label}</Button>
-          {/each}
-        </div>
-      {/if}
-    </div>
-  </div>
-{/if}

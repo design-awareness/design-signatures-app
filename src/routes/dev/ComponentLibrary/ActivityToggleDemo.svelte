@@ -5,7 +5,8 @@
   import Header from "../../../components/type/Header.svelte";
   import SectionHeader from "../../../components/type/SectionHeader.svelte";
 
-  let color = "#000000";
+  let lightColor = "#000000";
+  let darkColor = "#ffffff";
   let checked = false;
   let name = "Activity";
 </script>
@@ -13,13 +14,24 @@
 <ContentFrame>
   <BackButton href="/dev/component-library/" />
   <Header>ActivityToggle</Header>
-  <p>
-    <ActivityToggle color={color.substr(1)} bind:checked activityName={name} />
+  <p style="--color-light: {lightColor}; --color-dark: {darkColor}" class="clr">
+    <ActivityToggle bind:checked activityName={name} />
   </p>
+  <p />
+  <p>light color <input type="color" bind:value={lightColor} /></p>
+  <p>dark color <input type="color" bind:value={darkColor} /></p>
   <hr />
   <SectionHeader>Bindings</SectionHeader>
   <p><code>checked</code> <input type="checkbox" bind:checked /></p>
   <SectionHeader>Props</SectionHeader>
-  <p><code>color</code> <input type="color" bind:value={color} /></p>
   <p><code>activityName</code> <input type="text" bind:value={name} /></p>
 </ContentFrame>
+
+<style lang="scss">
+  .clr {
+    --activity-color: var(--color-light);
+    @media (prefers-color-scheme: dark) {
+      --activity-color: var(--color-dark);
+    }
+  }
+</style>

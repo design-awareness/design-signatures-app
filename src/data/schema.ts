@@ -1,4 +1,4 @@
-export const DB_VERSION = 3;
+export const DB_VERSION = 4;
 
 export interface IDBObj {}
 
@@ -22,7 +22,7 @@ export interface ActivitySet extends IDBObj, IDBClientObj<ActivitySet> {
   activityNames: readonly string[];
   activityCodes: readonly string[];
   activityDescriptions: readonly string[];
-  colors: readonly string[];
+  colors: readonly [string, string][];
   wellKnown: boolean;
 }
 const ActivitySetSchema: DBSchema = [

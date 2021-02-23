@@ -7,12 +7,18 @@
   export let value: any;
   export let hasRemove = false;
   export let disabled = false;
+  export let isSpecialColor = false;
 
   const id = Math.random().toString(36).substr(2, 8);
 
   function blur() {
     dispatch("set", this.value);
   }
+  const blurS = (i: number) =>
+    function () {
+      value[i] = this.value;
+      dispatch("set", value);
+    };
 
   function remove() {
     dispatch("remove");
@@ -23,17 +29,6 @@
   }
 </script>
 
-<style lang="scss">
-  .field {
-    display: table-row;
-    height: 2rem;
-  }
-  label,
-  input {
-    display: table-cell;
-  }
-</style>
-
 <div class="field">
   {#if name}<label for={id}>{name}</label>{/if}
   {#if type === 'boolean'}
@@ -42,10 +37,26 @@
       on:blur={blur}
       bind:checked={value}
       {id}
-      {disabled} />
+      {disabled}
+    />
   {/if}
   {#if type === 'string'}
-    <input type="text" on:blur={blur} bind:value {id} {disabled} />
+    {#if isSpecialColor}
+      <input
+        type="text"
+        on:blur={blurS(0)}
+        bind:value={value[0]}
+        id={id + '1'}
+        {disabled}
+      />
+      <input
+        type="text"
+        on:blur={blurS(1)}
+        bind:value={value[1]}
+        id={id + '2'}
+        {disabled}
+      />
+    {:else}<input type="text" on:blur={blur} bind:value {id} {disabled} />{/if}
   {/if}
   {#if type === 'number'}
     <input type="number" on:blur={blur} bind:value {id} {disabled} />
@@ -62,7 +73,19 @@
               'T'
             ) : new Date().toLocaleString('sv').replace(' ', 'T')}
       {id}
-      {disabled} />
+      {disabled}
+    />
   {/if}
   {#if hasRemove}<button on:click={remove}>-</button>{/if}
 </div>
+
+<style lang="scss">
+  .field {
+    display: table-row;
+    height: 2rem;
+  }
+  label,
+  input {
+    display: table-cell;
+  }
+</style>

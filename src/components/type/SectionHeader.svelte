@@ -4,7 +4,6 @@
   h3 {
     @include type-style($type-section-header);
     margin: 1rem 0;
-    text-align: center;
     text-transform: uppercase;
     &:first-child {
       margin-top: 0;

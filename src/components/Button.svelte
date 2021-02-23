@@ -6,6 +6,13 @@
   export let icon = null;
 </script>
 
+<button class:small class:inlabel on:click {disabled}>
+  {#if icon}
+    <Icon {icon} />
+  {/if}
+  <slot />
+</button>
+
 <style lang="scss">
   @import "src/styles/type.scss";
   @import "src/styles/tokens.scss";
@@ -24,6 +31,7 @@
       calc(#{$button-padding-horizontal} - #{$button-border-size});
     min-width: $button-min-width;
     white-space: nowrap;
+    color: $text-primary-color;
     :global(svg) {
       margin-right: $button-icon-spacing;
       font-size: $button-icon-size;
@@ -52,10 +60,3 @@
     }
   }
 </style>
-
-<button class:small class:inlabel on:click {disabled}>
-  {#if icon}
-    <Icon {icon} />
-  {/if}
-  <slot />
-</button>

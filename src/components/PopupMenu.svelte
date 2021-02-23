@@ -65,7 +65,6 @@
   }
 
   function onButtonKeydown(event: KeyboardEvent) {
-    let target = event.currentTarget;
     let key = event.key;
     let flag = false;
 
@@ -99,7 +98,7 @@
     }
   }
 
-  function onButtonClick(event: MouseEvent) {
+  function onButtonClick() {
     if (opened) {
       close();
     } else {
@@ -121,7 +120,6 @@
   const onItemClick = (i: number) => (_: MouseEvent) => dispatch(i);
 
   const onItemKeydown = (i: number) => (event: KeyboardEvent) => {
-    let target = event.currentTarget;
     let key = event.key;
     let flag = false;
 
@@ -183,8 +181,7 @@
     }
   };
 
-  const onItemMouseover = (i: number) => (event: MouseEvent) =>
-    refs[i]?.focus();
+  const onItemMouseover = (i: number) => () => refs[i]?.focus();
 
   const refs: HTMLElement[] = descriptor.map(() => null);
   function setRef(el: HTMLElement, i: number) {
@@ -194,17 +191,55 @@
   function setButton(el: HTMLButtonElement) {
     button = el;
   }
-
-  function inject(node: HTMLElement) {
-    document.body.appendChild(node);
-
-    return {
-      destroy() {
-        node.remove();
-      },
-    };
-  }
 </script>
+
+<div class="popup-container" class:open={opened}>
+  <button
+    id="{id}_button"
+    class="button"
+    type="button"
+    aria-haspopup="true"
+    aria-controls="{id}_menu"
+    aria-expanded={opened}
+    on:keydown={onButtonKeydown}
+    on:click={onButtonClick}
+    use:setButton
+  >
+    {label}
+    <Icon icon={opened ? caretUpIcon : caretDownIcon} />
+  </button>
+  <ul
+    id="{id}_menu"
+    class="menu {alignment}"
+    role="menu"
+    aria-labelledby="{id}_button"
+    style="display: {opened ? 'block' : 'none'}"
+  >
+    {#each descriptor as item, i}
+      {#if item.separator}
+        <li class="separator" role="separator" tabindex="-1" />
+      {:else}
+        <li
+          class="item {item.class || ''}"
+          role="menuitem"
+          tabindex={i === selectedItem ? 0 : -1}
+          use:setRef={i}
+          on:keydown={onItemKeydown(i)}
+          on:click={onItemClick(i)}
+          on:mouseover={onItemMouseover(i)}
+        >
+          {#if item.icon}
+            <Icon icon={item.icon} />
+          {/if}
+          {item.label}
+        </li>
+      {/if}
+    {/each}
+  </ul>
+  {#if opened}
+    <div class="scrim" role="presentation" on:click={close} />
+  {/if}
+</div>
 
 <style lang="scss">
   @import "src/styles/type.scss";
@@ -225,6 +260,7 @@
     align-items: center;
     justify-content: center;
     background-color: $button-background-color;
+    color: $text-primary-color;
     border: $button-border-size solid $button-border-color;
     box-sizing: border-box;
     border-radius: $button-border-radius;
@@ -284,7 +320,7 @@
       }
 
       &.danger {
-        color: #b71c1c;
+        color: $accent-danger-color;
         font-weight: 500;
       }
 
@@ -304,48 +340,3 @@
     z-index: 0;
   }
 </style>
-
-<div class="popup-container" class:open={opened}>
-  <button
-    id="{id}_button"
-    class="button"
-    type="button"
-    aria-haspopup="true"
-    aria-controls="{id}_menu"
-    aria-expanded={opened}
-    on:keydown={onButtonKeydown}
-    on:click={onButtonClick}
-    use:setButton>
-    {label}
-    <Icon icon={opened ? caretUpIcon : caretDownIcon} />
-  </button>
-  <ul
-    id="{id}_menu"
-    class="menu {alignment}"
-    role="menu"
-    aria-labelledby="{id}_button"
-    style="display: {opened ? 'block' : 'none'}">
-    {#each descriptor as item, i}
-      {#if item.separator}
-        <li class="separator" role="separator" tabindex="-1" />
-      {:else}
-        <li
-          class="item {item.class || ''}"
-          role="menuitem"
-          tabindex={i === selectedItem ? 0 : -1}
-          use:setRef={i}
-          on:keydown={onItemKeydown(i)}
-          on:click={onItemClick(i)}
-          on:mouseover={onItemMouseover(i)}>
-          {#if item.icon}
-            <Icon icon={item.icon} />
-          {/if}
-          {item.label}
-        </li>
-      {/if}
-    {/each}
-  </ul>
-  {#if opened}
-    <div class="scrim" role="presentation" on:click={close} />
-  {/if}
-</div>

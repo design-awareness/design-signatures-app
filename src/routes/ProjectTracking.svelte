@@ -5,18 +5,16 @@
   import Link from "../components/Link.svelte";
   import Modal from "../components/Modal.svelte";
   import TrackingTimer from "../components/TrackingTimer.svelte";
-  import {
-    getEntityOrFail,
-    getProject,
-    newNote,
-    newSession,
-  } from "../data/database";
+  import { getProject, newNote, newSession } from "../data/database";
   import { goUpSafe } from "../util/history";
   import useInterval from "../util/interval";
   import createIcon from "@iconify-icons/ic/baseline-create";
+  import stopIcon from "@iconify-icons/ic/baseline-stop";
+  import playIcon from "@iconify-icons/ic/baseline-play-arrow";
+  import pauseIcon from "@iconify-icons/ic/baseline-pause";
+  import settingsIcon from "@iconify-icons/ic/baseline-settings";
   import { pop, push } from "svelte-spa-router/Router.svelte";
   import InputField from "../components/InputField.svelte";
-  import DetailText from "../components/type/DetailText.svelte";
   import ButtonGroup from "../components/ButtonGroup.svelte";
   import { shortDuration } from "../util/time";
   import ActivitySlat from "../components/ActivitySlat.svelte";
@@ -24,6 +22,11 @@
   import { pushRecentProject } from "../data/recentProjects";
   import CONFIG from "../data/config";
   import { delay } from "../util/delay";
+  import SelectField from "../components/SelectField.svelte";
+  import type { Project } from "../data/schema";
+  import ActivityToken from "../components/ActivityToken.svelte";
+  import ColorPicker from "../components/ActivitySet/ColorPicker.svelte";
+
   export let params: { id: string; wild: string };
 
   const TIMER_TICK = 100;
@@ -31,11 +34,20 @@
   const session = newSession();
 
   let projectTime = 0;
+  let timerDisplayMode: "project" | "session" | "none" = "session";
+  let visualizationMode: "timeline" | "bundle" | "none" = "timeline";
+  let singleActivityMode = false;
 
+  let errorLoading = false;
   let hasProject = false;
   let thenProject = getProject(params.id);
-  thenProject.then((project) => {
-    if (!project) return;
+  let project: Project;
+  thenProject.then((_project) => {
+    if (!_project) {
+      errorLoading = true;
+      return;
+    }
+    project = _project;
     hasProject = true;
     session.startTime = new Date();
     session.project = project;
@@ -92,9 +104,87 @@
     goingUp = false;
   }
 
-  const openModal = (modalName) => () => {
+  const openModal = (modalName: string) => () => {
     push(`/projects/${params.id}/track/${modalName}`);
   };
+
+  interface ActivitySpec {
+    name: string;
+    code: string;
+    description: string;
+    color: [string, string];
+    index: number;
+  }
+  let editingActivity = false;
+  let selectedActivity: ActivitySpec, selectedActivityTemp: ActivitySpec;
+  const openInfo = (i: number) => () => {
+    editingActivity = false;
+    const as = project.activitySet;
+    selectedActivity = {
+      name: as.activityNames[i],
+      code: as.activityCodes[i],
+      description: as.activityDescriptions[i],
+      color: as.colors[i],
+      index: i,
+    };
+    openModal("info")();
+  };
+  const infoButtons = [
+    {
+      label: "Edit",
+      onClick: function () {
+        selectedActivityTemp = { ...selectedActivity };
+        editingActivity = true;
+      },
+    },
+    {
+      label: "Close",
+      onClick: closeModal,
+    },
+  ];
+  const infoButtonsEditing = [
+    {
+      label: "Cancel",
+      onClick: function () {
+        editingActivity = false;
+      },
+    },
+    {
+      label: "Save",
+      onClick: function () {
+        const as = project.activitySet;
+        const i = selectedActivity.index;
+        as.activityDescriptions = setInArray(
+          as.activityDescriptions,
+          i,
+          selectedActivityTemp.description
+        );
+        as.activityNames = setInArray(
+          as.activityNames,
+          i,
+          selectedActivityTemp.name
+        );
+        as.activityCodes = setInArray(
+          as.activityCodes,
+          i,
+          selectedActivityTemp.code.toUpperCase()
+        );
+        as.colors = setInArray(as.colors, i, selectedActivityTemp.color);
+        as.save();
+        project.activitySet = project.activitySet;
+        editingActivity = false;
+      },
+    },
+  ];
+  $: if (params.wild === "info" && !selectedActivity) {
+    closeModal();
+  }
+
+  function setInArray<T>(arr: readonly T[], i: number, v: T): T[] {
+    const newArr = arr.slice();
+    newArr[i] = v;
+    return newArr;
+  }
 
   $: if (params.wild && !bindModalOpen && !goingUp) closeModal();
 
@@ -163,7 +253,186 @@
     noteText = "";
     noteSaving = false;
   }
+  function closeNote() {
+    closeModal();
+    noteText = "";
+  }
 </script>
+
+<svelte:window on:beforeunload={beforeUnload} />
+<main class="device-frame page">
+  <ContentFrame>
+    {#if hasProject}
+      <div class="tracking-frame">
+        <div class="top-bar">
+          <TrackingTimer
+            bind:displayMode={timerDisplayMode}
+            sessionTime={subsessionTime + pastSessionTime}
+            {projectTime}
+          />
+          <div class="flex-spacer" />
+          <Button small icon={settingsIcon} on:click={openModal("options")}>
+            Options
+          </Button>
+        </div>
+
+        <div class="flexible-toggle-area">
+          {#each project.activitySet.activityNames as activityName, i (i)}
+            <ActivitySlat
+              {activityName}
+              activityColor={project.activitySet.colors[i]}
+              index={i}
+              time={subsessionTime + pastSessionTime}
+              showInfo={openInfo(i)}
+              bind:sessionData={session.data}
+            />
+          {/each}
+        </div>
+
+        {#if visualizationMode !== "none"}
+          <MiniTimeline
+            bind:timelineMode={visualizationMode}
+            shouldUpdate={hasProject && !params.wild}
+            {session}
+            activitySet={project.activitySet}
+          />
+        {/if}
+
+        <ButtonGroup fill>
+          <Button icon={createIcon} on:click={openModal("note")}>
+            Add note
+          </Button>
+          <Button icon={pauseIcon} on:click={openModal("paused")}>Pause</Button>
+        </ButtonGroup>
+      </div>
+
+      {#if params.wild === "note"}
+        <Modal
+          maxWidth
+          bind:visible={bindModalOpen}
+          closeWithScrim={false}
+          status="Tracking is paused."
+          buttons={[
+            { label: "Cancel", onClick: closeNote, disabled: noteSaving },
+            {
+              label: "Save",
+              onClick: saveNote,
+              disabled: noteSaving || !noteText,
+            },
+          ]}
+        >
+          <InputField
+            large
+            xlarge
+            bind:value={noteText}
+            label={timerDisplayMode === "none"
+              ? "Add note"
+              : "Add note at " +
+                shortDuration(
+                  timerDisplayMode === "project"
+                    ? pastSessionTime + projectTime
+                    : pastSessionTime
+                )}
+          />
+        </Modal>
+      {:else if params.wild === "paused"}
+        <Modal
+          bind:visible={bindModalOpen}
+          status="Tracking is paused."
+          buttons={[
+            { label: "Stop", onClick: stopTrackingButton, icon: stopIcon },
+            { label: "Resume", onClick: closeModal, icon: playIcon },
+          ]}
+        >
+          Resume your project to continue tracking. If you stop tracking now,
+          you can always continue later.
+        </Modal>
+      {:else if params.wild === "options"}
+        <Modal
+          bind:visible={bindModalOpen}
+          status="Tracking is paused."
+          title="Tracking options"
+          buttons={[{ label: "Done", onClick: closeModal }]}
+        >
+          <SelectField
+            label="Timer"
+            bind:value={timerDisplayMode}
+            options={[
+              ["session", "Session time"],
+              ["project", "Project time"],
+              ["none", "None (hide timer)"],
+            ]}
+          />
+          <SelectField
+            label="Visualization"
+            bind:value={visualizationMode}
+            options={[
+              ["timeline", "Mini timeline"],
+              ["bundle", "Tree map"],
+              ["none", "None (hide visualization)"],
+            ]}
+          />
+          <label
+            ><input
+              type="checkbox"
+              bind:checked={singleActivityMode}
+              disabled
+            />Single activity mode</label
+          >
+        </Modal>
+      {:else if params.wild === "info" && selectedActivity}
+        <Modal
+          bind:visible={bindModalOpen}
+          status="Tracking is paused"
+          title={editingActivity ? "Edit activity" : selectedActivity.name}
+          buttons={editingActivity ? infoButtonsEditing : infoButtons}
+        >
+          {#if editingActivity}
+            {#if !project.activitySet.wellKnown}
+              <InputField
+                label="Activity name"
+                bind:value={selectedActivityTemp.name}
+              />
+              <InputField
+                label="Activity code"
+                bind:value={selectedActivityTemp.code}
+                maxlength="5"
+                style="text-transform: uppercase"
+              />
+            {/if}
+            <ColorPicker bind:color={selectedActivityTemp.color} />
+
+            {#if !project.activitySet.wellKnown}
+              <InputField
+                large
+                label="Description"
+                bind:value={selectedActivityTemp.description}
+              />
+              <p class="hint">
+                Changes will also apply to any other projects using the same
+                Activity Set.
+              </p>
+            {:else}
+              <p class="hint">
+                Activity names, codes, and descriptions cannot be changed for
+                built-in Activity Sets.
+              </p>
+            {/if}
+          {:else}
+            <ActivityToken
+              code={selectedActivity.code}
+              color={selectedActivity.color}
+            />
+            <p>{selectedActivity.description || "No description provided."}</p>
+          {/if}
+        </Modal>
+      {/if}
+    {:else if errorLoading}
+      This project does not exist.
+      <Link href="/" up>Go home</Link>
+    {:else}Loading…{/if}
+  </ContentFrame>
+</main>
 
 <style lang="scss">
   @import "src/styles/tokens";
@@ -176,6 +445,11 @@
     > :global(div) {
       flex: 1;
     }
+  }
+
+  .hint {
+    @include type-style($type-detail);
+    color: $text-secondary-color;
   }
 
   .top-bar {
@@ -202,88 +476,3 @@
     overflow-y: auto;
   }
 </style>
-
-<svelte:window on:beforeunload={beforeUnload} />
-<main class="device-frame page">
-  <ContentFrame>
-    {#await getEntityOrFail(thenProject)}
-      Project loading…
-    {:then project}
-      <div class="tracking-frame">
-        <div class="top-bar">
-          <TrackingTimer
-            sessionTime={subsessionTime + pastSessionTime}
-            {projectTime} />
-          <div class="flex-spacer" />
-          <Button small icon={createIcon} on:click={openModal('note')}>
-            Add note
-          </Button>
-        </div>
-
-        <div class="flexible-toggle-area">
-          {#each project.activitySet.activityCodes as activityCode, i (i)}
-            <ActivitySlat
-              {activityCode}
-              activityName={project.activitySet.activityNames[i]}
-              activityColor={project.activitySet.colors[i]}
-              activityDescription={project.activitySet.activityDescriptions[i]}
-              index={i}
-              time={subsessionTime + pastSessionTime}
-              bind:sessionData={session.data} />
-          {/each}
-        </div>
-
-        <MiniTimeline
-          shouldUpdate={hasProject && !params.wild}
-          {session}
-          activitySet={project.activitySet} />
-
-        <ButtonGroup fill>
-          <Button on:click={openModal('paused')}>Pause</Button>
-          <Button on:click={openModal('stop')}>Stop</Button>
-        </ButtonGroup>
-      </div>
-
-      {#if params.wild === 'note'}
-        <Modal maxWidth bind:visible={bindModalOpen} closeWithScrim={false}>
-          <DetailText>Tracking is paused while adding a note.</DetailText>
-          <InputField
-            large
-            xlarge
-            bind:value={noteText}
-            label="Note at {shortDuration(pastSessionTime + projectTime)}" />
-          <ButtonGroup>
-            <Button small on:click={closeModal} disabled={noteSaving}>
-              Cancel
-            </Button>
-            <Button
-              small
-              on:click={saveNote}
-              disabled={noteSaving || !noteText}>
-              Save
-            </Button>
-          </ButtonGroup>
-        </Modal>
-      {:else if params.wild === 'paused'}
-        <Modal bind:visible={bindModalOpen}>
-          <DetailText>Tracking is paused.</DetailText>
-          <ButtonGroup>
-            <Button small on:click={closeModal}>Resume</Button>
-          </ButtonGroup>
-        </Modal>
-      {:else if params.wild === 'stop'}
-        <Modal bind:visible={bindModalOpen} title="Stop tracking?">
-          <p>You can always resume tracking later.</p>
-
-          <ButtonGroup>
-            <Button small on:click={closeModal}>Cancel</Button>
-            <Button small on:click={stopTrackingButton}>Stop tracking</Button>
-          </ButtonGroup>
-        </Modal>
-      {/if}
-    {:catch}
-      This project does not exist.
-      <Link href="/" up>Go home</Link>
-    {/await}
-  </ContentFrame>
-</main>

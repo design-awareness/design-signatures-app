@@ -8,13 +8,47 @@
   export let sessionTime: number;
   export let projectTime: number;
 
-  let displaySession = true;
+  export let displayMode: "project" | "session" | "none";
 
-  let time;
+  let time: { hours: number; minutes: number; seconds: number };
   $: time = splitDuration(
-    displaySession ? sessionTime : sessionTime + projectTime
+    displayMode === "session" ? sessionTime : sessionTime + projectTime
   );
+
+  function nextMode() {
+    switch (displayMode) {
+      case "none":
+        displayMode = "session";
+        break;
+      case "session":
+        displayMode = "project";
+        break;
+      case "project":
+        displayMode = "none";
+    }
+  }
 </script>
+
+<div class="timer">
+  <InvisibleButton on:click={() => nextMode()}>
+    <div class="icon">
+      <Icon icon={timeIcon} />
+    </div>
+    {#if displayMode !== 'none'}
+      <div class="text-stack">
+        <div class="time">
+          {time.hours}h
+          {pad(time.minutes)}m
+          {pad(time.seconds)}s
+        </div>
+        <div class="toggle">
+          <span>{displayMode === 'session' ? 'Session' : 'Project'} time</span>
+          <span class="toggle-icon"><Icon icon={caretDownIcon} /></span>
+        </div>
+      </div>
+    {/if}
+  </InvisibleButton>
+</div>
 
 <style lang="scss">
   @import "src/styles/tokens";
@@ -52,22 +86,3 @@
     vertical-align: bottom;
   }
 </style>
-
-<div class="timer">
-  <InvisibleButton on:click={() => (displaySession = !displaySession)}>
-    <div class="icon">
-      <Icon icon={timeIcon} />
-    </div>
-    <div class="text-stack">
-      <div class="time">
-        {time.hours}h
-        {pad(time.minutes)}m
-        {pad(time.seconds)}s
-      </div>
-      <div class="toggle">
-        <span>{displaySession ? 'Session' : 'Project'} time</span>
-        <span class="toggle-icon"><Icon icon={caretDownIcon} /></span>
-      </div>
-    </div>
-  </InvisibleButton>
-</div>

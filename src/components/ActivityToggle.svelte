@@ -1,10 +1,21 @@
 <script lang="ts">
-  export let color: string;
   export let checked: boolean;
   export let activityName: string;
 
   const id = Math.random().toString(36).substr(2, 8);
 </script>
+
+<div class="container">
+  <!-- svelte-ignore empty-block -->
+  {#if true}{/if}
+  <input type="checkbox" bind:checked {id} />
+  <label for={id} aria-label="Toggle {activityName}">
+    <div role="presentation" class="toggle">
+      <div class="thumb" />
+      <div class="background" />
+    </div>
+  </label>
+</div>
 
 <style lang="scss">
   @import "src/styles/tokens";
@@ -32,13 +43,13 @@
     height: $activity-toggle-height;
     box-sizing: border-box;
     border-radius: $activity-toggle-height/2;
-    border: $activity-toggle-border-width solid getvar(activity-color);
+    border: $activity-toggle-border-width solid;
     box-shadow: 0 0 0 0 getvar(activity-color);
     transition: box-shadow $activity-toggle-transition-speed/2;
+    z-index: 1;
     &::before,
     &::after {
       position: absolute;
-      color: getvar(activity-color);
       top: calc(50% - #{rem(map-get($type-activity-toggle-on, size)) / 2});
       transition: opacity $activity-toggle-transition-speed;
     }
@@ -46,12 +57,14 @@
       content: "on";
       @include type-style($type-activity-toggle-on);
       left: $activity-toggle-text-padding;
+      color: $text-opposing-color;
       opacity: 0;
     }
     &::after {
       content: "off";
       @include type-style($type-activity-toggle-off);
       right: $activity-toggle-text-padding;
+      color: $text-primary-color;
       opacity: 1;
     }
     .background {
@@ -65,6 +78,7 @@
       opacity: 0;
       transition: opacity $activity-toggle-transition-speed;
       pointer-events: none;
+      z-index: -1;
     }
     .thumb {
       $size: calc(
@@ -78,7 +92,7 @@
       position: absolute;
       left: $offset;
       top: $offset;
-      background-color: getvar(activity-color);
+      background-color: $activity-toggle-neutral-color;
       transform: translateX(0);
       transition: transform $activity-toggle-transition-speed;
     }
@@ -110,28 +124,16 @@
     &::after {
       opacity: 0;
     }
+    border-color: getvar(activity-color);
     .thumb {
       transform: translateX(
         calc(#{$activity-toggle-width} - #{$activity-toggle-height})
       );
+      background-color: $text-opposing-color;
+      opacity: 0.85;
     }
     .background {
-      opacity: $activity-toggle-background-opacity;
+      opacity: 1;
     }
   }
 </style>
-
-<div class="container">
-  <!-- svelte-ignore empty-block -->
-  {#if true}{/if}
-  <input type="checkbox" bind:checked {id} />
-  <label
-    for={id}
-    aria-label="Toggle {activityName}"
-    style="--activity-color:#{color}">
-    <div role="presentation" class="toggle">
-      <div class="thumb" />
-      <div class="background" />
-    </div>
-  </label>
-</div>

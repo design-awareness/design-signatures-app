@@ -36,6 +36,45 @@
   });
 </script>
 
+<p class="detail">{(dbObj && dbObj.id) || 'New ActivitySet'}</p>
+<div class="editor">
+  {#if !loading && dbObj}
+    <EditorField name="name" type="string" bind:value={dbObj.name} />
+    <EditorField
+      name="description"
+      type="string"
+      bind:value={dbObj.description}
+    />
+    <EditorFieldGroup
+      name="activityNames"
+      type={{ primitive: 'string' }}
+      bind:value={dbObj.activityNames}
+    />
+    <EditorFieldGroup
+      name="activityCodes"
+      type={{ primitive: 'string' }}
+      bind:value={dbObj.activityCodes}
+    />
+    <EditorFieldGroup
+      name="activityDescriptions"
+      type={{ primitive: 'string' }}
+      bind:value={dbObj.activityDescriptions}
+    />
+    <EditorFieldGroup
+      name="colors"
+      type={{ primitive: 'string' }}
+      bind:value={dbObj.colors}
+      isSpecialColor={true}
+    />
+    <EditorField
+      name="wellKnown"
+      type="boolean"
+      bind:value={dbObj.wellKnown}
+      disabled
+    />
+  {/if}
+</div>
+
 <style lang="scss">
   .editor {
     display: table;
@@ -45,35 +84,3 @@
     line-height: 2;
   }
 </style>
-
-<p class="detail">{(dbObj && dbObj.id) || 'New ActivitySet'}</p>
-<div class="editor">
-  {#if !loading && dbObj}
-    <EditorField name="name" type="string" bind:value={dbObj.name} />
-    <EditorField
-      name="description"
-      type="string"
-      bind:value={dbObj.description} />
-    <EditorFieldGroup
-      name="activityNames"
-      type={{ primitive: 'string' }}
-      bind:value={dbObj.activityNames} />
-    <EditorFieldGroup
-      name="activityCodes"
-      type={{ primitive: 'string' }}
-      bind:value={dbObj.activityCodes} />
-    <EditorFieldGroup
-      name="activityDescriptions"
-      type={{ primitive: 'string' }}
-      bind:value={dbObj.activityDescriptions} />
-    <EditorFieldGroup
-      name="colors"
-      type={{ primitive: 'string' }}
-      bind:value={dbObj.colors} />
-    <EditorField
-      name="wellKnown"
-      type="boolean"
-      bind:value={dbObj.wellKnown}
-      disabled />
-  {/if}
-</div>

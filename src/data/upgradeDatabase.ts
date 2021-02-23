@@ -1,4 +1,12 @@
+// upgrade database structure as needed
+
 const CONFIG_STORE = "_Config";
+interface RawDBOperations {
+  add: (store: string, data: any) => Promise<void>;
+  update: (store: string, data: any) => Promise<void>;
+  remove: (store: string, id: string) => Promise<void>;
+  get: (store: string, id: string) => Promise<object | null>;
+}
 
 export function upgradeDatabase(from: number, db: IDBDatabase) {
   if (from <= 2) {
@@ -10,12 +18,7 @@ export function upgradeDatabase(from: number, db: IDBDatabase) {
 
 export async function initializeConfiguration(
   from = 0,
-  rawDbOperations: {
-    add: (store: string, data: any) => Promise<void>;
-    update: (store: string, data: any) => Promise<void>;
-    remove: (store: string, id: string) => Promise<void>;
-    get: (store: string, id: string) => Promise<object | null>;
-  }
+  rawDbOperations: RawDBOperations
 ) {
   const addConfig = (key: string, value: any) =>
     rawDbOperations.add(CONFIG_STORE, { key, value });
