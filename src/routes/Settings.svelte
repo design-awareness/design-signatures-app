@@ -3,6 +3,7 @@
 
   import BackButton from "../components/BackButton.svelte";
   import Button from "../components/Button.svelte";
+  import InvisibleButton from "../components/InvisibleButton.svelte";
   import ContentFrame from "../components/layout/ContentFrame.svelte";
   import Link from "../components/Link.svelte";
   import Header from "../components/type/Header.svelte";
@@ -64,18 +65,9 @@
       await replace("/update/3");
     }
   }
-</script>
 
-<style lang="scss">
-  @import "src/styles/tokens";
-  .page {
-    background-color: $background-color;
-    min-height: 100%;
-  }
-  .small {
-    font-size: 0.8em;
-  }
-</style>
+  let tapCount = 0;
+</script>
 
 <main class="device-frame page">
   <ContentFrame>
@@ -92,7 +84,7 @@
       <Button small on:click={resetWKAS}>Reset built-in activity sets</Button>
     </p>
 
-    {#if BUILD_ENV !== 'prod'}
+    {#if BUILD_ENV !== "prod" || tapCount > 4}
       <SectionHeader>Developer</SectionHeader>
       <p>
         <Link href="/dev/">Developer tools</Link>
@@ -102,12 +94,12 @@
     <SectionHeader>About app</SectionHeader>
     <p class="small">
       <strong>Version:</strong>
-      {VERSION}
+      <InvisibleButton on:click={() => tapCount++}>{VERSION}</InvisibleButton>
       <br /><strong>Last built:</strong>
       {new Date(BUILD_TIME).toLocaleString()}
       <br /><strong>Build environment:</strong>
-      {{ dev: 'Development', stage: 'Staging', prod: 'Production' }[BUILD_ENV]}
-      {#if BUILD_ENV !== 'prod' && BRANCH}
+      {{ dev: "Development", stage: "Staging", prod: "Production" }[BUILD_ENV]}
+      {#if BUILD_ENV !== "prod" && BRANCH}
         <br /><strong>Branch:</strong>
         {BRANCH}
       {/if}
@@ -117,3 +109,18 @@
     </p>
   </ContentFrame>
 </main>
+
+<style lang="scss">
+  @import "src/styles/tokens";
+  .page {
+    background-color: $background-color;
+    min-height: 100%;
+  }
+  .small {
+    font-size: 0.8em;
+    :global(button) {
+      display: inline-block;
+      width: auto;
+    }
+  }
+</style>
