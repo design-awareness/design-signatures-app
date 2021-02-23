@@ -320,7 +320,7 @@
       }
 
       &.danger {
-        color: #b71c1c;
+        color: $accent-danger-color;
         font-weight: 500;
       }
 

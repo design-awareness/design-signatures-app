@@ -34,7 +34,7 @@ $neutral-90: #000000;
       popup-separator: $neutral-20,
       input-background: $neutral-00,
       input-border: $neutral-20,
-      active-selection-background: #50b7ff40,
+      active-selection-background: rgba(80, 182, 255, 0.18),
       action-bar-background: #649fc9,
       action-bar-background_disabled: #87b6d6,
       tracking-background: $neutral-00,
@@ -43,6 +43,7 @@ $neutral-90: #000000;
       timeline-background: $neutral-00,
       timeline-gridline: $neutral-20,
       toggle-switch-neutral: $neutral-50,
+      accent-danger: #b71c1c,
     )
   );
 }
@@ -68,7 +69,7 @@ $neutral-90: #000000;
       popup-separator: $neutral-50,
       input-background: $neutral-60,
       input-border: $neutral-50,
-      active-selection-background: #50b6ff2f,
+      active-selection-background: rgba(80, 183, 255, 0.25),
       action-bar-background: #4379a0,
       action-bar-background_disabled: #2e536d,
       tracking-background: $neutral-80,
@@ -77,6 +78,7 @@ $neutral-90: #000000;
       timeline-background: $neutral-60,
       timeline-gridline: $neutral-20,
       toggle-switch-neutral: $neutral-20,
+      accent-danger: #e53c3c,
     )
   );
 }
