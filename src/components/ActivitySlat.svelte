@@ -47,7 +47,7 @@
     box-sizing: border-box;
     align-items: center;
     :global(button) {
-      width: fit-content;
+      flex: 0;
       padding: 0.25rem;
       margin-right: $activity-slat-icon-text-spacing;
     }
