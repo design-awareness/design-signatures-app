@@ -29,7 +29,9 @@
   import { shortDuration } from "../util/time";
   import SessionTracker from "../util/track";
 
-  export let params: { id: string; wild: string };
+  type ModalName = "note" | "paused" | "options" | "info";
+
+  export let params: { id: string; wild: ModalName };
 
   const TIMER_TICK = 100;
   const SAVE_FREQUENCY = 1000 * 60;
@@ -121,12 +123,12 @@
     goingUp = false;
   }
 
-  const openModal = (modalName: string) => () => {
+  const openModal = (modalName: ModalName) => () => {
     push(`/projects/${params.id}/track/${modalName}`);
   };
 
   function pause() {
-    openModal("pause");
+    openModal("paused")();
     tracker.save();
   }
 
