@@ -16,7 +16,7 @@ const vowels = ["A", "E", "I", "O", "U"];
 export default function abbreviateActivityName(name: string): string {
   name = name.toUpperCase().trim();
   if (knownCodes.has(name)) {
-    return knownCodes.get(name);
+    return knownCodes.get(name) as string;
   }
 
   const normalized = name.replace(/[^\w\s]+/g, "");

@@ -2,13 +2,13 @@
   import type { ActivitySet } from "../../data/schema";
   import ActivityToken from "../ActivityToken.svelte";
 
-  export let activitySet: ActivitySet = null;
+  export let activitySet: ActivitySet | null = null;
   export let selected = false;
-  export let empty = false;
+  // export let empty = false;
 </script>
 
 <div class="item" class:selected>
-  {#if empty}
+  {#if !activitySet}
     <p>Start from scratch</p>
   {:else}
     <p>{activitySet.name}</p>

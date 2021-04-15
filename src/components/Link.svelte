@@ -12,7 +12,17 @@
     navigate({ href, up, enforce, horizontal });
   }
 
-  function navigate({ href, up = false, enforce = false, horizontal = false }) {
+  function navigate({
+    href,
+    up = false,
+    enforce = false,
+    horizontal = false,
+  }: {
+    href: string;
+    up?: boolean;
+    enforce?: boolean;
+    horizontal?: boolean;
+  }) {
     if (up) {
       goUpSafe(href, enforce);
     } else if (horizontal) {
@@ -35,7 +45,7 @@
   }
 </script>
 
-<a href={'#' + href} on:click={click}>
+<a href={"#" + href} on:click={click}>
   <slot />
 </a>
 

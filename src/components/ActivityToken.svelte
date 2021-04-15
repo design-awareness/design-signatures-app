@@ -1,15 +1,15 @@
 <script lang="ts">
   import type { ActivitySet } from "../data/schema";
 
-  export let forEach: ActivitySet = null;
+  export let forEach: ActivitySet | null = null;
   let activitySet: ActivitySet;
   $: activitySet = forEach as ActivitySet;
   export let align: "left" | "right" | "center" = "left";
   export let fixWidth = false;
   export let space = false;
 
-  export let color: [string, string] = null;
-  export let code: string = null;
+  export let color: [string, string] | null = null;
+  export let code: string | null = null;
 
   const NBSP = " ";
 </script>
@@ -27,7 +27,8 @@
     class:fixWidth
     class:space
     style="--color-light: #{color?.[0]}; --color-dark: #{color?.[1]}"
-  >{code || NBSP}</i>
+    >{code || NBSP}</i
+  >
 {/if}
 
 <style lang="scss">

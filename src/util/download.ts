@@ -6,4 +6,3 @@ export default function download(filename: string, type: string, data: string) {
   link.setAttribute("download", filename);
   link.click();
 }
-window["download"] = download;

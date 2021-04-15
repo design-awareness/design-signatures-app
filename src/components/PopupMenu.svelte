@@ -1,31 +1,28 @@
+<script lang="ts" context="module">
+  import type { IconifyIcon } from "../types/IconifyIcon";
+  interface OptionDescriptor {
+    label: string;
+    action: () => void;
+    separator?: false;
+    icon?: IconifyIcon;
+    class?: string;
+  }
+  interface SeparatorDescriptor {
+    separator: true;
+  }
+
+  export type PopupMenuDescriptor = (OptionDescriptor | SeparatorDescriptor)[];
+</script>
+
 <script lang="ts">
   import caretDownIcon from "@iconify-icons/ic/baseline-keyboard-arrow-down";
   import caretUpIcon from "@iconify-icons/ic/baseline-keyboard-arrow-up";
   import Icon from "@iconify/svelte/dist/Icon.svelte";
 
-  interface IconifyIcon {
-    body: string;
-    left?: number;
-    top?: number;
-    width?: number;
-    height?: number;
-    rotate?: number;
-    hFlip?: boolean;
-    vFlip?: boolean;
-  }
-
-  type OptionDescriptor = {
-    label: string;
-    action: () => void;
-    separator?: boolean;
-    icon?: IconifyIcon;
-    class?: string;
-  };
-
   export let alignment: "left" | "right";
 
   export let label: string;
-  export let descriptor: OptionDescriptor[];
+  export let descriptor: PopupMenuDescriptor;
 
   let opened = false;
   let id = Math.random().toString(36).substr(2);
@@ -114,7 +111,10 @@
 
   function dispatch(i: number) {
     close();
-    descriptor[i].action();
+    let opt = descriptor[i];
+    if (!opt.separator) {
+      opt.action();
+    }
   }
 
   const onItemClick = (i: number) => (_: MouseEvent) => dispatch(i);
@@ -183,14 +183,11 @@
 
   const onItemMouseover = (i: number) => () => refs[i]?.focus();
 
-  const refs: HTMLElement[] = descriptor.map(() => null);
+  const refs: (HTMLElement | null)[] = descriptor.map(() => null);
   function setRef(el: HTMLElement, i: number) {
     refs[i] = el;
   }
-  let button: HTMLButtonElement;
-  function setButton(el: HTMLButtonElement) {
-    button = el;
-  }
+  let button: HTMLButtonElement | null;
 </script>
 
 <div class="popup-container" class:open={opened}>
@@ -203,7 +200,7 @@
     aria-expanded={opened}
     on:keydown={onButtonKeydown}
     on:click={onButtonClick}
-    use:setButton
+    bind:this={button}
   >
     {label}
     <Icon icon={opened ? caretUpIcon : caretDownIcon} />

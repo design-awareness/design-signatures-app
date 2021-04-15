@@ -6,13 +6,13 @@
   import EditorField from "./EditorField.svelte";
   import EditorRefField from "./EditorRefField.svelte";
 
-  export let setView: TriggerInvoker<[DBModelName, string]>;
+  export let setView: TriggerInvoker<[DBModelName, string | null]>;
   export let save: ITriggerPassable<void>;
   export let remove: ITriggerPassable<void>;
   export let id: string;
 
   let dbObj: Session;
-  let loadedId: string = undefined;
+  let loadedId: string | null = null;
   let loading = true;
 
   async function loadObj() {
@@ -36,6 +36,31 @@
   });
 </script>
 
+<p class="detail">{(dbObj && dbObj.id) || "New Session"}</p>
+<div class="editor">
+  {#if !loading && dbObj}
+    <EditorField name="label" type="string" bind:value={dbObj.label} />
+    <EditorField name="startTime" type="date" bind:value={dbObj.startTime} />
+    <EditorField name="duration" type="number" bind:value={dbObj.duration} />
+    <EditorRefField
+      name="project"
+      type="Project"
+      bind:value={dbObj.project}
+      {setView}
+    />
+  {/if}
+</div>
+{#if !loading && dbObj}
+  <div class="data-view">
+    <pre>{'data:\n' + dbObj.data
+          .map(
+            (pairs, i) =>
+              '[' + i + '] ' + pairs.map(([a, b]) => a + ':' + b).join(', ')
+          )
+          .join('\n')}</pre>
+  </div>
+{/if}
+
 <style lang="scss">
   .editor {
     display: table;
@@ -51,27 +76,3 @@
     white-space: pre-wrap;
   }
 </style>
-
-<p class="detail">{(dbObj && dbObj.id) || 'New Session'}</p>
-<div class="editor">
-  {#if !loading && dbObj}
-    <EditorField name="label" type="string" bind:value={dbObj.label} />
-    <EditorField name="startTime" type="date" bind:value={dbObj.startTime} />
-    <EditorField name="duration" type="number" bind:value={dbObj.duration} />
-    <EditorRefField
-      name="project"
-      type="Project"
-      bind:value={dbObj.project}
-      {setView} />
-  {/if}
-</div>
-{#if !loading && dbObj}
-  <div class="data-view">
-    <pre>{'data:\n' + dbObj.data
-          .map(
-            (pairs, i) =>
-              '[' + i + '] ' + pairs.map(([a, b]) => a + ':' + b).join(', ')
-          )
-          .join('\n')}</pre>
-  </div>
-{/if}

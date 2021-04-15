@@ -3,8 +3,22 @@
   import arrow from "@iconify-icons/ic/baseline-arrow-back";
   import Icon from "@iconify/svelte/dist/Icon.svelte";
   export let href: string = "/";
-  export let button: () => void = null;
+  export let button: null | (() => void) = null;
 </script>
+
+<div class="back-button">
+  {#if button}
+    <button on:click={button}>
+      <Icon icon={arrow} />
+      <span class="back">Back</span>
+    </button>
+  {:else}
+    <Link {href} up>
+      <Icon icon={arrow} />
+      <span class="back">Back</span>
+    </Link>
+  {/if}
+</div>
 
 <style lang="scss">
   @import "src/styles/tokens";
@@ -32,17 +46,3 @@
     }
   }
 </style>
-
-<div class="back-button">
-  {#if button}
-    <button on:click={button}>
-      <Icon icon={arrow} />
-      <span class="back">Back</span>
-    </button>
-  {:else}
-    <Link {href} up>
-      <Icon icon={arrow} />
-      <span class="back">Back</span>
-    </Link>
-  {/if}
-</div>

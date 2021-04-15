@@ -1,9 +1,10 @@
 <script lang="ts">
   import Icon from "@iconify/svelte/dist/Icon.svelte";
+  import type { IconifyIcon } from "../types/IconifyIcon";
   export let disabled = false;
   export let small = false;
   export let inlabel = false;
-  export let icon = null;
+  export let icon: IconifyIcon | null = null;
 </script>
 
 <button class:small class:inlabel on:click {disabled}>

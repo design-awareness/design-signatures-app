@@ -184,6 +184,7 @@ export function createPresets(): Promise<void[]> {
       if (existingSet === null) {
         const activitySet = newActivitySet();
         for (let [prop, val] of Object.entries(data)) {
+          // @ts-expect-error
           activitySet[prop] = val;
         }
         activitySet.wellKnown = true;

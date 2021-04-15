@@ -3,8 +3,8 @@
   import Header from "./type/Header.svelte";
 
   export let visible = true;
-  export let status: string = null;
-  export let title: string = null;
+  export let status: string | null = null;
+  export let title: string | null = null;
   export let closeWithScrim = true;
   export let maxWidth = false;
 

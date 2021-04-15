@@ -6,20 +6,18 @@
   const typeOptions = ["ActivitySet", "Note", "Project", "Session"];
 
   export let selectedType: DBModelName = "ActivitySet";
-  export let selectedId: string = null;
-  export let setViewTrigger: ITriggerPassable<[DBModelName, string]>;
-
-  window["db"] = db;
+  export let selectedId: string | null = null;
+  export let setViewTrigger: ITriggerPassable<[DBModelName, string | null]>;
 
   let loading = true;
-  let idOptions = [];
+  let idOptions: string[] = [];
 
   async function changeType() {
     loading = true;
     let loadingType = selectedType;
     const ids = await db.getAll(loadingType);
     if (loadingType === selectedType && loading === true) {
-      if (!ids.includes(selectedId)) {
+      if (selectedId !== null && !ids.includes(selectedId)) {
         selectedId = null;
       }
       idOptions = ids;
@@ -44,7 +42,7 @@
 </select>
 <select bind:value={selectedId}>
   {#if !loading}
-    <option value={null}>{'<create new>'}</option>
+    <option value={null}>{"<create new>"}</option>
     {#each idOptions as id}
       <option value={id}>{id}</option>
     {/each}

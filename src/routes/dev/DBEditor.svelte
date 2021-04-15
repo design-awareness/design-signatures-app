@@ -6,7 +6,9 @@
   import BackButton from "../../components/BackButton.svelte";
   let type: DBModelName, id: string;
 
-  const [setView, setViewTrigger] = createTrigger<[DBModelName, string]>();
+  const [setView, setViewTrigger] = createTrigger<
+    [DBModelName, string | null]
+  >();
 </script>
 
 <BackButton href="/" />

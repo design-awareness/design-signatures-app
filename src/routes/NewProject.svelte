@@ -14,7 +14,7 @@
   let name = "";
   let description = "";
 
-  let activitySet: ActivitySet = null;
+  let activitySet: ActivitySet;
   let isCreating = false;
 
   let newSetOverlay = false;

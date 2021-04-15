@@ -5,20 +5,48 @@
 
   export let newProjectPlaceholder = false;
   export let loadingPlaceholder = false;
-  export let id: string = null;
+  export let id: string | null = null;
 
   let loading = true;
-  let project: Project = null;
+  let project: Project | null = null;
 
   if (newProjectPlaceholder) {
     loading = false;
   } else if (!loadingPlaceholder) {
     (async function load() {
-      project = await getProject(id);
-      loading = false;
+      if (id) {
+        project = await getProject(id);
+        loading = false;
+      }
     })();
   }
 </script>
+
+<div class="project-card" class:loading>
+  {#if newProjectPlaceholder}
+    <div class="card new">
+      <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 62 62"
+        ><circle cx="31" cy="31" r="30.75" fill="none" stroke-width=".5" />
+        <path
+          d="M31.5312 30.125h13.5626v2.5625H31.5312v13.5h-2.5624v-13.5h-13.5V30.125h13.5V16.5625h2.5624V30.125z"
+          stroke="none"
+        /></svg
+      >
+    </div>
+  {:else}
+    <div class="card">
+      {#if !loading && project?.sessions?.length}
+        <CardTimeline {project} />
+      {/if}
+    </div>
+  {/if}
+
+  <div class="link" class:loading class:new={newProjectPlaceholder}>
+    {#if !loading && !newProjectPlaceholder && project}
+      <span>{project.name}</span>
+    {:else if !loading}New project{/if}
+  </div>
+</div>
 
 <style lang="scss">
   @import "src/styles/tokens";
@@ -72,34 +100,3 @@
     overflow: hidden;
   }
 </style>
-
-<div class="project-card" class:loading>
-  {#if newProjectPlaceholder}
-    <div class="card new">
-      <svg
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 62 62"><circle
-          cx="31"
-          cy="31"
-          r="30.75"
-          fill="none"
-          stroke-width=".5" />
-        <path
-          d="M31.5312 30.125h13.5626v2.5625H31.5312v13.5h-2.5624v-13.5h-13.5V30.125h13.5V16.5625h2.5624V30.125z"
-          stroke="none" /></svg>
-    </div>
-  {:else}
-    <div class="card">
-      {#if !loading && project.sessions?.length}
-        <CardTimeline {project} />
-      {/if}
-    </div>
-  {/if}
-
-  <div class="link" class:loading class:new={newProjectPlaceholder}>
-    {#if !loading && !newProjectPlaceholder}
-      <span>{project.name}</span>
-    {:else if !loading}New project{/if}
-  </div>
-</div>

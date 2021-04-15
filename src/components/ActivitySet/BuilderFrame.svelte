@@ -6,7 +6,7 @@
   import Builder from "./Builder.svelte";
   import Chooser from "./Chooser.svelte";
 
-  let startingPoint: ActivitySet = null;
+  let startingPoint: ActivitySet | null = null;
   export let visible: boolean;
   export let activitySet: ActivitySet;
 </script>

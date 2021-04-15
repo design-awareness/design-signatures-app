@@ -9,7 +9,7 @@
 
   export let params: { wild: string };
 
-  let components = {
+  let components: Record<string, any> = {
     "activity-toggle": ActivityToggleDemo,
     "popup-menu": PopupMenuDemo,
     modal: ModalDemo,
@@ -24,12 +24,12 @@
       {#each Object.entries(components) as [slug, component]}
         <li>
           <Link href="/dev/component-library/{slug}">
-            {component.name.replace('Demo', '')}
+            {component.name.replace("Demo", "")}
           </Link>
         </li>
       {/each}
     </ul>
   </ContentFrame>
 {:else}
-  <svelte:component this={components[params.wild.replace('/', '')]} />
+  <svelte:component this={components[params.wild.replace("/", "")]} />
 {/if}

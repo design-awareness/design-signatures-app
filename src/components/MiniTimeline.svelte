@@ -90,6 +90,7 @@
   let svgElement: Element;
   let width = 0;
   let height = 0;
+  width + height; // TODO: no-op - remove once these are used!
   function setSvgElement(el: Element) {
     svgElement = el;
     resize();
@@ -116,7 +117,7 @@
       xmlns="http://www.w3.org/2000/svg"
       use:setSvgElement
     >
-      {#if timelineMode === 'timeline'}
+      {#if timelineMode === "timeline"}
         {#each timeline as [[start, end], active]}
           {#each active as actId, i}
             <rect
@@ -124,7 +125,9 @@
               width={Math.max(0, end - start)}
               y={i / active.length}
               height={1 / active.length}
-              style="--color-light: #{colors[actId][0]}; --color-dark: #{colors[actId][1]}"
+              style="--color-light: #{colors[actId][0]}; --color-dark: #{colors[
+                actId
+              ][1]}"
             />
           {/each}
         {/each}
