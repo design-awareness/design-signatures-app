@@ -6,9 +6,7 @@
 </script>
 
 <div class="container">
-  <!-- svelte-ignore empty-block -->
-  {#if true}{/if}
-  <input type="checkbox" bind:checked {id} />
+  <input type="checkbox" bind:checked on:change {id} />
   <label for={id} aria-label="Toggle {activityName}">
     <div role="presentation" class="toggle">
       <div class="thumb" />

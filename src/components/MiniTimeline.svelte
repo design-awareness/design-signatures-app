@@ -4,7 +4,6 @@
     toActiveActivitiesTimeline,
     toStateDurationTimeline,
   } from "../data/dataTransformers";
-
   import type { ActivitySet, Session } from "../data/schema";
   import useInterval from "../util/interval";
   import { sortBy } from "../util/sort";
@@ -13,8 +12,8 @@
   export let session: Session;
   export let activitySet: ActivitySet;
   export let shouldUpdate: boolean;
-
   export let timelineMode: "timeline" | "bundle" | "none";
+  export let currentTime: number;
 
   const REDRAW_TICK = 2000;
   const noop = () => {};
@@ -31,14 +30,6 @@
   let timeline: readonly [[number, number], number[]][] = [];
   let colors: readonly [string, string][] = activitySet.colors;
 
-  // type Rect = {
-  //   x: number;
-  //   y: number;
-  //   width: number;
-  //   height: number;
-  //   color: string;
-  // };
-  // let rects: Rect[] = [];
   let activityDurations: {
     duration: number;
     color: [string, string];
@@ -47,7 +38,7 @@
   let totalDuration = 0;
 
   function calc() {
-    duration = session.duration;
+    duration = currentTime;
     if (timelineMode === "timeline") {
       timeline = toActiveActivitiesTimeline(
         toStateDurationTimeline(

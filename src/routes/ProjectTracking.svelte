@@ -1,42 +1,44 @@
 <script lang="ts">
+  import createIcon from "@iconify-icons/ic/baseline-create";
+  import pauseIcon from "@iconify-icons/ic/baseline-pause";
+  import playIcon from "@iconify-icons/ic/baseline-play-arrow";
+  import settingsIcon from "@iconify-icons/ic/baseline-settings";
+  import stopIcon from "@iconify-icons/ic/baseline-stop";
   import { onDestroy } from "svelte";
+  import { pop, push } from "svelte-spa-router/Router.svelte";
+  import ColorPicker from "../components/ActivitySet/ColorPicker.svelte";
+  import ActivitySlat from "../components/ActivitySlat.svelte";
+  import ActivityToken from "../components/ActivityToken.svelte";
   import Button from "../components/Button.svelte";
+  import ButtonGroup from "../components/ButtonGroup.svelte";
+  import InputField from "../components/InputField.svelte";
   import ContentFrame from "../components/layout/ContentFrame.svelte";
   import Link from "../components/Link.svelte";
+  import MiniTimeline from "../components/MiniTimeline.svelte";
   import Modal from "../components/Modal.svelte";
+  import SelectField from "../components/SelectField.svelte";
   import TrackingTimer from "../components/TrackingTimer.svelte";
-  import { getProject, newNote, newSession } from "../data/database";
+  import CONFIG from "../data/config";
+  import { getProject, newNote } from "../data/database";
+  import { pushRecentProject } from "../data/recentProjects";
+  import type { Project } from "../data/schema";
+  import { setInArray } from "../util/array";
+  import { delay } from "../util/delay";
   import { goUpSafe } from "../util/history";
   import useInterval from "../util/interval";
-  import createIcon from "@iconify-icons/ic/baseline-create";
-  import stopIcon from "@iconify-icons/ic/baseline-stop";
-  import playIcon from "@iconify-icons/ic/baseline-play-arrow";
-  import pauseIcon from "@iconify-icons/ic/baseline-pause";
-  import settingsIcon from "@iconify-icons/ic/baseline-settings";
-  import { pop, push } from "svelte-spa-router/Router.svelte";
-  import InputField from "../components/InputField.svelte";
-  import ButtonGroup from "../components/ButtonGroup.svelte";
   import { shortDuration } from "../util/time";
-  import ActivitySlat from "../components/ActivitySlat.svelte";
-  import MiniTimeline from "../components/MiniTimeline.svelte";
-  import { pushRecentProject } from "../data/recentProjects";
-  import CONFIG from "../data/config";
-  import { delay } from "../util/delay";
-  import SelectField from "../components/SelectField.svelte";
-  import type { Project } from "../data/schema";
-  import ActivityToken from "../components/ActivityToken.svelte";
-  import ColorPicker from "../components/ActivitySet/ColorPicker.svelte";
+  import SessionTracker from "../util/track";
 
   export let params: { id: string; wild: string };
 
   const TIMER_TICK = 100;
+  const SAVE_FREQUENCY = 1000 * 60;
 
-  const session = newSession();
+  let tracker: SessionTracker;
 
   let projectTime = 0;
   let timerDisplayMode: "project" | "session" | "none" = "session";
   let visualizationMode: "timeline" | "bundle" | "none" = "timeline";
-  let singleActivityMode = false;
 
   let errorLoading = false;
   let hasProject = false;
@@ -49,15 +51,19 @@
     }
     project = _project;
     hasProject = true;
-    session.startTime = new Date();
-    session.project = project;
-    session.data = project.activitySet.activityNames.map((_) => []);
     projectTime = project.sessions
       .map((session) => session.duration)
       .reduce((a, b) => a + b, 0);
-    project.sessions = [...project.sessions, session];
+    tracker = new SessionTracker(
+      project,
+      () => subsessionTime + pastSessionTime,
+      () => {
+        tracker = tracker;
+      }
+    );
   });
 
+  //#region timing
   let activeSubsession = false;
   let pastSessionTime = 0;
   let thisSubsessionStart = 0;
@@ -72,7 +78,6 @@
   function tick() {
     let tickTime = Date.now();
     subsessionTime = tickTime - thisSubsessionStart;
-    session.duration = pastSessionTime + subsessionTime;
   }
 
   function stopTracking() {
@@ -89,9 +94,21 @@
     TIMER_TICK
   );
 
+  const [enableSaveInterval, destroySaveInterval] = useInterval(
+    {
+      start() {},
+      tick: () => tracker?.save(),
+      stop() {},
+    },
+    SAVE_FREQUENCY
+  );
+
   // tracking is enabled when no modal is open
   $: enableInterval(hasProject && !params.wild);
+  $: enableSaveInterval(hasProject && !params.wild);
+  //#endregion timing
 
+  //#region modals
   // bind this to a Modal's `visible` to enable closing it via tap on scrim
   // an inner Link[up] or closeModal() will also work!
   let bindModalOpen = true;
@@ -107,6 +124,11 @@
   const openModal = (modalName: string) => () => {
     push(`/projects/${params.id}/track/${modalName}`);
   };
+
+  function pause() {
+    openModal("pause");
+    tracker.save();
+  }
 
   interface ActivitySpec {
     name: string;
@@ -180,36 +202,46 @@
     closeModal();
   }
 
-  function setInArray<T>(arr: readonly T[], i: number, v: T): T[] {
-    const newArr = arr.slice();
-    newArr[i] = v;
-    return newArr;
+  async function stopTrackingButton() {
+    if (params.wild) {
+      await pop();
+
+      // in safari, we seem to need an extra event cycle
+      // to do the two navigation actions in a row. whatever.
+      await delay(0);
+    }
+    goUpSafe(`/projects/${params.id}/`);
   }
 
   $: if (params.wild && !bindModalOpen && !goingUp) closeModal();
+  //#endregion modals
 
+  //#region component destroy
   onDestroy(async () => {
     destroyInterval();
-    session.duration = pastSessionTime;
-    stopAllActivities(pastSessionTime);
+    destroySaveInterval();
     let project = await thenProject;
     if (!project) return;
+    stopAllActivities(pastSessionTime);
+    tracker.save();
     project.lastModified = new Date();
     pushRecentProject(project.id);
     project.save();
   });
 
   function stopAllActivities(endTime: number) {
-    session.data = session.data.map((row) => {
-      if (row.length) {
-        if (row[row.length - 1][1] === -1) {
-          let newRow = row.slice();
-          newRow[row.length - 1][1] = endTime;
-          return newRow;
-        }
+    let numActivities = tracker.session.data.length;
+    for (let i = 0; i < numActivities; i++) {
+      if (tracker.getActivityState(i).status) {
+        tracker.off(i, endTime, true);
       }
-      return row;
-    });
+    }
+  }
+  //#endregion
+
+  //#region blur & close
+  function blur() {
+    tracker.save();
   }
 
   let suppressBeforeUnload = false;
@@ -224,19 +256,9 @@
       return "You are currently tracking a project!";
     }
   }
+  //#endregion
 
-  async function stopTrackingButton() {
-    if (params.wild) {
-      await pop();
-
-      // in safari, we seem to need an extra event cycle
-      // to do the two navigation actions in a row. whatever.
-      await delay(0);
-    }
-    goUpSafe(`/projects/${params.id}/`);
-  }
-
-  /////// ADD NOTES
+  //#region notes
   let noteText = "";
   let noteSaving = false;
   async function saveNote() {
@@ -257,9 +279,10 @@
     closeModal();
     noteText = "";
   }
+  //#endregion
 </script>
 
-<svelte:window on:beforeunload={beforeUnload} />
+<svelte:window on:beforeunload={beforeUnload} on:blur={blur} />
 <main class="device-frame page">
   <ContentFrame>
     {#if hasProject}
@@ -282,9 +305,8 @@
               {activityName}
               activityColor={project.activitySet.colors[i]}
               index={i}
-              time={subsessionTime + pastSessionTime}
               showInfo={openInfo(i)}
-              bind:sessionData={session.data}
+              {tracker}
             />
           {/each}
         </div>
@@ -293,7 +315,8 @@
           <MiniTimeline
             bind:timelineMode={visualizationMode}
             shouldUpdate={hasProject && !params.wild}
-            {session}
+            session={tracker.session}
+            currentTime={subsessionTime + pastSessionTime}
             activitySet={project.activitySet}
           />
         {/if}
@@ -302,7 +325,7 @@
           <Button icon={createIcon} on:click={openModal("note")}>
             Add note
           </Button>
-          <Button icon={pauseIcon} on:click={openModal("paused")}>Pause</Button>
+          <Button icon={pauseIcon} on:click={pause}>Pause</Button>
         </ButtonGroup>
       </div>
 
@@ -375,8 +398,8 @@
           <label
             ><input
               type="checkbox"
-              bind:checked={singleActivityMode}
-              disabled
+              bind:checked={tracker.singleActivity}
+              disabled={false}
             />Single activity mode</label
           >
         </Modal>
