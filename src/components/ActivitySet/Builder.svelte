@@ -9,9 +9,9 @@
   import Button from "../Button.svelte";
   import colorPresets from "../../data/colorPresets";
   import { newActivitySet } from "../../data/database";
+  import { pop } from "svelte-spa-router/Router.svelte";
 
   export let activitySet: ActivitySet;
-  export let visible: boolean;
 
   type Activity = {
     name: string;
@@ -75,7 +75,7 @@
     saving = true;
     await as.save();
     activitySet = as;
-    visible = false; // bye!
+    await pop();
   }
 
   let dragDisabled = true;

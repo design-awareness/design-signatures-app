@@ -25,7 +25,9 @@
     "/": Home, // Home
 
     "/projects/": AllProjects, // Projects
-    "/projects/new/": NewProject, // New project
+    // "/projects/new/": NewProject, // New project
+    "/projects/new/*": NewProject, // New project
+    "/projects/new": RedirectAddPath,
     "/projects/:id/": ProjectDetail, // Project detail
     "/projects/:id/export": ProjectExport,
     "/projects/:id/track/*": ProjectTracking, // Project tracking

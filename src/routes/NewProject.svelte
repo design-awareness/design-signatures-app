@@ -2,7 +2,7 @@
   import Header from "../components/type/Header.svelte";
   import type { ActivitySet } from "../data/schema";
   import { newProject } from "../data/database";
-  import { replace } from "svelte-spa-router/Router.svelte";
+  import { replace, location } from "svelte-spa-router/Router.svelte";
   import BackButton from "../components/BackButton.svelte";
   import ContentFrame from "../components/layout/ContentFrame.svelte";
   import InputField from "../components/InputField.svelte";
@@ -10,6 +10,7 @@
   import ActivitySetChooser from "../components/ActivitySet/Chooser.svelte";
   import BuilderFrame from "../components/ActivitySet/BuilderFrame.svelte";
   import { pushRecentProject } from "../data/recentProjects";
+  import { push } from "svelte-spa-router";
 
   let name = "";
   let description = "";
@@ -17,7 +18,10 @@
   let activitySet: ActivitySet;
   let isCreating = false;
 
+  export let params: { wild: string };
+
   let newSetOverlay = false;
+  $: newSetOverlay = params.wild === "as";
 
   let beginEnabled = false;
   $: beginEnabled = name !== "" && activitySet !== null && !isCreating;
@@ -53,7 +57,7 @@
       <InputField label="Description" large bind:value={description} />
       <ActivitySetChooser
         bind:activitySet
-        createNew={() => (newSetOverlay = true)}
+        createNew={() => push($location + "as")}
       />
     </ContentFrame>
     <BottomActionBar
@@ -63,7 +67,7 @@
     />
   {:else}
     <!-- newSetOverlay -->
-    <BuilderFrame bind:visible={newSetOverlay} bind:activitySet />
+    <BuilderFrame bind:activitySet />
   {/if}
 </main>
 

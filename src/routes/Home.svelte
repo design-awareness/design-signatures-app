@@ -10,6 +10,59 @@
   import { getRecentProjects } from "../data/recentProjects";
 </script>
 
+<main class="device-frame home">
+  <PageHeader />
+
+  <ContentFrame>
+    <Header>Recent projects</Header>
+
+    <HorizontalScrollArea>
+      <ul>
+        <li>
+          <a href="#/projects/new/">
+            <ProjectCard newProjectPlaceholder />
+          </a>
+        </li>
+        {#await getRecentProjects()}
+          <li>
+            <ProjectCard loadingPlaceholder />
+          </li>
+        {:then projects}
+          {#each projects as id}
+            <li>
+              <a href={"#/projects/" + id}>
+                <ProjectCard {id} />
+              </a>
+            </li>
+          {/each}
+        {/await}
+      </ul>
+    </HorizontalScrollArea>
+
+    <Button on:click={async () => await push("/projects/")}>
+      All Projects
+    </Button>
+
+    {#if location.hostname.indexOf("design") === -1}
+      <Header>Developer</Header>
+      <p>
+        <Link href="/dev/">Developer tools and configuration ›</Link>
+      </p>
+    {/if}
+
+    <Header>About Design Awareness</Header>
+    <p>
+      <Link href="/about/appdo">What does this app do? ›</Link>
+    </p>
+    <p>
+      <Link href="/about/atmans">Atman's Model ›</Link>
+    </p>
+    <!-- <p>
+      <Link href="/">Design Awareness App Tutorials</Link>
+    </p> -->
+  </ContentFrame>
+</main>
+
 <style lang="scss">
   @import "src/styles/tokens";
   .home {
@@ -40,56 +93,3 @@
     }
   }
 </style>
-
-<main class="device-frame home">
-  <PageHeader />
-
-  <ContentFrame>
-    <Header>Recent projects</Header>
-
-    <HorizontalScrollArea>
-      <ul>
-        <li>
-          <a href="#/projects/new">
-            <ProjectCard newProjectPlaceholder />
-          </a>
-        </li>
-        {#await getRecentProjects()}
-          <li>
-            <ProjectCard loadingPlaceholder />
-          </li>
-        {:then projects}
-          {#each projects as id}
-            <li>
-              <a href={'#/projects/' + id}>
-                <ProjectCard {id} />
-              </a>
-            </li>
-          {/each}
-        {/await}
-      </ul>
-    </HorizontalScrollArea>
-
-    <Button on:click={async () => await push('/projects/')}>
-      All Projects
-    </Button>
-
-    {#if location.hostname.indexOf('design') === -1}
-      <Header>Developer</Header>
-      <p>
-        <Link href="/dev/">Developer tools and configuration ›</Link>
-      </p>
-    {/if}
-
-    <Header>About Design Awareness</Header>
-    <p>
-      <Link href="/about/appdo">What does this app do? ›</Link>
-    </p>
-    <p>
-      <Link href="/about/atmans">Atman's Model ›</Link>
-    </p>
-    <!-- <p>
-      <Link href="/">Design Awareness App Tutorials</Link>
-    </p> -->
-  </ContentFrame>
-</main>

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { pop } from "svelte-spa-router/Router.svelte";
   import type { ActivitySet } from "../../data/schema";
   import BackButton from "../BackButton.svelte";
   import ContentFrame from "../layout/ContentFrame.svelte";
@@ -7,13 +8,12 @@
   import Chooser from "./Chooser.svelte";
 
   let startingPoint: ActivitySet | null = null;
-  export let visible: boolean;
   export let activitySet: ActivitySet;
 </script>
 
 <div class="device-frame">
   <ContentFrame>
-    <BackButton button={() => (visible = false)} />
+    <BackButton button={() => pop()} />
     {#if startingPoint === null}
       <Header>Create a Design Activity Set</Header>
       <Chooser
@@ -22,7 +22,7 @@
         bind:activitySet={startingPoint}
       />
     {:else}
-      <Builder {startingPoint} bind:activitySet bind:visible />
+      <Builder {startingPoint} bind:activitySet />
     {/if}
   </ContentFrame>
 </div>
