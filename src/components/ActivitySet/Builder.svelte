@@ -9,9 +9,19 @@
   import Button from "../Button.svelte";
   import colorPresets from "../../data/colorPresets";
   import { newActivitySet } from "../../data/database";
-  import { pop } from "svelte-spa-router/Router.svelte";
+  import { pop, push, location } from "svelte-spa-router";
 
   export let activitySet: ActivitySet;
+  export let showModal: boolean;
+  let modalId = -1;
+
+  function openModal(i: number) {
+    modalId = i;
+    if ($location === "/projects/new/as") push("/projects/new/as!");
+  }
+  function closeModal() {
+    if ($location === "/projects/new/as!") pop();
+  }
 
   type Activity = {
     name: string;
@@ -124,6 +134,9 @@
         <ActivityEditor
           bind:activity
           bind:dragDisabled
+          isModalOpen={showModal && modalId === i}
+          openModal={() => openModal(i)}
+          {closeModal}
           remove={() => remove(i)}
         />
       </li>

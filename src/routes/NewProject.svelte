@@ -18,10 +18,10 @@
   let activitySet: ActivitySet;
   let isCreating = false;
 
-  export let params: { wild: string };
+  const BUILDER_SUFFIX = "as";
+  const BUILDER_MODAL_SUFFIX = "as!";
 
-  let newSetOverlay = false;
-  $: newSetOverlay = params.wild === "as";
+  export let params: { wild: string };
 
   let beginEnabled = false;
   $: beginEnabled = name !== "" && activitySet !== null && !isCreating;
@@ -45,7 +45,7 @@
 </script>
 
 <main class="device-frame page">
-  {#if !newSetOverlay}
+  {#if !(params.wild === BUILDER_SUFFIX || params.wild === BUILDER_MODAL_SUFFIX)}
     <ContentFrame>
       <BackButton href="/" />
       <Header>Create project</Header>
@@ -67,7 +67,10 @@
     />
   {:else}
     <!-- newSetOverlay -->
-    <BuilderFrame bind:activitySet />
+    <BuilderFrame
+      bind:activitySet
+      showModal={params.wild === BUILDER_MODAL_SUFFIX}
+    />
   {/if}
 </main>
 

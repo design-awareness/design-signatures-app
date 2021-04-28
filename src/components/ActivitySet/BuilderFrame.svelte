@@ -9,6 +9,8 @@
 
   let startingPoint: ActivitySet | null = null;
   export let activitySet: ActivitySet;
+
+  export let showModal: boolean;
 </script>
 
 <div class="device-frame">
@@ -22,7 +24,7 @@
         bind:activitySet={startingPoint}
       />
     {:else}
-      <Builder {startingPoint} bind:activitySet />
+      <Builder {startingPoint} bind:activitySet {showModal} />
     {/if}
   </ContentFrame>
 </div>
