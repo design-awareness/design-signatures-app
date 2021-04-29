@@ -4,6 +4,7 @@
   import Link from "../../components/Link.svelte";
   import Header from "../../components/type/Header.svelte";
   import ActivityToggleDemo from "./ComponentLibrary/ActivityToggleDemo.svelte";
+  import CanvasDemo from "./ComponentLibrary/CanvasDemo.svelte";
   import ModalDemo from "./ComponentLibrary/ModalDemo.svelte";
   import PopupMenuDemo from "./ComponentLibrary/PopupMenuDemo.svelte";
 
@@ -13,6 +14,7 @@
     "activity-toggle": ActivityToggleDemo,
     "popup-menu": PopupMenuDemo,
     modal: ModalDemo,
+    canvas: CanvasDemo,
   };
 </script>
 

@@ -16,6 +16,7 @@
     "@rollup/plugin-typescript": "^6.0.0",
     "@tsconfig/svelte": "^1.0.10",
     "@types/dom-mediacapture-record": "^1.0.7",
+    "@types/resize-observer-browser": "^0.1.5",
     "rollup": "^2.30.0",
     "rollup-plugin-copy": "^3.3.0",
     "rollup-plugin-livereload": "^2.0.0",
