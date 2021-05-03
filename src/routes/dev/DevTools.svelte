@@ -12,6 +12,7 @@
     getProject,
     getSession,
   } from "../../data/database";
+  import { colorScheme } from "../../util/colorScheme";
 
   let reloadSuppressed = false;
   (async function () {
@@ -94,8 +95,12 @@
       on:click={() => {
         reloadSuppressed = !reloadSuppressed;
         CONFIG.setDevSuppressBeforeUnload(reloadSuppressed);
-      }}>{reloadSuppressed ? 'suppressed' : 'normal'}</button>
+      }}>{reloadSuppressed ? "suppressed" : "normal"}</button
+    >
   </p>
+
+  <Header>Device properties</Header>
+  <p>Color scheme: {$colorScheme}</p>
 
   <Header>Danger zone</Header>
   <p>
