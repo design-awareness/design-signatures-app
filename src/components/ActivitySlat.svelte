@@ -4,67 +4,37 @@
   import InvisibleButton from "./InvisibleButton.svelte";
 
   import infoIcon from "@iconify-icons/ic/baseline-info";
+  import type SessionTracker from "../util/track";
 
   export let activityName: string;
   export let activityColor: [string, string];
   export let index: number;
-  export let time: number;
-  export let sessionData: readonly [number, number][][];
+  export let tracker: SessionTracker;
   export let showInfo: () => void;
 
-  let lastToggleTime = 0;
-  let lastActivityOn = false;
-  let activityOn = false;
-  let hasNewActivity = false;
-  $: if (lastActivityOn !== activityOn) {
-    let newDataRow = sessionData[index].slice();
-    let newSessionData = sessionData.slice();
-    if (activityOn) {
-      // turn activity on
-      if (!hasNewActivity || time - lastToggleTime >= 1000) {
-        // push new activity on
-        newDataRow.push([time, -1]);
-        hasNewActivity = true;
-      } else if (hasNewActivity) {
-        // quick switch: undo last activity off
-        newDataRow[newDataRow.length - 1] = [
-          newDataRow[newDataRow.length - 1][0],
-          -1,
-        ];
-        hasNewActivity = false;
-      }
-    } else {
-      // turn activity off
-      if (!hasNewActivity || time - lastToggleTime >= 1000) {
-        // update last activity on
-        newDataRow[newDataRow.length - 1] = [
-          newDataRow[newDataRow.length - 1][0],
-          time,
-        ];
-        hasNewActivity = true;
-      } else if (hasNewActivity) {
-        // quick switch: undo last activity on
-        newDataRow = sessionData[index].slice(0, sessionData[index].length - 1);
-        hasNewActivity = false;
-      }
-    }
-    newSessionData[index] = newDataRow;
-    sessionData = newSessionData;
-    lastToggleTime = time;
-    lastActivityOn = activityOn;
+  function toggle() {
+    tracker.toggle(index);
+  }
+
+  let status: boolean, currentDuration: number, totalActivityTime: number;
+  $: {
+    let state = tracker.getActivityState(index);
+    status = state.status;
+    currentDuration = state.currentDuration;
+    totalActivityTime = state.totalActivityTime;
   }
 </script>
 
 <div
   class="slat"
-  class:active={activityOn}
+  class:active={status}
   style="--activity-color-light: #{activityColor[0]}; --activity-color-dark: #{activityColor[1]}"
 >
   <InvisibleButton on:click={showInfo}>
     <Icon icon={infoIcon} />
   </InvisibleButton>
   <div class="name">{activityName}</div>
-  <ActivityToggle {activityName} bind:checked={activityOn} />
+  <ActivityToggle {activityName} checked={status} on:change={toggle} />
 </div>
 
 <style lang="scss">
@@ -77,7 +47,7 @@
     box-sizing: border-box;
     align-items: center;
     :global(button) {
-      width: fit-content;
+      flex: 0;
       padding: 0.25rem;
       margin-right: $activity-slat-icon-text-spacing;
     }

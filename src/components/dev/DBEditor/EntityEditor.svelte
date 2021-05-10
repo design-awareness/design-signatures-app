@@ -13,7 +13,7 @@
 
   export let entityType: DBModelName;
   export let id: string;
-  export let setView: TriggerInvoker<[DBModelName, string]>;
+  export let setView: TriggerInvoker<[DBModelName, string | null]>;
 
   const editorComponents = {
     ActivitySet: ActivitySetEditor,
@@ -31,4 +31,5 @@
   {id}
   {setView}
   {save}
-  {remove} />
+  {remove}
+/>

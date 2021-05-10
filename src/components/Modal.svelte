@@ -1,10 +1,12 @@
 <script lang="ts">
+  import { createEventDispatcher } from "svelte";
+
   import Button from "./Button.svelte";
   import Header from "./type/Header.svelte";
 
   export let visible = true;
-  export let status: string = null;
-  export let title: string = null;
+  export let status: string | null = null;
+  export let title: string | null = null;
   export let closeWithScrim = true;
   export let maxWidth = false;
 
@@ -17,6 +19,8 @@
     disabled?: boolean;
   }[] = [];
 
+  const dispatch = createEventDispatcher();
+
   function inject(node: HTMLElement) {
     document.body.appendChild(node);
 
@@ -26,11 +30,18 @@
       },
     };
   }
+
+  function clickScrim() {
+    dispatch("close");
+    if (closeWithScrim) {
+      visible = false;
+    }
+  }
 </script>
 
 {#if visible}
   <div role="dialog" aria-labelledby="dialog__Title" use:inject>
-    <div class="scrim" on:click={() => closeWithScrim && (visible = false)} />
+    <div class="scrim" on:click={clickScrim} />
     <div class="modal" class:maxWidth>
       {#if status}
         <div class="status">{status}</div>

@@ -16,7 +16,7 @@ let dbOpen = false;
 /**
  * promise resolving to the open database
  */
-let dbPromise: Promise<IDBDatabase> = null;
+let dbPromise: Promise<IDBDatabase>;
 
 /**
  * whether the database open has been started
@@ -33,7 +33,7 @@ export function isOpen() {
 const [_onUpgradeNeeded, requestUpgrade] = defer<number>();
 export const onUpgradeNeeded = _onUpgradeNeeded;
 
-type ObjectStoreName = Schema.DBModelName | "_Config";
+type ObjectStoreName = Schema.DBModelName | "_Config" | string;
 
 /**
  * Get the IDB Database, opening it if it isn't open yet.
@@ -62,7 +62,7 @@ function getDb(onblocked?: (evt: any) => void) {
         } else {
           console.log("Database needs upgrading: ");
           upgradeDatabase(event.oldVersion, db);
-          dbPromise.then(() => {
+          dbPromise?.then(() => {
             requestUpgrade(event.oldVersion);
           });
         }
@@ -72,7 +72,7 @@ function getDb(onblocked?: (evt: any) => void) {
         dbOpen = true;
         // @ts-ignore
         const db = event.target.result;
-        db.onversionchange = (event) => {
+        db.onversionchange = (/*event*/) => {
           db.close();
           alert(
             "A new version of this page is ready. Please reload or close this tab!"
@@ -116,7 +116,7 @@ async function transaction(
  * Adds given new entry (data) to the given datastore. Resolves when the
  * transaction is complete. Use update to update an existing entry.
  */
-async function add(store: ObjectStoreName, data) {
+async function add(store: ObjectStoreName, data: any) {
   const { complete, objectStore } = await transaction(store, "readwrite");
   objectStore.add(data);
   await complete;
@@ -126,7 +126,7 @@ async function add(store: ObjectStoreName, data) {
  * Updates given entry in the given datastore. Resolves when the transaction
  * is complete. Use to update an entry that is already saved.
  */
-async function update(store: ObjectStoreName, data) {
+async function update(store: ObjectStoreName, data: any) {
   const { complete, objectStore } = await transaction(store, "readwrite");
   objectStore.put(data);
   await complete;
@@ -147,12 +147,10 @@ async function remove(store: ObjectStoreName, id: DBID) {
 async function get(store: ObjectStoreName, id: DBID): Promise<object | null> {
   const objectStore = (await transaction(store)).objectStore;
   const request = objectStore.get(id);
-  return (
-    await new Promise((res, rej) => {
-      request.onerror = rej;
-      request.onsuccess = res;
-    })
-  )["target"]["result"];
+  return ((await new Promise((res, rej) => {
+    request.onerror = rej;
+    request.onsuccess = res;
+  })) as any)["target"]["result"];
 }
 
 export const rawDatabaseOperations = {
@@ -254,7 +252,7 @@ export function saveAll(
 async function getEntry(
   store: Schema.DBModelName,
   id: DBID
-): Promise<Schema.IDBObj> {
+): Promise<Schema.IDBObj | null> {
   if (id === null) return null;
 
   const typeStore = objStore[store] as Map<DBID, Schema.IDBObj>;
@@ -287,7 +285,7 @@ async function getEntry(
       await childResolutionPromise;
     }
   }
-  return typeStore.get(id);
+  return typeStore.get(id) ?? null;
 }
 
 /**
@@ -310,10 +308,15 @@ function createClientObject(
   _id: DBID | null = null
 ): [Schema.IDBObj, Promise<any[]>] {
   const schema = Schema.Schema[store];
-  const data = {};
+  const data: Record<string, any> = {};
   const obj = {};
   const childResolvers = [];
-  const subscriptions = new Set();
+  type SubscriptionHandler = (
+    this: Schema.IDBObj,
+    key: string,
+    value: any
+  ) => void;
+  const subscriptions = new Set<SubscriptionHandler>();
 
   // client obj private properties
   let dirty = !_id;
@@ -323,11 +326,13 @@ function createClientObject(
 
   for (let [name, dbtype] of schema) {
     if (dbtype == null) {
+      // @ts-expect-error
       data[name] = rawObj[name];
     } else {
       // children need resolving!!
       const [modelName, repeated] = dbtype;
       if (!repeated) {
+        // @ts-expect-error
         const childID = rawObj[name];
         if (childID) {
           childResolvers.push(
@@ -339,11 +344,15 @@ function createClientObject(
           data[name] = null;
         }
       } else {
+        // @ts-expect-error
         if (rawObj[name].length) {
           childResolvers.push(
             (async () => {
               data[name] = await Promise.all(
-                rawObj[name].map((childID) => getEntry(modelName, childID))
+                // @ts-expect-error
+                rawObj[name].map((childID: string) =>
+                  getEntry(modelName, childID)
+                )
               );
             })()
           );
@@ -376,12 +385,12 @@ function createClientObject(
   Object.defineProperty(obj, "id", { get: () => id });
   Object.defineProperty(obj, "deleted", { get: () => deleted });
 
-  let removing: Promise<void> = null;
+  let removing: Promise<void> | null = null;
   Object.assign(obj, {
-    subscribe(fn) {
+    subscribe(fn: SubscriptionHandler) {
       subscriptions.add(fn);
     },
-    unsubscribe(fn) {
+    unsubscribe(fn: SubscriptionHandler) {
       subscriptions.delete(fn);
     },
     // save is typed as async () => void to prevent
@@ -401,6 +410,7 @@ function createClientObject(
         // pack into db-friendly object
         for (let [name, dbtype] of schema) {
           if (dbtype === null) {
+            // @ts-expect-error
             dbObj[name] = data[name];
           } else {
             // child db entry - save this too!
@@ -410,6 +420,7 @@ function createClientObject(
             // another parameter or something)
             const repeated = dbtype[1];
             if (repeated) {
+              // @ts-expect-error
               dbObj[name] = [];
               if (!data[name]) data[name] = [];
               savingChildren.push(
@@ -419,6 +430,7 @@ function createClientObject(
                       return null; // await Promise.resolve([null]) -> [null]
                     }
                     const childPromise = child.save();
+                    // @ts-expect-error
                     dbObj[name][i] = child.id;
                     return childPromise;
                   })
@@ -426,9 +438,11 @@ function createClientObject(
               );
             } else {
               if (data[name] === null) {
+                // @ts-expect-error
                 dbObj[name] = null;
               } else {
                 const childPromise = data[name].save();
+                // @ts-expect-error
                 dbObj[name] = data[name].id;
                 savingChildren.push(childPromise);
               }

@@ -8,12 +8,12 @@
   import InvisibleButton from "../InvisibleButton.svelte";
   import Item from "./Item.svelte";
 
-  export let activitySet: ActivitySet;
+  export let activitySet: ActivitySet | null = null;
   export let label = "Activity Set";
-  export let createNew: () => void = null;
+  export let createNew: (() => void) | null = null;
   export let withEmpty = false;
 
-  export let allActivitySets: Promise<ActivitySet[]>;
+  let allActivitySets: Promise<ActivitySet[]>;
   function refreshSets() {
     allActivitySets = getAll("ActivitySet").then((ids) =>
       Promise.all(ids.map(getActivitySet))
@@ -39,11 +39,11 @@
     {#if withEmpty}
       <li>
         <InvisibleButton on:click={() => set(newActivitySet())}>
-          <Item empty />
+          <Item />
         </InvisibleButton>
       </li>
     {/if}
-    {#each sortBy('wellKnown', sortBy('name', activitySets)) as activitySetItem}
+    {#each sortBy("wellKnown", sortBy("name", activitySets)) as activitySetItem}
       <li>
         <InvisibleButton on:click={() => set(activitySetItem)}>
           <Item

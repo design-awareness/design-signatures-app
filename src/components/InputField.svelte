@@ -2,7 +2,7 @@
   export let value: string;
   export let label: string;
   export let placeholder = "";
-  export let helptext: string = null;
+  export let helptext: string | null = null;
 
   export let large = false;
   export let xlarge = false;

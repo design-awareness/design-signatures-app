@@ -5,9 +5,12 @@
   import EditorRefField from "./EditorRefField.svelte";
 
   export let name: string;
-  export let type:
-    | { primitive: "boolean" | "string" | "number" | "date" }
-    | { entity: DBModelName };
+  type PrimitiveTypeDescriptor = {
+    primitive: "boolean" | "string" | "number" | "date";
+  };
+  type EntityTypeDescriptor = { entity: DBModelName };
+  type TypeDescriptor = PrimitiveTypeDescriptor | EntityTypeDescriptor;
+  export let type: TypeDescriptor;
   export let value: readonly any[] = [];
   export let setView: TriggerInvoker<[DBModelName, string]> = () => {};
 
@@ -53,30 +56,34 @@
       value = [...tarr];
     };
   }
+
+  function isPrimitive(type: TypeDescriptor): type is PrimitiveTypeDescriptor {
+    return type.hasOwnProperty("primitive");
+  }
 </script>
 
 <div class="field">
   <p>{name}</p>
   <div class="group">
     {#each value as entry, i}
-      {#if type.hasOwnProperty('primitive')}
+      {#if isPrimitive(type)}
         <EditorField
-          type={type['primitive']}
+          type={type.primitive}
           value={entry}
           on:set={set(i)}
           on:remove={remove(i)}
           hasRemove={true}
-          name={'' + i}
+          name={"" + i}
           {isSpecialColor}
         />
       {:else}
         <EditorRefField
-          type={type['entity']}
+          type={type.entity}
           value={entry}
           on:set={set(i)}
           on:remove={remove(i)}
           hasRemove={true}
-          name={'' + i}
+          name={"" + i}
           {setView}
         />
       {/if}

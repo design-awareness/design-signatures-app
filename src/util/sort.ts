@@ -1,4 +1,8 @@
-export function sortBy<P>(key: string, list: P[], ascending = true): P[] {
+export function sortBy<P extends Record<string, any>>(
+  key: string,
+  list: P[],
+  ascending = true
+): P[] {
   return sortWith((el) => el[key], list, ascending);
 }
 

@@ -1,4 +1,4 @@
-import { sortBy, sortWith } from "../util/sort";
+import { sortWith } from "../util/sort";
 
 export function toEventTimeline(
   data: readonly [number, number][][],
@@ -67,7 +67,7 @@ export function toActiveActivitiesTimeline<T>(
 }
 
 export function toActiveActivities(data: readonly boolean[]): number[] {
-  let result = [];
+  let result: number[] = [];
   data.forEach((b, i) => b && result.push(i));
   return result;
 }

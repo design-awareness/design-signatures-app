@@ -11,11 +11,11 @@
 
   const id = Math.random().toString(36).substr(2, 8);
 
-  function blur() {
+  function blur(this: HTMLInputElement) {
     dispatch("set", this.value);
   }
   const blurS = (i: number) =>
-    function () {
+    function (this: HTMLInputElement) {
       value[i] = this.value;
       dispatch("set", value);
     };
@@ -24,14 +24,14 @@
     dispatch("remove");
   }
 
-  function setDate() {
+  function setDate(this: HTMLInputElement) {
     value = new Date(this.value);
   }
 </script>
 
 <div class="field">
   {#if name}<label for={id}>{name}</label>{/if}
-  {#if type === 'boolean'}
+  {#if type === "boolean"}
     <input
       type="checkbox"
       on:blur={blur}
@@ -40,38 +40,35 @@
       {disabled}
     />
   {/if}
-  {#if type === 'string'}
+  {#if type === "string"}
     {#if isSpecialColor}
       <input
         type="text"
         on:blur={blurS(0)}
         bind:value={value[0]}
-        id={id + '1'}
+        id={id + "1"}
         {disabled}
       />
       <input
         type="text"
         on:blur={blurS(1)}
         bind:value={value[1]}
-        id={id + '2'}
+        id={id + "2"}
         {disabled}
       />
     {:else}<input type="text" on:blur={blur} bind:value {id} {disabled} />{/if}
   {/if}
-  {#if type === 'number'}
+  {#if type === "number"}
     <input type="number" on:blur={blur} bind:value {id} {disabled} />
   {/if}
-  {#if type === 'date'}
+  {#if type === "date"}
     <input
       type="datetime-local"
       on:blur={blur}
       on:change={setDate}
-      value={value ? value
-            .toLocaleString('sv')
-            .replace(
-              ' ',
-              'T'
-            ) : new Date().toLocaleString('sv').replace(' ', 'T')}
+      value={value
+        ? value.toLocaleString("sv").replace(" ", "T")
+        : new Date().toLocaleString("sv").replace(" ", "T")}
       {id}
       {disabled}
     />

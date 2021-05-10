@@ -60,7 +60,7 @@
       // TODO: combine sessions output
       return { error: "Combined sessions not available yet!" };
     } else {
-      let data = [];
+      let data: any[] = [];
       let elapsedTime = 0;
       project.sessions.forEach((session) => {
         let sessionData = exportSession(session, elapsedTime);
@@ -86,7 +86,7 @@
       return toEventTimeline(session.data, projectTime ? prevTime : 0);
     } else if (dataFormat === 2) {
       return toStateTimeline(session.data, 0, projectTime ? prevTime : 0);
-    } else if (dataFormat === 3) {
+    } /*if (dataFormat === 3)*/ else {
       const stateTimeline = toStateTimeline(
         session.data,
         0,
@@ -100,7 +100,12 @@
     let as = project.activitySet;
     if (asFormat === 1) {
       // group by activity;
-      let activities = [];
+      let activities: {
+        code: string;
+        name: string;
+        description: string;
+        color: [string, string];
+      }[] = [];
       as.activityCodes.forEach((code, i) => {
         activities.push({
           code,
@@ -136,11 +141,12 @@
         "image/svg+xml",
         timelineRef
           .querySelector(".timeline-scrollable svg")
-          .outerHTML.replace(
+          ?.outerHTML?.replace(
             "</svg>",
             "<" +
               "style>svg{background-color:white;}.grid-line{fill:#bdbdbd;}text{font:500 0.8rem sans-serif;}</style></svg>"
           )
+          .toString() as string
       );
     } else if (exportType === "data") {
       if (!project) await projectPromise;
@@ -163,45 +169,69 @@
       <SelectField
         label="Type"
         bind:value={exportType}
-        options={[['image', 'Timeline image (SVG)'], ['data', 'Session data (JSON)']]}
+        options={[
+          ["image", "Timeline image (SVG)"],
+          ["data", "Session data (JSON)"],
+        ]}
       />
-      {#if exportType === 'image'}
+      {#if exportType === "image"}
         <SelectField
           label="Size"
           bind:value={imageSize}
-          options={[[200, 'Super short'], [350, 'Short'], [500, 'Normal'], [750, 'Long'], [1000, 'Super long']]}
+          options={[
+            [200, "Super short"],
+            [350, "Short"],
+            [500, "Normal"],
+            [750, "Long"],
+            [1000, "Super long"],
+          ]}
         />
         <SectionHeader>Preview</SectionHeader>
         <div use:setTimeline>
           <RichTimeline {project} width={imageSize} fixedCodes={false} />
         </div>
-      {:else if exportType === 'data'}
+      {:else if exportType === "data"}
         <SectionHeader>Sessions</SectionHeader>
-        <label><input
+        <label
+          ><input
             type="checkbox"
             bind:checked={combineSessions}
             disabled
-          />Combine sessions</label>
-        <label><input
+          />Combine sessions</label
+        >
+        <label
+          ><input
             type="checkbox"
             bind:checked={annotateSessions}
             disabled={combineSessions}
-          />Include session metadata</label>
+          />Include session metadata</label
+        >
         <SectionHeader>Timestamps</SectionHeader>
-        <label><input
+        <label
+          ><input
             type="checkbox"
             bind:checked={projectTime}
             disabled={combineSessions}
-          />Use project time</label>
+          />Use project time</label
+        >
         <SelectField
           label="Format"
           bind:value={dataFormat}
-          options={[[0, 'Raw on/off pairs'], [1, 'Raw event timeline'], [2, 'State timeline (all)'], [3, 'State timeline (active IDs)']]}
+          options={[
+            [0, "Raw on/off pairs"],
+            [1, "Raw event timeline"],
+            [2, "State timeline (all)"],
+            [3, "State timeline (active IDs)"],
+          ]}
         />
         <SelectField
           label="Activity set"
           bind:value={asFormat}
-          options={[[0, "Don't export Activity Set"], [1, 'Group by activity'], [2, 'Group by field']]}
+          options={[
+            [0, "Don't export Activity Set"],
+            [1, "Group by activity"],
+            [2, "Group by field"],
+          ]}
         />
         <!--<SelectField
           label="Format"

@@ -6,13 +6,13 @@
   import EditorField from "./EditorField.svelte";
   import EditorFieldGroup from "./EditorFieldGroup.svelte";
 
-  export let setView: TriggerInvoker<[DBModelName, string]>;
+  export let setView: TriggerInvoker<[DBModelName, string | null]>;
   export let save: ITriggerPassable<void>;
   export let remove: ITriggerPassable<void>;
   export let id: string;
 
   let dbObj: ActivitySet;
-  let loadedId: string = undefined;
+  let loadedId: string | null = null;
   let loading = true;
 
   async function loadObj() {
@@ -36,7 +36,7 @@
   });
 </script>
 
-<p class="detail">{(dbObj && dbObj.id) || 'New ActivitySet'}</p>
+<p class="detail">{(dbObj && dbObj.id) || "New ActivitySet"}</p>
 <div class="editor">
   {#if !loading && dbObj}
     <EditorField name="name" type="string" bind:value={dbObj.name} />
@@ -47,22 +47,22 @@
     />
     <EditorFieldGroup
       name="activityNames"
-      type={{ primitive: 'string' }}
+      type={{ primitive: "string" }}
       bind:value={dbObj.activityNames}
     />
     <EditorFieldGroup
       name="activityCodes"
-      type={{ primitive: 'string' }}
+      type={{ primitive: "string" }}
       bind:value={dbObj.activityCodes}
     />
     <EditorFieldGroup
       name="activityDescriptions"
-      type={{ primitive: 'string' }}
+      type={{ primitive: "string" }}
       bind:value={dbObj.activityDescriptions}
     />
     <EditorFieldGroup
       name="colors"
-      type={{ primitive: 'string' }}
+      type={{ primitive: "string" }}
       bind:value={dbObj.colors}
       isSpecialColor={true}
     />

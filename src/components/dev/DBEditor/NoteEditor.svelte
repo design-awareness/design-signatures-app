@@ -6,13 +6,13 @@
   import EditorField from "./EditorField.svelte";
   import EditorRefField from "./EditorRefField.svelte";
 
-  export let setView: TriggerInvoker<[DBModelName, string]>;
+  export let setView: TriggerInvoker<[DBModelName, string | null]>;
   export let save: ITriggerPassable<void>;
   export let remove: ITriggerPassable<void>;
   export let id: string;
 
   let dbObj: Note;
-  let loadedId: string = undefined;
+  let loadedId: string | null = null;
   let loading = true;
 
   async function loadObj() {
@@ -36,17 +36,7 @@
   });
 </script>
 
-<style lang="scss">
-  .editor {
-    display: table;
-  }
-  p {
-    font-weight: 600;
-    line-height: 2;
-  }
-</style>
-
-<p class="detail">{(dbObj && dbObj.id) || 'New Note'}</p>
+<p class="detail">{(dbObj && dbObj.id) || "New Note"}</p>
 <div class="editor">
   {#if !loading && dbObj}
     <EditorField name="contents" type="string" bind:value={dbObj.contents} />
@@ -57,11 +47,23 @@
       name="session"
       type="Session"
       bind:value={dbObj.session}
-      {setView} />
+      {setView}
+    />
     <EditorRefField
       name="project"
       type="Project"
       bind:value={dbObj.project}
-      {setView} />
+      {setView}
+    />
   {/if}
 </div>
+
+<style lang="scss">
+  .editor {
+    display: table;
+  }
+  p {
+    font-weight: 600;
+    line-height: 2;
+  }
+</style>

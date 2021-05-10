@@ -4,7 +4,6 @@
     toActiveActivitiesTimeline,
     toStateDurationTimeline,
   } from "../data/dataTransformers";
-
   import type { ActivitySet, Session } from "../data/schema";
   import useInterval from "../util/interval";
   import { sortBy } from "../util/sort";
@@ -13,8 +12,8 @@
   export let session: Session;
   export let activitySet: ActivitySet;
   export let shouldUpdate: boolean;
-
   export let timelineMode: "timeline" | "bundle" | "none";
+  export let currentTime: number;
 
   const REDRAW_TICK = 2000;
   const noop = () => {};
@@ -31,14 +30,6 @@
   let timeline: readonly [[number, number], number[]][] = [];
   let colors: readonly [string, string][] = activitySet.colors;
 
-  // type Rect = {
-  //   x: number;
-  //   y: number;
-  //   width: number;
-  //   height: number;
-  //   color: string;
-  // };
-  // let rects: Rect[] = [];
   let activityDurations: {
     duration: number;
     color: [string, string];
@@ -47,7 +38,7 @@
   let totalDuration = 0;
 
   function calc() {
-    duration = session.duration;
+    duration = currentTime;
     if (timelineMode === "timeline") {
       timeline = toActiveActivitiesTimeline(
         toStateDurationTimeline(
@@ -90,6 +81,7 @@
   let svgElement: Element;
   let width = 0;
   let height = 0;
+  width + height; // TODO: no-op - remove once these are used!
   function setSvgElement(el: Element) {
     svgElement = el;
     resize();
@@ -116,7 +108,7 @@
       xmlns="http://www.w3.org/2000/svg"
       use:setSvgElement
     >
-      {#if timelineMode === 'timeline'}
+      {#if timelineMode === "timeline"}
         {#each timeline as [[start, end], active]}
           {#each active as actId, i}
             <rect
@@ -124,7 +116,9 @@
               width={Math.max(0, end - start)}
               y={i / active.length}
               height={1 / active.length}
-              style="--color-light: #{colors[actId][0]}; --color-dark: #{colors[actId][1]}"
+              style="--color-light: #{colors[actId][0]}; --color-dark: #{colors[
+                actId
+              ][1]}"
             />
           {/each}
         {/each}

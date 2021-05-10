@@ -4,6 +4,7 @@
   import BottomActionBar from "../components/BottomActionBar.svelte";
   import ContentFrame from "../components/layout/ContentFrame.svelte";
   import PopupMenu from "../components/PopupMenu.svelte";
+  import type { PopupMenuDescriptor } from "../components/PopupMenu.svelte";
   import RichTimeline from "../components/RichTimeline.svelte";
   import Header from "../components/type/Header.svelte";
   import SectionHeader from "../components/type/SectionHeader.svelte";
@@ -56,7 +57,7 @@
   let otherOpen = false;
   let deleteProjectOpen = false;
 
-  const menuDescriptor = () => [
+  const menuDescriptor = (): PopupMenuDescriptor => [
     { label: "Edit", icon: editIcon, action: () => (editProjectOpen = true) },
     { label: "Compare", icon: compareIcon, action: () => (otherOpen = true) },
     {
@@ -64,7 +65,7 @@
       icon: exportIcon,
       action: () => push(`/projects/${params.id}/export`),
     },
-    { separator: true, label: null, action: null },
+    { separator: true },
     {
       label: project.active ? "Archive" : "Unarchive",
       icon: project.active ? archiveIcon : unarchiveIcon,

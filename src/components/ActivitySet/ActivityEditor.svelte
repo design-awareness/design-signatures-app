@@ -19,8 +19,9 @@
 
   export let activity: Activity;
   export let remove: () => void;
-
-  let editorVisible = false;
+  export let isModalOpen: boolean;
+  export let openModal: () => void;
+  export let closeModal: () => void;
 
   function setCode(e: Event) {
     activity.code = abbreviateActivityName(
@@ -52,7 +53,7 @@
     class="drag-handle"
     tabindex={dragDisabled ? 0 : -1}
     aria-label="drag-handle"
-    style={dragDisabled ? 'cursor: grab' : 'cursor: grabbing'}
+    style={dragDisabled ? "cursor: grab" : "cursor: grabbing"}
     on:mousedown={startDrag}
     on:touchstart={startDrag}
     on:keydown={handleKeyDown}
@@ -60,7 +61,7 @@
     <Icon icon={dragIcon} />
   </div>
   <input bind:value={activity.name} on:input={setCode} />
-  <InvisibleButton on:click={() => (editorVisible = true)}>
+  <InvisibleButton on:click={openModal}>
     <ActivityToken fixWidth color={activity.color} code={activity.code} />
     <Icon icon={down} />
   </InvisibleButton>
@@ -71,9 +72,10 @@
   </InvisibleButton>
 
   <Modal
-    bind:visible={editorVisible}
+    visible={isModalOpen}
     title={activity.name}
-    buttons={[{ label: 'Done', onClick: () => (editorVisible = false) }]}
+    buttons={[{ label: "Done", onClick: closeModal }]}
+    on:close={closeModal}
   >
     <InputField
       label="Activity code"

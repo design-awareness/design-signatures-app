@@ -5,7 +5,10 @@ const CONFIG_STORE = "_Config";
 const configCache = new Map<String, any>();
 const promiseCache = new Map<String, Promise<any>>();
 
-async function getConfig<T>(key: string, defaultValue: T = null): Promise<T> {
+async function getConfig<T>(
+  key: string,
+  defaultValue: T | null = null
+): Promise<T> {
   if (configCache.has(key)) {
     return configCache.get(key);
   }
@@ -14,7 +17,7 @@ async function getConfig<T>(key: string, defaultValue: T = null): Promise<T> {
   }
 
   let data = await rawDatabaseOperations.get(CONFIG_STORE, key);
-  return data?.["value"] ?? defaultValue;
+  return (data as any)?.value ?? defaultValue;
 }
 
 function setConfig(key: string, value: any): Promise<void> {
