@@ -33,6 +33,7 @@
     min-width: $button-min-width;
     white-space: nowrap;
     color: $text-primary-color;
+    font-feature-settings: "tnum" 1;
     :global(svg) {
       margin-right: $button-icon-spacing;
       font-size: $button-icon-size;
