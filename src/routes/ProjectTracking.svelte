@@ -4,8 +4,9 @@
   import playIcon from "@iconify-icons/ic/baseline-play-arrow";
   import settingsIcon from "@iconify-icons/ic/baseline-settings";
   import stopIcon from "@iconify-icons/ic/baseline-stop";
+  import undoIcon from "@iconify-icons/ic/baseline-history";
   import { onDestroy } from "svelte";
-  import { pop, push } from "svelte-spa-router/Router.svelte";
+  import { pop, push, replace } from "svelte-spa-router/Router.svelte";
   import ColorPicker from "../components/ActivitySet/ColorPicker.svelte";
   import ActivitySlat from "../components/ActivitySlat.svelte";
   import ActivityToken from "../components/ActivityToken.svelte";
@@ -28,8 +29,9 @@
   import useInterval from "../util/interval";
   import { shortDuration } from "../util/time";
   import SessionTracker from "../util/track";
+  import UndoTrackingModal from "../components/UndoTrackingModal.svelte";
 
-  type ModalName = "note" | "paused" | "options" | "info";
+  type ModalName = "note" | "paused" | "options" | "info" | "undo";
 
   export let params: { id: string; wild: ModalName };
 
@@ -125,6 +127,9 @@
 
   const openModal = (modalName: ModalName) => () => {
     push(`/projects/${params.id}/track/${modalName}`);
+  };
+  const replaceModal = (modalName: ModalName) => () => {
+    replace(`/projects/${params.id}/track/${modalName}`);
   };
 
   function pause() {
@@ -379,6 +384,9 @@
           title="Tracking options"
           buttons={[{ label: "Done", onClick: closeModal }]}
         >
+          <Button on:click={replaceModal("undo")} icon={undoIcon}
+            >Undo Tracking</Button
+          >
           <SelectField
             label="Timer"
             bind:value={timerDisplayMode}
@@ -451,6 +459,14 @@
             <p>{selectedActivity.description || "No description provided."}</p>
           {/if}
         </Modal>
+      {:else if params.wild === "undo"}
+        <UndoTrackingModal
+          bind:visible={bindModalOpen}
+          {closeModal}
+          {undoIcon}
+          bind:time={pastSessionTime}
+          {tracker}
+        />
       {/if}
     {:else if errorLoading}
       This project does not exist.

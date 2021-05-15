@@ -27,7 +27,6 @@ export default class SessionTracker {
   private activityStates: boolean[];
   private pastTimes: number[];
   private lastToggleTime: number[];
-  private lastActivationTime: number[];
   private hasAddedToProject = false;
   private getTime: () => number;
   private invalidate: () => void;
@@ -65,7 +64,6 @@ export default class SessionTracker {
     this.activityStates = project.activitySet.activityNames.map(() => false);
     this.pastTimes = this.activityStates.map(() => -1);
     this.lastToggleTime = this.activityStates.map(() => -1);
-    this.lastActivationTime = this.activityStates.map(() => 0);
 
     this.session.project = project;
     this.session.data = this.activityStates.map(() => []);
@@ -177,7 +175,6 @@ export default class SessionTracker {
       this.session.data = setInArray(this.session.data, i, data);
       // we shouldn't undo any more, so this will ensure that the next
       // toggle always ƒinishes the current entry.
-      this.lastActivationTime[i] = lastOn;
       this.lastToggleTime[i] = -1;
     } else {
       // add a new entry to the session data
@@ -185,7 +182,6 @@ export default class SessionTracker {
         ...this.session.data[i],
         [time, -1],
       ]);
-      this.lastActivationTime[i] = time;
       this.lastToggleTime[i] = time;
     }
     this.activityStates[i] = true;
@@ -198,6 +194,37 @@ export default class SessionTracker {
         }
       });
     }
+
+    this.invalidate();
+  }
+
+  /**
+   * Rewind the tracking state to the given time, so that the state
+   * is changed back to what it would have been at that time.
+   * Note that the time provider should also update its time, as the
+   * SessionTracker cannot control that.
+   * @param time time to rewind back to
+   */
+  rewindTo(time: number) {
+    // clear last activation times
+    this.session.data = this.session.data.map((data, i) => {
+      let on = false;
+      // remove pairs that start after the cutoff time
+      // (inefficient!)
+      data = data.filter(([start]) => start < time);
+
+      // need to check the last pair to see if the activity has ended or not
+      if (data.length) {
+        let lastIdx = data.length - 1;
+        if (data[lastIdx][1] > time) {
+          on = true;
+          data[lastIdx][1] = -1;
+        }
+      }
+      this.activityStates[i] = on;
+      this.lastToggleTime[i] = -1;
+      return data;
+    });
 
     this.invalidate();
   }
