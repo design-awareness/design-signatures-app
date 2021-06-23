@@ -3,43 +3,50 @@
 // Color tokens
 
 $neutral-00: #ffffff;
-$neutral-10: #f5f5f5;
-$neutral-20: #bdbdbd;
-$neutral-30: #929292;
-$neutral-40: #515151;
-$neutral-50: #4f4f4f;
-$neutral-60: #313131;
-$neutral-70: #282828;
+$neutral-05: #f5f5f5;
+$neutral-10: #eaeaea;
+$neutral-20: #dadada;
+$neutral-30: #bdbdbd;
+$neutral-40: #999999;
+$neutral-50: #757575;
+$neutral-60: #4f4f4f;
+$neutral-70: #333333;
 $neutral-80: #212121;
 $neutral-90: #000000;
+
+$accentmain: #5372e0;
+$accentdark: #202372;
+$accentoverlay: #2375ef3f;
+$accentdim: #8697ee;
+$accentdimdrk: #3D4572;
 
 @mixin color-theme-light {
   @include setvars(
     (
-      background: $neutral-10,
+      background: $neutral-05,
       modal-background: $neutral-00,
       modal-status-background: $neutral-50,
       modal-status-text: $neutral-00,
-      text-primary: $neutral-90,
-      text-secondary: $neutral-60,
+      text-primary: $neutral-80,
+      text-secondary: $neutral-50,
       text-ghost: $neutral-40,
       text-opposing: $neutral-00,
       project-card-background: $neutral-00,
       loading-placeholder: $neutral-50,
-      button-background: $neutral-00,
+      button-background: $neutral-10,
       button-disabled: $neutral-30,
       back-button: $neutral-40,
-      button-border: $neutral-60,
+      button-border: $neutral-40,
       popup-background: $neutral-00,
       popup-separator: $neutral-20,
       input-background: $neutral-00,
       input-border: $neutral-20,
-      active-selection-background: rgba(80, 182, 255, 0.18),
-      action-bar-background: #649fc9,
-      action-bar-background_disabled: #87b6d6,
+      active-selection-background: $accentoverlay,
+      action-bar-background: $accentmain,
+      action-bar-background_disabled: $accentdim,
       tracking-background: $neutral-00,
       mini-timeline-card-background: $neutral-00,
-      mini-timeline-inactive: $neutral-20,
+      mini-timeline-inactive: $neutral-10,
       timeline-background: $neutral-00,
       timeline-gridline: $neutral-20,
       toggle-switch-neutral: $neutral-50,
@@ -54,29 +61,29 @@ $neutral-90: #000000;
       background: $neutral-80,
       modal-background: $neutral-70,
       modal-status-background: $neutral-30,
-      modal-status-text: $neutral-90,
+      modal-status-text: $neutral-70,
       text-primary: $neutral-00,
-      text-secondary: $neutral-20,
+      text-secondary: $neutral-30,
       text-ghost: $neutral-40,
       text-opposing: $neutral-90,
-      project-card-background: $neutral-60,
+      project-card-background: $neutral-70,
       loading-placeholder: $neutral-30,
-      button-background: $neutral-60,
+      button-background: $neutral-70,
       button-disabled: $neutral-40,
-      back-button: $neutral-30,
-      button-border: $neutral-30,
+      back-button: $neutral-40,
+      button-border: $neutral-40,
       popup-background: $neutral-70,
-      popup-separator: $neutral-50,
-      input-background: $neutral-60,
-      input-border: $neutral-50,
-      active-selection-background: rgba(80, 183, 255, 0.25),
-      action-bar-background: #4379a0,
-      action-bar-background_disabled: #2e536d,
+      popup-separator: $neutral-60,
+      input-background: $neutral-70,
+      input-border: $neutral-40,
+      active-selection-background: $accentoverlay,
+      action-bar-background: $accentmain,
+      action-bar-background_disabled: #485495,
       tracking-background: $neutral-80,
-      mini-timeline-card-background: $neutral-60,
+      mini-timeline-card-background: $neutral-70,
       mini-timeline-inactive: $neutral-80,
-      timeline-background: $neutral-60,
-      timeline-gridline: $neutral-20,
+      timeline-background: $neutral-70,
+      timeline-gridline: $neutral-50,
       toggle-switch-neutral: $neutral-20,
       accent-danger: #e53c3c,
     )

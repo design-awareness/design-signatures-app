@@ -122,6 +122,10 @@
       border: 0 solid $input-border-color;
       border-width: 0 0 $input-border-size 0;
       border-radius: 0.01px;
+
+      // a forced fix for input field bg and text color for dark mode - idk if this is best practice - KJ
+      background-color: $input-background-color;
+      color: $text-primary-color;
     }
     :global(button) {
       flex: 0 0;
