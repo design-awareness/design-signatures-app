@@ -17,7 +17,6 @@
   import { shortDuration } from "../util/time";
 
   import editIcon from "@iconify-icons/ic/baseline-edit";
-  import compareIcon from "@iconify-icons/ic/baseline-compare-arrows";
   import archiveIcon from "@iconify-icons/ic/baseline-archive";
   import unarchiveIcon from "@iconify-icons/ic/baseline-unarchive";
   import exportIcon from "@iconify-icons/ic/baseline-share";
@@ -59,7 +58,6 @@
 
   const menuDescriptor = (): PopupMenuDescriptor => [
     { label: "Edit", icon: editIcon, action: () => (editProjectOpen = true) },
-    { label: "Compare", icon: compareIcon, action: () => (otherOpen = true) },
     {
       label: "Export",
       icon: exportIcon,
