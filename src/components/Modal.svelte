@@ -1,7 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
-
   import Button from "./Button.svelte";
+  import ButtonGroup from "./ButtonGroup.svelte";
   import Header from "./type/Header.svelte";
 
   export let visible = true;
@@ -54,12 +54,12 @@
         {/if}
         <slot />
         {#if buttons.length}
-          <div class="button-group" class:one={buttons.length === 1}>
+          <ButtonGroup>
             {#each buttons as { label, onClick, icon, disabled }}
               <Button small on:click={onClick} {disabled} {icon}>{label}</Button
               >
             {/each}
-          </div>
+          </ButtonGroup>
         {/if}
       </div>
     </div>
@@ -104,14 +104,6 @@
   }
   .content-container {
     padding: $modal-padding-vertical $modal-padding-horizontal;
-  }
-  .button-group {
-    margin-top: $block-vertical-spacing;
-    display: flex;
-    justify-content: space-between;
-    &.one {
-      justify-content: center;
-    }
   }
 
   .status {
