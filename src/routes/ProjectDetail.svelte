@@ -53,7 +53,6 @@
 
   let editProjectOpen = false;
   let toggleProjectCompleteOpen = false;
-  let otherOpen = false;
   let deleteProjectOpen = false;
 
   const menuDescriptor = (): PopupMenuDescriptor => [
@@ -206,14 +205,6 @@
           This project will move back to your recent projects and you'll be able
           to continue tracking.
         {/if}
-      </Modal>
-
-      <Modal
-        bind:visible={otherOpen}
-        title="Not available"
-        buttons={[{ label: "Close", onClick: () => (otherOpen = false) }]}
-      >
-        This feature isn't ready yet. Hold tight!
       </Modal>
     {/await}
   </ContentFrame>
