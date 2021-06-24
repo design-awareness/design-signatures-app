@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { IconifyIcon } from "../types/IconifyIcon";
   import type SessionTracker from "../util/track";
-  import InputField from "./InputField.svelte";
+  import InputNumberField from "./InputNumberField.svelte";
   import Modal from "./Modal.svelte";
 
   export let visible: boolean;
@@ -45,8 +45,12 @@
     },
   ]}
 >
-  {"Seconds to undo: "}
-  <input type="number" bind:value={rewindSeconds} {max} min={1} />
+  <InputNumberField
+    bind:value={rewindSeconds}
+    {max}
+    min={1}
+    label="Seconds to undo"
+  />
 </Modal>
 
 <style lang="scss">
