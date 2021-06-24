@@ -9,7 +9,7 @@
   import Item from "./Item.svelte";
 
   export let activitySet: DesignModel | null = null;
-  export let label = "Activity Set";
+  export let label = "Design Model";
   export let createNew: (() => void) | null = null;
   export let withEmpty = false;
 
@@ -66,19 +66,19 @@
     justify-content: space-between;
   }
   .container {
-    border: $input-border-size solid $input-border-color;
+    // border: $input-border-size solid $input-border-color;
     border-radius: $input-border-radius;
-    background-color: $input-background-color;
+    background-color: none;
     list-style-type: none;
     margin: 0;
     padding: 0;
     overflow: none;
   }
   li {
+    background-color: $input-background-color;
     padding: 0;
-    border-bottom: $input-border-size solid $input-border-color;
-    &:last-child {
-      border-bottom: none;
-    }
+    border-radius: 4px;
+    margin: $block-vertical-spacing 0 $block-vertical-spacing 0;
+    border: $input-border-size solid $input-border-color;
   }
 </style>
