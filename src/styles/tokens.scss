@@ -94,6 +94,10 @@ $modal-min-gap-horizontal: 3rem;
 $modal-min-gap-vertical: 4rem;
 $modal-shadow: 0px 24px 38px rgba(black, 0.14), 0px 11px 15px rgba(black, 0.2);
 
+// DESIGN MODEL CARD
+$design-model-header-background: getvar(design-model-header);
+$design-model-header-selected: getvar(design-model-header-selected);
+
 // COLOR PICKER
 $color-picker-swatch-size: 2.5rem;
 $color-picker-spacing: 0.75rem;
