@@ -1,15 +1,15 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
-  import type { DBModelName } from "../../../data/schema";
+  import type { EntityName } from "../../../data/schema";
   import * as db from "../../../data/database";
   import type { TriggerInvoker } from "../../../util/trigger";
   const dispatch = createEventDispatcher();
 
   export let name: string;
-  export let type: DBModelName;
+  export let type: EntityName;
   export let value: any = null;
   export let hasRemove = false;
-  export let setView: TriggerInvoker<[DBModelName, string]>;
+  export let setView: TriggerInvoker<[EntityName, string]>;
 
   const id = Math.random().toString(36).substr(2, 8);
 

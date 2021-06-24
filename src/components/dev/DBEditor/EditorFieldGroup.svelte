@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { DBModelName } from "../../../data/schema";
+  import type { EntityName } from "../../../data/schema";
   import type { TriggerInvoker } from "../../../util/trigger";
   import EditorField from "./EditorField.svelte";
   import EditorRefField from "./EditorRefField.svelte";
@@ -8,11 +8,11 @@
   type PrimitiveTypeDescriptor = {
     primitive: "boolean" | "string" | "number" | "date";
   };
-  type EntityTypeDescriptor = { entity: DBModelName };
+  type EntityTypeDescriptor = { entity: EntityName };
   type TypeDescriptor = PrimitiveTypeDescriptor | EntityTypeDescriptor;
   export let type: TypeDescriptor;
   export let value: readonly any[] = [];
-  export let setView: TriggerInvoker<[DBModelName, string]> = () => {};
+  export let setView: TriggerInvoker<[EntityName, string]> = () => {};
 
   export let isSpecialColor = false;
 

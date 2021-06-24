@@ -1,12 +1,12 @@
 <script lang="ts">
   import { onTrigger } from "../../../util/trigger";
   import type { ITriggerPassable, TriggerInvoker } from "../../../util/trigger";
-  import { getNote, newNote } from "../../../data/database";
-  import type { DBModelName, Note } from "../../../data/schema";
+  import { getTimedNote, newTimedNote } from "../../../data/database";
+  import type { EntityName, Note } from "../../../data/schema";
   import EditorField from "./EditorField.svelte";
   import EditorRefField from "./EditorRefField.svelte";
 
-  export let setView: TriggerInvoker<[DBModelName, string | null]>;
+  export let setView: TriggerInvoker<[EntityName, string | null]>;
   export let save: ITriggerPassable<void>;
   export let remove: ITriggerPassable<void>;
   export let id: string;
@@ -18,9 +18,9 @@
   async function loadObj() {
     loading = true;
     if (id === null) {
-      dbObj = newNote();
+      dbObj = newTimedNote();
     } else {
-      dbObj = await getNote(id);
+      dbObj = await getTimedNote(id);
     }
     loading = false;
   }

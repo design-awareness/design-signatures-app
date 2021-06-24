@@ -6,11 +6,14 @@
   import { ACTIVITY_SET_WELL_KNOWN_PREFIX } from "../../data/activitySetPresets";
   import CONFIG from "../../data/config";
   import {
-    getActivitySet,
     getAll,
-    getNote,
-    getProject,
-    getSession,
+    getAsyncEntry,
+    getAsyncProject,
+    getDesignModel,
+    getProjectNote,
+    getRealtimeProject,
+    getRealtimeSession,
+    getTimedNote,
   } from "../../data/database";
   import { colorScheme } from "../../util/colorScheme";
 
@@ -20,12 +23,12 @@
   })();
 
   async function resetWKAS() {
-    if (confirm("Are you sure? Built-in activity sets will be recreated.")) {
-      const activitySets = await getAll("ActivitySet");
+    if (confirm("Are you sure? Built-in design models will be recreated.")) {
+      const activitySets = await getAll("DesignModel");
       await Promise.all(
         activitySets.map(async (asid) => {
           if (asid.startsWith(ACTIVITY_SET_WELL_KNOWN_PREFIX)) {
-            const as = await getActivitySet(asid);
+            const as = await getDesignModel(asid);
             if (as) await as.remove();
           }
         })
@@ -39,36 +42,65 @@
     if (
       confirm("Are you absolutely sure? The entire database will be deleted.")
     ) {
-      const [activitySets, notes, projects, sessions] = await Promise.all([
-        getAll("ActivitySet"),
-        getAll("Note"),
-        getAll("Project"),
-        getAll("Session"),
+      const [
+        asyncEntries,
+        asyncProjects,
+        designModels,
+        projectNotes,
+        realtimeProjects,
+        realtimeSessions,
+        timedNotes,
+      ] = await Promise.all([
+        getAll("AsyncEntry"),
+        getAll("AsyncProject"),
+        getAll("DesignModel"),
+        getAll("ProjectNote"),
+        getAll("RealtimeProject"),
+        getAll("RealtimeSession"),
+        getAll("TimedNote"),
       ]);
       await Promise.all([
         CONFIG.setRecentProjects([]),
         Promise.all(
-          activitySets.map(async (asid) => {
-            const activitySet = await getActivitySet(asid);
-            if (activitySet) await activitySet.remove();
+          asyncEntries.map(async (id) => {
+            const designModel = await getAsyncEntry(id);
+            if (designModel) await designModel.remove();
           })
         ),
         Promise.all(
-          notes.map(async (noteid) => {
-            const note = await getNote(noteid);
-            if (note) await note.remove();
+          asyncProjects.map(async (id) => {
+            const asyncProject = await getAsyncProject(id);
+            if (asyncProject) await asyncProject.remove();
           })
         ),
         Promise.all(
-          projects.map(async (prid) => {
-            const project = await getProject(prid);
-            if (project) await project.remove();
+          designModels.map(async (id) => {
+            const designModel = await getDesignModel(id);
+            if (designModel) await designModel.remove();
           })
         ),
         Promise.all(
-          sessions.map(async (asid) => {
-            const session = await getSession(asid);
-            if (session) await session.remove();
+          projectNotes.map(async (id) => {
+            const projectNote = await getProjectNote(id);
+            if (projectNote) await projectNote.remove();
+          })
+        ),
+        Promise.all(
+          realtimeProjects.map(async (id) => {
+            const realtimeProject = await getRealtimeProject(id);
+            if (realtimeProject) await realtimeProject.remove();
+          })
+        ),
+        Promise.all(
+          realtimeSessions.map(async (id) => {
+            const realtimeSession = await getRealtimeSession(id);
+            if (realtimeSession) await realtimeSession.remove();
+          })
+        ),
+        Promise.all(
+          timedNotes.map(async (id) => {
+            const timedNote = await getTimedNote(id);
+            if (timedNote) await timedNote.remove();
           })
         ),
       ]);

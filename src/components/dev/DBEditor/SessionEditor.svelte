@@ -1,12 +1,15 @@
 <script lang="ts">
   import { onTrigger } from "../../../util/trigger";
   import type { ITriggerPassable, TriggerInvoker } from "../../../util/trigger";
-  import { getSession, newSession } from "../../../data/database";
-  import type { DBModelName, Session } from "../../../data/schema";
+  import {
+    getRealtimeSession,
+    newRealtimeSession,
+  } from "../../../data/database";
+  import type { EntityName, Session } from "../../../data/schema";
   import EditorField from "./EditorField.svelte";
   import EditorRefField from "./EditorRefField.svelte";
 
-  export let setView: TriggerInvoker<[DBModelName, string | null]>;
+  export let setView: TriggerInvoker<[EntityName, string | null]>;
   export let save: ITriggerPassable<void>;
   export let remove: ITriggerPassable<void>;
   export let id: string;
@@ -18,9 +21,9 @@
   async function loadObj() {
     loading = true;
     if (id === null) {
-      dbObj = newSession();
+      dbObj = newRealtimeSession();
     } else {
-      dbObj = await getSession(id);
+      dbObj = await getRealtimeSession(id);
     }
     loading = false;
   }

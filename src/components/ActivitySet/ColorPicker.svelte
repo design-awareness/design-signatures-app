@@ -3,7 +3,7 @@
   import check from "@iconify-icons/ic/baseline-check";
   import colorPresets from "../../data/colorPresets";
 
-  export let color: [string, string];
+  export let color: readonly [string, string];
 
   let idPrefix = Math.random().toString(36).substr(2);
 </script>

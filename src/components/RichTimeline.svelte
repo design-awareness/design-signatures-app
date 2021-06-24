@@ -1,11 +1,11 @@
 <script lang="ts">
-  import type { Project } from "../data/schema";
+  import type { RealtimeProject } from "../data/schema";
   import Button from "./Button.svelte";
   import ButtonGroup from "./ButtonGroup.svelte";
   import iconZoomOut from "@iconify-icons/ic/baseline-zoom-out";
   import iconZoomIn from "@iconify-icons/ic/baseline-zoom-in";
 
-  export let project: Project;
+  export let project: RealtimeProject;
 
   // user controls
   export let scalable = false;
@@ -36,7 +36,7 @@
   $: displayHeight =
     colors.length * (barHeight + barGap) - barGap + padding * 2;
 
-  let colors = project.activitySet.colors;
+  let colors = project.designModel.activities.map(({ color }) => color);
 
   function zoomIn() {
     scale /= rescaleFactor;
@@ -93,7 +93,7 @@
               x="50%"
               y={padding + i * (barHeight + barGap) + barHeight / 2}
             >
-              {project.activitySet.activityCodes[i]}
+              {project.designModel.activities[i].code}
             </text>
           {/each}
         </svg>
@@ -102,7 +102,9 @@
     <div class="timeline-scrollable">
       <svg
         height={displayHeight}
-        viewBox="{!fixedCodes && activityNames ? -codeWidth : 0} 0 {totalDuration / scale} {displayHeight}"
+        viewBox="{!fixedCodes && activityNames
+          ? -codeWidth
+          : 0} 0 {totalDuration / scale} {displayHeight}"
         xmlns="http://www.w3.org/2000/svg"
       >
         {#if !fixedCodes && activityNames}
@@ -114,7 +116,7 @@
               x={-codeWidth / 2}
               y={padding + i * (barHeight + barGap) + barHeight / 2}
             >
-              {project.activitySet.activityCodes[i]}
+              {project.designModel.activities[i].code}
             </text>
           {/each}
         {/if}
@@ -123,7 +125,10 @@
             <rect
               x="0"
               width="100%"
-              y={padding + i * (barHeight + barGap) + barHeight / 2 - gridlineWeight / 2}
+              y={padding +
+                i * (barHeight + barGap) +
+                barHeight / 2 -
+                gridlineWeight / 2}
               height={gridlineWeight}
               class="grid-line"
             />
@@ -145,11 +150,13 @@
             {#each points as [start, end]}
               <rect
                 x={(priorDuration + start - 1) / scale}
-                width={(end - start) / scale}
+                width={Math.max(0, (end - start) / scale)}
                 y={padding + i * (barHeight + barGap)}
                 height={barHeight}
                 class="colorbar"
-                style="--color-light: #{colors[i][0]}; --color-dark: #{colors[i][1]}"
+                style="--color-light: #{colors[i][0]}; --color-dark: #{colors[
+                  i
+                ][1]}"
               />
             {/each}
           {/each}

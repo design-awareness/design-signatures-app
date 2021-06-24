@@ -1,14 +1,14 @@
 <script lang="ts">
   import { pop } from "svelte-spa-router/Router.svelte";
-  import type { ActivitySet } from "../../data/schema";
+  import type { DesignModel } from "../../data/schema";
   import BackButton from "../BackButton.svelte";
   import ContentFrame from "../layout/ContentFrame.svelte";
   import Header from "../type/Header.svelte";
   import Builder from "./Builder.svelte";
   import Chooser from "./Chooser.svelte";
 
-  let startingPoint: ActivitySet | null = null;
-  export let activitySet: ActivitySet;
+  let startingPoint: DesignModel | null = null;
+  export let activitySet: DesignModel;
 
   export let showModal: boolean;
 </script>

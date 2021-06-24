@@ -1,7 +1,6 @@
 import * as Schema from "./schema";
 import defer from "../util/defer";
 import { upgradeDatabase, initializeConfiguration } from "./upgradeDatabase";
-import { createTrigger } from "../util/trigger";
 
 const DB_NAME = "design-awareness-local-store";
 const DEBUG_DELAY = 0;
@@ -33,7 +32,7 @@ export function isOpen() {
 const [_onUpgradeNeeded, requestUpgrade] = defer<number>();
 export const onUpgradeNeeded = _onUpgradeNeeded;
 
-type ObjectStoreName = Schema.DBModelName | "_Config" | string;
+type ObjectStoreName = Schema.EntityName | "_Config" | string;
 
 /**
  * Get the IDB Database, opening it if it isn't open yet.
@@ -51,13 +50,16 @@ function getDb(onblocked?: (evt: any) => void) {
       }
       request.onerror = rej;
       request.onupgradeneeded = (event) => {
-        const db = ((event.target as any) as { result: IDBDatabase }).result;
+        const db = (event.target as any as { result: IDBDatabase }).result;
         if (event.oldVersion === 0) {
           console.log("First visit: setting up database!");
-          db.createObjectStore("ActivitySet", { keyPath: "id" });
-          db.createObjectStore("Note", { keyPath: "id" });
-          db.createObjectStore("Project", { keyPath: "id" });
-          db.createObjectStore("Session", { keyPath: "id" });
+          db.createObjectStore("AsyncEntry", { keyPath: "id" });
+          db.createObjectStore("AsyncProject", { keyPath: "id" });
+          db.createObjectStore("DesignModel", { keyPath: "id" });
+          db.createObjectStore("ProjectNote", { keyPath: "id" });
+          db.createObjectStore("RealtimeProject", { keyPath: "id" });
+          db.createObjectStore("RealtimeSession", { keyPath: "id" });
+          db.createObjectStore("TimedNote", { keyPath: "id" });
           db.createObjectStore("_Config", { keyPath: "key" });
         } else {
           console.log("Database needs upgrading: ");
@@ -66,7 +68,10 @@ function getDb(onblocked?: (evt: any) => void) {
             requestUpgrade(event.oldVersion);
           });
         }
-        initializeConfiguration(event.oldVersion, rawDatabaseOperations);
+        dbPromise?.then(() => {
+          console.log("initializing config!");
+          initializeConfiguration(event.oldVersion, rawDatabaseOperations);
+        });
       };
       request.onsuccess = (event) => {
         dbOpen = true;
@@ -147,10 +152,12 @@ async function remove(store: ObjectStoreName, id: DBID) {
 async function get(store: ObjectStoreName, id: DBID): Promise<object | null> {
   const objectStore = (await transaction(store)).objectStore;
   const request = objectStore.get(id);
-  return ((await new Promise((res, rej) => {
-    request.onerror = rej;
-    request.onsuccess = res;
-  })) as any)["target"]["result"];
+  return (
+    (await new Promise((res, rej) => {
+      request.onerror = rej;
+      request.onsuccess = res;
+    })) as any
+  )["target"]["result"];
 }
 
 export const rawDatabaseOperations = {
@@ -184,16 +191,19 @@ const objStore = {
   // gonna pull from here in getEntry which will type them as IDBClientObjects
   // and then the specific model getter methods cast back to the right type
   // ...oh well.
-  ActivitySet: new Map<DBID, Schema.ActivitySet>(),
-  Note: new Map<DBID, Schema.Note>(),
-  Project: new Map<DBID, Schema.Project>(),
-  Session: new Map<DBID, Schema.Session>(),
+  AsyncEntry: new Map<DBID, Schema.AsyncEntry>(),
+  AsyncProject: new Map<DBID, Schema.AsyncProject>(),
+  DesignModel: new Map<DBID, Schema.DesignModel>(),
+  ProjectNote: new Map<DBID, Schema.ProjectNote>(),
+  RealtimeProject: new Map<DBID, Schema.RealtimeProject>(),
+  RealtimeSession: new Map<DBID, Schema.RealtimeSession>(),
+  TimedNote: new Map<DBID, Schema.TimedNote>(),
 };
 
 /**
  * Resolves to the IDs of all entries in the given datastore.
  */
-export function getAll(store: Schema.DBModelName): Promise<DBID[]> {
+export function getAll(store: Schema.EntityName): Promise<DBID[]> {
   return new Promise(async (res, rej) => {
     const objectStore = (await transaction(store)).objectStore;
     const request = objectStore.getAllKeys();
@@ -210,14 +220,7 @@ export function getAll(store: Schema.DBModelName): Promise<DBID[]> {
   });
 }
 
-export function saveAll(
-  objects: (
-    | Schema.ActivitySet
-    | Schema.Note
-    | Schema.Project
-    | Schema.Session
-  )[]
-): Promise<void[]> {
+export function saveAll(objects: Schema.Entity[]): Promise<void[]> {
   return Promise.all(objects.map((object) => object.save()));
 }
 
@@ -235,7 +238,7 @@ export function saveAll(
  * Entries are wrapped with appropriate database manipulation methods
  * and all children will be fully resolved, so they are ready to use,
  * though for safety, you should cast to the appropriate model interface,
- * or use the helper methods (getActivitySet, etc.) that do this for you.
+ * or use the helper methods (getDesignModel, etc.) that do this for you.
  * (Type checking is no longer enforced at runtime, so using the interfaces
  * will help you ensure type correctness when setting properties.)
  *
@@ -250,12 +253,12 @@ export function saveAll(
  * parameter to request full resolution?
  */
 async function getEntry(
-  store: Schema.DBModelName,
+  store: Schema.EntityName,
   id: DBID
-): Promise<Schema.IDBObj | null> {
+): Promise<Schema.Entity | null> {
   if (id === null) return null;
 
-  const typeStore = objStore[store] as Map<DBID, Schema.IDBObj>;
+  const typeStore = objStore[store] as Map<DBID, Schema.Entity>;
   if (!typeStore.has(id)) {
     if (resolving.has(id)) {
       await resolving.get(id);
@@ -265,7 +268,7 @@ async function getEntry(
       resolving.set(id, promise);
 
       // lookup entry from db;
-      const obj = (await get(store, id)) as Schema.IDBObj;
+      const obj = (await get(store, id)) as Schema.Entity;
       if (!obj) {
         resolving.delete(id);
         return null;
@@ -302,21 +305,14 @@ async function getEntry(
  * @param id object id
  */
 function createClientObject(
-  store: Schema.DBModelName,
-  // ugh we probably should type raw and wrapped objects differently!
-  rawObj: Schema.IDBObj,
+  store: Schema.EntityName,
+  rawObj: Record<string, any>,
   _id: DBID | null = null
-): [Schema.IDBObj, Promise<any[]>] {
+): [Schema.Entity, Promise<any[]>] {
   const schema = Schema.Schema[store];
   const data: Record<string, any> = {};
   const obj = {};
   const childResolvers = [];
-  type SubscriptionHandler = (
-    this: Schema.IDBObj,
-    key: string,
-    value: any
-  ) => void;
-  const subscriptions = new Set<SubscriptionHandler>();
 
   // client obj private properties
   let dirty = !_id;
@@ -324,15 +320,13 @@ function createClientObject(
   let id = _id;
   let deleted = false;
 
-  for (let [name, dbtype] of schema) {
+  for (let [name, dbtype, repeated] of schema) {
     if (dbtype == null) {
-      // @ts-expect-error
       data[name] = rawObj[name];
     } else {
+      let modelName = dbtype;
       // children need resolving!!
-      const [modelName, repeated] = dbtype;
       if (!repeated) {
-        // @ts-expect-error
         const childID = rawObj[name];
         if (childID) {
           childResolvers.push(
@@ -344,12 +338,10 @@ function createClientObject(
           data[name] = null;
         }
       } else {
-        // @ts-expect-error
         if (rawObj[name].length) {
           childResolvers.push(
             (async () => {
               data[name] = await Promise.all(
-                // @ts-expect-error
                 rawObj[name].map((childID: string) =>
                   getEntry(modelName, childID)
                 )
@@ -372,8 +364,6 @@ function createClientObject(
         if (v !== data[name]) {
           data[name] = v;
           dirty = true;
-          // @ts-ignore
-          subscriptions.forEach((k) => k.call(obj, name, v));
         }
       },
     });
@@ -387,12 +377,6 @@ function createClientObject(
 
   let removing: Promise<void> | null = null;
   Object.assign(obj, {
-    subscribe(fn: SubscriptionHandler) {
-      subscriptions.add(fn);
-    },
-    unsubscribe(fn: SubscriptionHandler) {
-      subscriptions.delete(fn);
-    },
     // save is typed as async () => void to prevent
     // setting ids unless you really, really
     // mean to!
@@ -405,12 +389,11 @@ function createClientObject(
           objStore[store].set(id, obj as any);
         }
 
-        const dbObj = { id };
+        const dbObj: Record<string, any> = { id };
         const savingChildren = [];
         // pack into db-friendly object
-        for (let [name, dbtype] of schema) {
+        for (let [name, dbtype, repeated] of schema) {
           if (dbtype === null) {
-            // @ts-expect-error
             dbObj[name] = data[name];
           } else {
             // child db entry - save this too!
@@ -418,9 +401,7 @@ function createClientObject(
             // that's actually maybe not ideal. we can save the promise
             // and return that if it's still saving? (but then need to add
             // another parameter or something)
-            const repeated = dbtype[1];
             if (repeated) {
-              // @ts-expect-error
               dbObj[name] = [];
               if (!data[name]) data[name] = [];
               savingChildren.push(
@@ -430,7 +411,6 @@ function createClientObject(
                       return null; // await Promise.resolve([null]) -> [null]
                     }
                     const childPromise = child.save();
-                    // @ts-expect-error
                     dbObj[name][i] = child.id;
                     return childPromise;
                   })
@@ -438,11 +418,9 @@ function createClientObject(
               );
             } else {
               if (data[name] === null) {
-                // @ts-expect-error
                 dbObj[name] = null;
               } else {
                 const childPromise = data[name].save();
-                // @ts-expect-error
                 dbObj[name] = data[name].id;
                 savingChildren.push(childPromise);
               }
@@ -479,24 +457,29 @@ function createClientObject(
     },
   });
 
-  // this cast isn't really right but... i dont want to add a type
-  // parameter to this function or export the interface from schema.ts :[
-  // the model specific get methods will take care of it
-  // i'll do typescript right in the svelte components (lmao)
-  return [obj as Schema.IDBObj, Promise.all(childResolvers)];
+  return [obj as Schema.Entity, Promise.all(childResolvers)];
 }
 
-export function getActivitySet(id: DBID) {
-  return getEntry("ActivitySet", id) as Promise<Schema.ActivitySet>;
+export function getAsyncEntry(id: DBID) {
+  return getEntry("AsyncEntry", id) as Promise<Schema.AsyncEntry>;
 }
-export function getNote(id: DBID) {
-  return getEntry("Note", id) as Promise<Schema.Note>;
+export function getAsyncProject(id: DBID) {
+  return getEntry("AsyncProject", id) as Promise<Schema.AsyncProject>;
 }
-export function getProject(id: DBID) {
-  return getEntry("Project", id) as Promise<Schema.Project>;
+export function getDesignModel(id: DBID) {
+  return getEntry("DesignModel", id) as Promise<Schema.DesignModel>;
 }
-export function getSession(id: DBID) {
-  return getEntry("Session", id) as Promise<Schema.Session>;
+export function getProjectNote(id: DBID) {
+  return getEntry("ProjectNote", id) as Promise<Schema.ProjectNote>;
+}
+export function getRealtimeProject(id: DBID) {
+  return getEntry("RealtimeProject", id) as Promise<Schema.RealtimeProject>;
+}
+export function getRealtimeSession(id: DBID) {
+  return getEntry("RealtimeSession", id) as Promise<Schema.RealtimeSession>;
+}
+export function getTimedNote(id: DBID) {
+  return getEntry("TimedNote", id) as Promise<Schema.TimedNote>;
 }
 
 export function getEntityOrFail<T>(promise: Promise<T>): Promise<T> {
@@ -508,63 +491,43 @@ export function getEntityOrFail<T>(promise: Promise<T>): Promise<T> {
   );
 }
 
-export function newActivitySet() {
-  return createClientObject(
-    "ActivitySet",
-    {
-      name: "",
-      description: "",
-      activityNames: [],
-      activityCodes: [],
-      activityDescriptions: [],
-      colors: [],
-      wellKnown: false,
-    },
-    null
-  )[0] as Schema.ActivitySet;
+function newEntity(type: Schema.EntityName) {
+  const schema = Schema.Schema[type];
+  const defaults = Object.fromEntries(
+    schema.map(([prop, entityType, def]) => [
+      prop,
+      entityType === null
+        ? typeof def === "function"
+          ? def()
+          : def
+        : def
+        ? []
+        : null,
+    ])
+  );
+  return createClientObject(type, defaults);
 }
-export function newNote() {
-  return createClientObject(
-    "Note",
-    {
-      contents: "",
-      created: new Date(),
-      timed: false,
-      timestamp: 0,
-      session: null,
-      project: null,
-    },
-    null
-  )[0] as Schema.Note;
+
+export function newAsyncEntry() {
+  return newEntity("AsyncEntry")[0] as Schema.AsyncEntry;
 }
-export function newProject() {
-  return createClientObject(
-    "Project",
-    {
-      name: "",
-      description: "",
-      active: true,
-      created: new Date(),
-      lastModified: new Date(),
-      activitySet: null,
-      notes: [],
-      sessions: [],
-    },
-    null
-  )[0] as Schema.Project;
+export function newAsyncProject() {
+  return newEntity("AsyncProject")[0] as Schema.AsyncProject;
 }
-export function newSession() {
-  return createClientObject(
-    "Session",
-    {
-      label: "",
-      startTime: new Date(),
-      duration: 0,
-      data: [],
-      project: null,
-    },
-    null
-  )[0] as Schema.Session;
+export function newDesignModel() {
+  return newEntity("DesignModel")[0] as Schema.DesignModel;
+}
+export function newRealtimeProjectNote() {
+  return newEntity("ProjectNote")[0] as Schema.ProjectNote;
+}
+export function newRealtimeProject() {
+  return newEntity("RealtimeProject")[0] as Schema.RealtimeProject;
+}
+export function newRealtimeSession() {
+  return newEntity("RealtimeSession")[0] as Schema.RealtimeSession;
+}
+export function newTimedNote() {
+  return newEntity("TimedNote")[0] as Schema.TimedNote;
 }
 
 /**

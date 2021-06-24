@@ -1,6 +1,6 @@
 <script lang="ts">
   import add from "@iconify-icons/ic/baseline-add";
-  import type { ActivitySet } from "../../data/schema";
+  import type { DesignModel } from "../../data/schema";
   import BottomActionBar from "../BottomActionBar.svelte";
   import InputField from "../InputField.svelte";
   import Header from "../type/Header.svelte";
@@ -8,10 +8,10 @@
   import { dndzone, SOURCES, TRIGGERS } from "svelte-dnd-action";
   import Button from "../Button.svelte";
   import colorPresets from "../../data/colorPresets";
-  import { newActivitySet } from "../../data/database";
+  import { newDesignModel } from "../../data/database";
   import { pop, push, location } from "svelte-spa-router";
 
-  export let activitySet: ActivitySet;
+  export let activitySet: DesignModel;
   export let showModal: boolean;
   let modalId = -1;
 
@@ -23,11 +23,11 @@
     if ($location === "/projects/new/as!") pop();
   }
 
-  type Activity = {
+  type ActivityWithID = {
     name: string;
     code: string;
     description: string;
-    color: [string, string];
+    color: readonly [string, string];
     id: number;
   };
 
@@ -36,13 +36,10 @@
     return () => lastId++;
   })();
 
-  export let startingPoint: ActivitySet;
+  export let startingPoint: DesignModel;
   let name = startingPoint.name;
-  let activities = startingPoint.activityNames.map<Activity>((name, i) => ({
-    name,
-    code: startingPoint.activityCodes[i],
-    description: startingPoint.activityDescriptions[i],
-    color: startingPoint.colors[i],
+  let activities = startingPoint.activities.map<ActivityWithID>((activity) => ({
+    ...activity,
     id: nextId(),
   }));
 
@@ -74,13 +71,15 @@
 
   let saving = false;
   async function build() {
-    let as = newActivitySet();
+    let as = newDesignModel();
     as.name = name;
-    as.description = "";
-    as.activityNames = activities.map((act) => act.name.trim());
-    as.activityCodes = activities.map((act) => act.code.trim());
-    as.activityDescriptions = activities.map((act) => act.description.trim());
-    as.colors = activities.map((act) => act.color);
+    as.description = null;
+    as.activities = activities.map(({ code, color, description, name }) => ({
+      code,
+      color,
+      description,
+      name,
+    }));
     as.wellKnown = false;
     saving = true;
     await as.save();
@@ -155,6 +154,7 @@
 <BottomActionBar label="Save and use" disabled={!ok} on:click={build} />
 
 <style lang="scss">
+  @use "sass:math";
   @import "src/styles/tokens";
   @import "src/styles/type";
   .label {
@@ -168,7 +168,7 @@
   }
   li {
     margin: 0;
-    padding: $input-spacing-inner/2;
+    padding: math.div($input-spacing-inner, 2);
     background-color: $background-color;
     border-radius: 0.01px;
     &:focus {

@@ -1,21 +1,21 @@
 <script lang="ts">
-  import { getProject } from "../data/database";
+  import { getRealtimeProject } from "../data/database";
   import type { Project } from "../data/schema";
   import CardTimeline from "./CardTimeline.svelte";
 
-  export let newProjectPlaceholder = false;
+  export let newRealtimeProjectPlaceholder = false;
   export let loadingPlaceholder = false;
   export let id: string | null = null;
 
   let loading = true;
   let project: Project | null = null;
 
-  if (newProjectPlaceholder) {
+  if (newRealtimeProjectPlaceholder) {
     loading = false;
   } else if (!loadingPlaceholder) {
     (async function load() {
       if (id) {
-        project = await getProject(id);
+        project = await getRealtimeProject(id);
         loading = false;
       }
     })();
@@ -23,7 +23,7 @@
 </script>
 
 <div class="project-card" class:loading>
-  {#if newProjectPlaceholder}
+  {#if newRealtimeProjectPlaceholder}
     <div class="card new">
       <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 62 62"
         ><circle cx="31" cy="31" r="30.75" fill="none" stroke-width=".5" />
@@ -41,8 +41,8 @@
     </div>
   {/if}
 
-  <div class="link" class:loading class:new={newProjectPlaceholder}>
-    {#if !loading && !newProjectPlaceholder && project}
+  <div class="link" class:loading class:new={newRealtimeProjectPlaceholder}>
+    {#if !loading && !newRealtimeProjectPlaceholder && project}
       <span>{project.name}</span>
     {:else if !loading}New project{/if}
   </div>

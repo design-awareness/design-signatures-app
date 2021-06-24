@@ -2,13 +2,12 @@
   import EntityChooser from "../../components/dev/DBEditor/EntityChooser.svelte";
   import EntityEditor from "../../components/dev/DBEditor/EntityEditor.svelte";
   import { createTrigger } from "../../util/trigger";
-  import type { DBModelName } from "../../data/schema";
+  import type { EntityName } from "../../data/schema";
   import BackButton from "../../components/BackButton.svelte";
-  let type: DBModelName, id: string;
+  let type: EntityName, id: string;
 
-  const [setView, setViewTrigger] = createTrigger<
-    [DBModelName, string | null]
-  >();
+  const [setView, setViewTrigger] =
+    createTrigger<[EntityName, string | null]>();
 </script>
 
 <BackButton href="/" />

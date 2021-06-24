@@ -5,7 +5,7 @@
   import Header from "../components/type/Header.svelte";
   import { getAll } from "../data/database";
 
-  let getProjects = () => getAll("Project");
+  let getRealtimeProjects = () => getAll("RealtimeProject");
 </script>
 
 <main class="device-frame page">
@@ -13,7 +13,7 @@
     <BackButton href="/" />
     <Header>All projects</Header>
     <ul>
-      {#await getProjects()}
+      {#await getRealtimeProjects()}
         <!-- loading placeholder? -->
         {#each [1, 2, 3, 4] as _}
           <li>

@@ -1,21 +1,20 @@
 <script type="ts">
-  import Icon from "@iconify/svelte/dist/Icon.svelte";
-  import dragIcon from "@iconify-icons/ic/baseline-drag-indicator";
   import down from "@iconify-icons/ic/baseline-arrow-drop-down";
   import deleteIcon from "@iconify-icons/ic/baseline-delete";
+  import dragIcon from "@iconify-icons/ic/baseline-drag-indicator";
+  import Icon from "@iconify/svelte/dist/Icon.svelte";
+  import type { DesignModel } from "../../data/schema";
+  import abbreviateActivityName from "../../util/activityCode";
   import ActivityToken from "../ActivityToken.svelte";
+  import InputField from "../InputField.svelte";
   import InvisibleButton from "../InvisibleButton.svelte";
   import Modal from "../Modal.svelte";
-  import InputField from "../InputField.svelte";
   import ColorPicker from "./ColorPicker.svelte";
-  import abbreviateActivityName from "../../util/activityCode";
 
-  type Activity = {
-    name: string;
-    code: string;
-    description: string;
-    color: [string, string];
-  };
+  // FIXME: it would be nice to expose this Activity type directly in schema
+  // with necessary modifications for convenience, instead of getting it like
+  // this.
+  type Activity = DesignModel["activities"][0];
 
   export let activity: Activity;
   export let remove: () => void;
@@ -89,6 +88,7 @@
 </div>
 
 <style lang="scss">
+  @use "sass:math";
   @import "src/styles/tokens";
   @import "src/styles/type";
 
@@ -98,12 +98,16 @@
     justify-content: center;
   }
 
+  @function h($n) {
+    @return math.div($n, 2);
+  }
+
   .item {
     display: flex;
     align-items: stretch;
     width: 100%;
     .drag-handle {
-      $m: -$input-spacing-inner/2;
+      $m: -(h($input-spacing-inner));
       margin: $m 0 $m $m;
       width: 2rem;
       flex: 0 0 2rem;
@@ -116,9 +120,9 @@
       @include type-style($type-input);
       min-width: 0;
       flex: 1 0 2rem;
-      padding: $input-padding-vertical/2 $input-padding-horizontal/2
-        calc(#{$input-padding-vertical/2} - #{$input-border-size})
-        $input-padding-horizontal/2;
+      padding: h($input-padding-vertical) h($input-padding-horizontal)
+        calc(#{h($input-padding-vertical)} - #{$input-border-size})
+        h($input-padding-horizontal);
       border: 0 solid $input-border-color;
       border-width: 0 0 $input-border-size 0;
       border-radius: 0.01px;

@@ -10,16 +10,16 @@
   import SectionHeader from "../components/type/SectionHeader.svelte";
   import { ACTIVITY_SET_WELL_KNOWN_PREFIX } from "../data/activitySetPresets";
   import { BRANCH, BUILD_ENV, BUILD_TIME, VERSION } from "../data/buildData";
-  import { getActivitySet, getAll, getProject } from "../data/database";
-  import type { ActivitySet } from "../data/schema";
+  import { getDesignModel, getAll, getRealtimeProject } from "../data/database";
+  import type { DesignModel } from "../data/schema";
 
   async function resetWKAS() {
     if (confirm("Are you sure? Built-in activity sets will be recreated.")) {
-      const activitySets = await getAll("ActivitySet");
+      const activitySets = await getAll("DesignModel");
       await Promise.all(
         activitySets.map(async (asid) => {
           if (asid.startsWith(ACTIVITY_SET_WELL_KNOWN_PREFIX)) {
-            const as = await getActivitySet(asid);
+            const as = await getDesignModel(asid);
             if (as) await as.remove();
           }
         })
@@ -30,15 +30,15 @@
   }
 
   async function deleteUnusedAS() {
-    const setsToRemove = new Set<ActivitySet>(
-      await getAll("ActivitySet").then((ids) =>
-        Promise.all(ids.map((id) => getActivitySet(id)))
+    const setsToRemove = new Set<DesignModel>(
+      await getAll("DesignModel").then((ids) =>
+        Promise.all(ids.map((id) => getDesignModel(id)))
       )
     );
-    const projects = await getAll("Project").then((ids) =>
-      Promise.all(ids.map((id) => getProject(id)))
+    const projects = await getAll("RealtimeProject").then((ids) =>
+      Promise.all(ids.map((id) => getRealtimeProject(id)))
     );
-    projects.forEach(({ activitySet }) => setsToRemove.delete(activitySet));
+    projects.forEach(({ designModel }) => setsToRemove.delete(designModel));
     const sets = Array.from(setsToRemove.values());
     if (!sets.length) {
       alert("No unused activity sets to delete.");

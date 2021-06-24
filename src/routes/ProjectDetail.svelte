@@ -8,12 +8,12 @@
   import RichTimeline from "../components/RichTimeline.svelte";
   import Header from "../components/type/Header.svelte";
   import SectionHeader from "../components/type/SectionHeader.svelte";
-  import { getProject } from "../data/database";
+  import { getRealtimeProject } from "../data/database";
   import {
     pushRecentProject,
     removeRecentProject,
   } from "../data/recentProjects";
-  import type { Project } from "../data/schema";
+  import type { RealtimeProject } from "../data/schema";
   import { shortDuration } from "../util/time";
 
   import editIcon from "@iconify-icons/ic/baseline-edit";
@@ -26,10 +26,10 @@
 
   export let params: { id: string };
 
-  let projectPromise: Promise<Project>;
-  projectPromise = getProject(params.id);
+  let projectPromise: Promise<RealtimeProject>;
+  projectPromise = getRealtimeProject(params.id);
 
-  let project: Project;
+  let project: RealtimeProject;
   projectPromise.then((p) => (project = p));
 
   let active = true;
@@ -124,15 +124,16 @@
       <SectionHeader>Tracking overview</SectionHeader>
       <RichTimeline {project} scalable />
 
+      <!-- FIXME: This should have both project and session-level notes?  -->
       <SectionHeader>Project comments</SectionHeader>
 
-      {#each project.notes as note}
+      {#each project.sessions.flatMap((session) => session.notes) as note}
         <div
           class="note-meta"
           on:click={() => (showProjectTimestamps = !showProjectTimestamps)}
         >
           {#if showProjectTimestamps}
-            {note.timed ? shortDuration(note.timestamp) : "—"}
+            {shortDuration(note.time)} [WRONG!]
           {:else}
             {note.created.toLocaleDateString(undefined, {
               day: "numeric",
@@ -145,7 +146,7 @@
             })}
           {/if}
         </div>
-        <div class="content">{note.contents}</div>
+        <div class="content">{note.content}</div>
       {/each}
 
       {#if project.active}

@@ -1,5 +1,5 @@
-import { newSession } from "../data/database";
-import type { Project, Session } from "../data/schema";
+import { newRealtimeSession } from "../data/database";
+import type { RealtimeProject, RealtimeSession } from "../data/schema";
 import { setInArray } from "./array";
 
 interface ActivityStateDescriptor {
@@ -22,8 +22,8 @@ const TOGGLE_UNDO_TIME = 1000;
  * writing to Sessions.
  */
 export default class SessionTracker {
-  private project: Project;
-  readonly session: Session;
+  private project: RealtimeProject;
+  readonly session: RealtimeSession;
   private activityStates: boolean[];
   private pastTimes: number[];
   private lastToggleTime: number[];
@@ -55,17 +55,16 @@ export default class SessionTracker {
    * });
    */
   constructor(
-    project: Project,
+    project: RealtimeProject,
     getTime: () => number,
     invalidate: () => void = _noop
   ) {
     this.project = project;
-    this.session = newSession();
-    this.activityStates = project.activitySet.activityNames.map(() => false);
+    this.session = newRealtimeSession();
+    this.activityStates = project.designModel.activities.map(() => false);
     this.pastTimes = this.activityStates.map(() => -1);
     this.lastToggleTime = this.activityStates.map(() => -1);
 
-    this.session.project = project;
     this.session.data = this.activityStates.map(() => []);
 
     this.invalidate = invalidate;
@@ -198,6 +197,33 @@ export default class SessionTracker {
     this.invalidate();
   }
 
+  // FIXME: it seems that sometimes the toggle states aren't getting set
+  // correctly after a rewind, and an activity is turned off even though
+  // the latest timepair has a end time of -1. This leads to timepairs that
+  // never end, even though later pairs can be written.
+  /*
+
+  Example of bad session data after this happens:
+
+data: [
+  0: [
+    0: [1917, -1]
+    1: [7580, 9480]
+  ]
+  1: []
+  2: [
+    0: [2514, -1]
+    1: [15584, 17181]
+  ]
+  3: []
+  4: [
+    0: [5016, -1]
+    1: [11579, 13884]
+  ]
+]
+
+*/
+
   /**
    * Rewind the tracking state to the given time, so that the state
    * is changed back to what it would have been at that time.
@@ -211,19 +237,19 @@ export default class SessionTracker {
       let on = false;
       // remove pairs that start after the cutoff time
       // (inefficient!)
-      data = data.filter(([start]) => start < time);
+      let mutableData = data.filter(([start]) => start < time);
 
       // need to check the last pair to see if the activity has ended or not
-      if (data.length) {
-        let lastIdx = data.length - 1;
-        if (data[lastIdx][1] > time) {
+      if (mutableData.length) {
+        let lastIdx = mutableData.length - 1;
+        if (mutableData[lastIdx][1] > time) {
           on = true;
-          data[lastIdx][1] = -1;
+          mutableData[lastIdx] = [mutableData[lastIdx][0], -1];
         }
       }
       this.activityStates[i] = on;
       this.lastToggleTime[i] = -1;
-      return data;
+      return mutableData;
     });
 
     this.invalidate();

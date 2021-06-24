@@ -1,7 +1,8 @@
+import type { DeepReadonly } from "../types/utility";
 import { sortWith } from "../util/sort";
 
 export function toEventTimeline(
-  data: readonly [number, number][][],
+  data: DeepReadonly<[number, number][][]>,
   startOffset: number = 0
 ): [number, number, boolean][] {
   let timeline: [number, number, boolean][] = [];
@@ -19,7 +20,7 @@ export function toEventTimeline(
 }
 
 export function toStateTimeline(
-  data: readonly [number, number][][],
+  data: DeepReadonly<[number, number][][]>,
   coalesceThreshold: number = 0,
   startOffset: number = 0
 ): [number, boolean[]][] {
@@ -46,7 +47,7 @@ export function toStateTimeline(
 }
 
 export function toStateDurationTimeline(
-  data: readonly [number, number][][],
+  data: DeepReadonly<[number, number][][]>,
   duration: number,
   coalesceThreshold: number = 0,
   startOffset: number = 0

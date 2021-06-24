@@ -1,4 +1,6 @@
-import { getActivitySet, newActivitySet } from "./database";
+import type { DesignModel } from "design-awareness-data-types";
+import type { DeepRequired } from "../types/utility";
+import { getDesignModel, newDesignModel } from "./database";
 
 export const ACTIVITY_SET_WELL_KNOWN_PREFIX = "_well-known.";
 
@@ -7,31 +9,45 @@ export const presetActivitySets = [
     "atman_abbreviated",
     {
       name: "Atman model (abbreviated)",
-      description: "",
-      activityNames: [
-        "Problem Definition",
-        "Gather Information",
-        "Generate Ideas",
-        "Model",
-        "Evaluation",
-        "Implementation",
-      ],
-      activityCodes: ["PD", "GATH", "GEN", "MOD", "EVAL", "IMPL"],
-      activityDescriptions: [
-        "Define the problem (identify constraints, criteria, etc.)",
-        "Search for and collect information",
-        "Think up and brainstorm potential solutions",
-        "Detail how to build solution(s) to the problem",
-        "Compare and contrast possible solutions",
-        "Produce or construct a physical device/product/system",
-      ],
-      colors: [
-        ["AE1E60", "D93FC0"],
-        ["DE1B54", "FF4D70"],
-        ["F06E0A", "FF8324"],
-        ["B3820F", "EFC31A"],
-        ["0C8375", "14B8A5"],
-        ["401073", "A93BF1"],
+      description: null,
+      activities: [
+        {
+          name: "Problem Definition",
+          code: "PD",
+          description:
+            "Define the problem (identify constraints, criteria, etc.)",
+          color: ["AE1E60", "D93FC0"],
+        },
+        {
+          name: "Gather Information",
+          code: "GATH",
+          description: "Search for and collect information",
+          color: ["DE1B54", "FF4D70"],
+        },
+        {
+          name: "Generate Ideas",
+          code: "GEN",
+          description: "Think up and brainstorm potential solutions",
+          color: ["F06E0A", "FF8324"],
+        },
+        {
+          name: "Model",
+          code: "MOD",
+          description: "Detail how to build solution(s) to the problem",
+          color: ["B3820F", "EFC31A"],
+        },
+        {
+          name: "Evaluation",
+          code: "EVAL",
+          description: "Compare and contrast possible solutions",
+          color: ["0C8375", "14B8A5"],
+        },
+        {
+          name: "Implementation",
+          code: "IMPL",
+          description: "Produce or construct a physical device/product/system",
+          color: ["401073", "A93BF1"],
+        },
       ],
     },
   ],
@@ -39,37 +55,57 @@ export const presetActivitySets = [
     "atman",
     {
       name: "Atman model",
-      description: "",
-      activityNames: [
-        "Problem Definition",
-        "Gather Information",
-        "Generate Ideas",
-        "Model",
-        "Feasibility Analysis",
-        "Evaluation",
-        "Decision",
-        "Communication",
-      ],
-      activityCodes: ["PD", "GATH", "GEN", "MOD", "FEAS", "EVAL", "DEC", "COM"],
-      activityDescriptions: [
-        "Define the problem (identify constraints, criteria, etc.)",
-        "Search for and collect information",
-        "Think up and brainstorm potential solutions",
-        "Detail how to build solution(s) to the problem",
-        "Assess workability of possible solutions",
-        "Compare and contrast possible solutions",
-        "Select idea or solution from among alternatives",
-        "Communicate the design to others",
-      ],
-      colors: [
-        ["AE1E60", "D93FC0"],
-        ["DE1B54", "FF4D70"],
-        ["F06E0A", "FF8324"],
-        ["B3820F", "EFC31A"],
-        ["935FA7", "999999"],
-        ["0C8375", "14B8A5"],
-        ["567321", "87BB25"],
-        ["3761A4", "3884FF"],
+      description: null,
+      activities: [
+        {
+          name: "Problem Definition",
+          code: "PD",
+          description:
+            "Define the problem (identify constraints, criteria, etc.)",
+          color: ["AE1E60", "D93FC0"],
+        },
+        {
+          name: "Gather Information",
+          code: "GATH",
+          description: "Search for and collect information",
+          color: ["DE1B54", "FF4D70"],
+        },
+        {
+          name: "Generate Ideas",
+          code: "GEN",
+          description: "Think up and brainstorm potential solutions",
+          color: ["F06E0A", "FF8324"],
+        },
+        {
+          name: "Model",
+          code: "MOD",
+          description: "Detail how to build solution(s) to the problem",
+          color: ["B3820F", "EFC31A"],
+        },
+        {
+          name: "Feasibility Analysis",
+          code: "FEAS",
+          description: "Assess workability of possible solutions",
+          color: ["935FA7", "999999"],
+        },
+        {
+          name: "Evaluation",
+          code: "EVAL",
+          description: "Compare and contrast possible solutions",
+          color: ["0C8375", "14B8A5"],
+        },
+        {
+          name: "Decision",
+          code: "DEC",
+          description: "Select idea or solution from among alternatives",
+          color: ["567321", "87BB25"],
+        },
+        {
+          name: "Communication",
+          code: "COM",
+          description: "Communicate the design to others",
+          color: ["3761A4", "3884FF"],
+        },
       ],
     },
   ],
@@ -77,55 +113,72 @@ export const presetActivitySets = [
     "atman_extended",
     {
       name: "Atman model (extended)",
-      description:
-        'Atman model extended to include "Identify a need" and "Implementation"',
-      activityNames: [
-        "Identify a need",
-        "Problem Definition",
-        "Gather Information",
-        "Generate Ideas",
-        "Model",
-        "Feasibility Analysis",
-        "Evaluation",
-        "Decision",
-        "Communication",
-        "Implementation",
-      ],
-      activityCodes: [
-        "ID",
-        "PD",
-        "GATH",
-        "GEN",
-        "MOD",
-        "FEAS",
-        "EVAL",
-        "DEC",
-        "COM",
-        "IMPL",
-      ],
-      activityDescriptions: [
-        "Identify basic needs (purpose, reason for design)",
-        "Define the problem (identify constraints, criteria, etc.)",
-        "Search for and collect information",
-        "Think up potential solutions",
-        "Detail how to build solution(s) to the problem",
-        "Assess workability of possible solutions",
-        "Compare and contrast possible solutions",
-        "Select idea or solution from among alternatives",
-        "Communicate the design to others",
-        "Produce or construct a physical device/product/system",
-      ],
-      colors: [
-        ["530D17", "FF9EA5"],
-        ["AE1E60", "D93FC0"],
-        ["DE1B54", "FF4D70"],
-        ["F06E0A", "FF8324"],
-        ["B3820F", "EFC31A"],
-        ["935FA7", "999999"],
-        ["0C8375", "14B8A5"],
-        ["567321", "87BB25"],
-        ["3761A4", "3884FF"],
-        ["401073", "A93BF1"],
+      description: {
+        description:
+          'Atman model extended to include "Identify a need" and "Implementation"',
+      },
+      activities: [
+        {
+          name: "Identify a need",
+          code: "ID",
+          description: "Identify basic needs (purpose, reason for design)",
+          color: ["530D17", "FF9EA5"],
+        },
+        {
+          name: "Problem Definition",
+          code: "PD",
+          description:
+            "Define the problem (identify constraints, criteria, etc.)",
+          color: ["AE1E60", "D93FC0"],
+        },
+        {
+          name: "Gather Information",
+          code: "GATH",
+          description: "Search for and collect information",
+          color: ["DE1B54", "FF4D70"],
+        },
+        {
+          name: "Generate Ideas",
+          code: "GEN",
+          description: "Think up potential solutions",
+          color: ["F06E0A", "FF8324"],
+        },
+        {
+          name: "Model",
+          code: "MOD",
+          description: "Detail how to build solution(s) to the problem",
+          color: ["B3820F", "EFC31A"],
+        },
+        {
+          name: "Feasibility Analysis",
+          code: "FEAS",
+          description: "Assess workability of possible solutions",
+          color: ["935FA7", "999999"],
+        },
+        {
+          name: "Evaluation",
+          code: "EVAL",
+          description: "Compare and contrast possible solutions",
+          color: ["0C8375", "14B8A5"],
+        },
+        {
+          name: "Decision",
+          code: "DEC",
+          description: "Select idea or solution from among alternatives",
+          color: ["567321", "87BB25"],
+        },
+        {
+          name: "Communication",
+          code: "COM",
+          description: "Communicate the design to others",
+          color: ["3761A4", "3884FF"],
+        },
+        {
+          name: "Implementation",
+          code: "IMPL",
+          description: "Produce or construct a physical device/product/system",
+          color: ["401073", "A93BF1"],
+        },
       ],
     },
   ],
@@ -133,16 +186,22 @@ export const presetActivitySets = [
     "diverge_converge",
     {
       name: "Diverge-Converge",
-      description: "",
-      activityNames: ["Diverging", "Converging"],
-      activityCodes: ["DIV", "CONV"],
-      activityDescriptions: [
-        "Conceptualizing and creatively negotiating proposed concepts/ Inductive, creative and non-judgemental idea generating",
-        "Narrowing ideas with reductive, deliberative, analytical decision making during assesment and implementation",
-      ],
-      colors: [
-        ["F06E0A", "FF8324"],
-        ["530D17", "FF9EA5"],
+      description: null,
+      activities: [
+        {
+          name: "Diverging",
+          code: "DIV",
+          description:
+            "Conceptualizing and creatively negotiating proposed concepts/ Inductive, creative and non-judgemental idea generating",
+          color: ["F06E0A", "FF8324"],
+        },
+        {
+          name: "Converging",
+          code: "CONV",
+          description:
+            "Narrowing ideas with reductive, deliberative, analytical decision making during assesment and implementation",
+          color: ["530D17", "FF9EA5"],
+        },
       ],
     },
   ],
@@ -150,16 +209,22 @@ export const presetActivitySets = [
     "problem_solution",
     {
       name: "Problem-Solution",
-      description: "",
-      activityNames: ["Problem Space", "Solution Space"],
-      activityCodes: ["PROB", "SOL"],
-      activityDescriptions: [
-        "Working on understanding and/or defining the design challenge ",
-        "Working on ideas to tackle or solve the design challenge/ problem",
-      ],
-      colors: [
-        ["0C8375", "14B8A5"],
-        ["401073", "A93BF1"],
+      description: null,
+      activities: [
+        {
+          name: "Problem Space",
+          code: "PROB",
+          description:
+            "Working on understanding and/or defining the design challenge ",
+          color: ["0C8375", "14B8A5"],
+        },
+        {
+          name: "Solution Space",
+          code: "SOL",
+          description:
+            "Working on ideas to tackle or solve the design challenge/ problem",
+          color: ["401073", "A93BF1"],
+        },
       ],
     },
   ],
@@ -167,22 +232,38 @@ export const presetActivitySets = [
     "hcde",
     {
       name: "Human Centered Design & Engineering model",
-      description: "",
-      activityNames: ["Research", "Ideate", "Prototype", "Evaluate", "Produce"],
-      activityCodes: ["RES", "IDEA", "PROT", "EVAL", "PRD"],
-      activityDescriptions: [
-        "Discover goals and needs",
-        "Generate ideas",
-        "Produce something tangible",
-        "Determine usability & usefulness",
-        "Build, measure, learn",
-      ],
-      colors: [
-        ["DE1B54", "FF4D70"],
-        ["F06E0A", "FF8324"],
-        ["B3820F", "EFC31A"],
-        ["0C8375", "14B8A5"],
-        ["401073", "A93BF1"],
+      description: null,
+      activities: [
+        {
+          name: "Research",
+          code: "RES",
+          description: "Discover goals and needs",
+          color: ["DE1B54", "FF4D70"],
+        },
+        {
+          name: "Ideate",
+          code: "IDEA",
+          description: "Generate ideas",
+          color: ["F06E0A", "FF8324"],
+        },
+        {
+          name: "Prototype",
+          code: "PROT",
+          description: "Produce something tangible",
+          color: ["B3820F", "EFC31A"],
+        },
+        {
+          name: "Evaluate",
+          code: "EVAL",
+          description: "Determine usability & usefulness",
+          color: ["0C8375", "14B8A5"],
+        },
+        {
+          name: "Produce",
+          code: "PRD",
+          description: "Build, measure, learn",
+          color: ["401073", "A93BF1"],
+        },
       ],
     },
   ],
@@ -190,26 +271,22 @@ export const presetActivitySets = [
   string,
   {
     name: string;
-    description: string;
-    activityNames: string[];
-    activityCodes: string[];
-    activityDescriptions: string[];
-    colors: [string, string][];
+    description: DeepRequired<DesignModel>["description"];
+    activities: DeepRequired<DesignModel>["activities"];
   }
 ][];
 
 export function createPresets(): Promise<void[]> {
   return Promise.all(
-    presetActivitySets.map(async ([id, data]) => {
-      const existingSet = await getActivitySet(
+    presetActivitySets.map(async ([id, { name, activities, description }]) => {
+      const existingSet = await getDesignModel(
         ACTIVITY_SET_WELL_KNOWN_PREFIX + id
       );
       if (existingSet === null) {
-        const activitySet = newActivitySet();
-        for (let [prop, val] of Object.entries(data)) {
-          // @ts-expect-error
-          activitySet[prop] = val;
-        }
+        const activitySet = newDesignModel();
+        activitySet.name = name;
+        activitySet.description = description;
+        activitySet.activities = activities;
         activitySet.wellKnown = true;
         await (activitySet.save as (id: string) => Promise<void>)(
           ACTIVITY_SET_WELL_KNOWN_PREFIX + id

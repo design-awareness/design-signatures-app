@@ -16,6 +16,7 @@
 </div>
 
 <style lang="scss">
+  @use "sass:math";
   @import "src/styles/tokens";
   @import "src/styles/type";
 
@@ -40,15 +41,17 @@
     width: $activity-toggle-width;
     height: $activity-toggle-height;
     box-sizing: border-box;
-    border-radius: $activity-toggle-height/2;
+    border-radius: math.div($activity-toggle-height, 2);
     border: $activity-toggle-border-width solid;
     box-shadow: 0 0 0 0 getvar(activity-color);
-    transition: box-shadow $activity-toggle-transition-speed/2;
+    transition: box-shadow math.div($activity-toggle-transition-speed, 2);
     z-index: 1;
     &::before,
     &::after {
       position: absolute;
-      top: calc(50% - #{rem(map-get($type-activity-toggle-on, size)) / 2});
+      top: calc(
+        50% - #{math.div(rem(map-get($type-activity-toggle-on, size)), 2)}
+      );
       transition: opacity $activity-toggle-transition-speed;
     }
     &::before {
@@ -71,7 +74,7 @@
       top: -$activity-toggle-border-width;
       width: $activity-toggle-width;
       height: $activity-toggle-height;
-      border-radius: $activity-toggle-height/2;
+      border-radius: math.div($activity-toggle-height, 2);
       background: getvar(activity-color);
       opacity: 0;
       transition: opacity $activity-toggle-transition-speed;

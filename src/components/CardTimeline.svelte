@@ -1,14 +1,14 @@
 <script lang="ts">
-  import type { Project, Session } from "../data/schema";
+  import type { RealtimeProject, RealtimeSession } from "../data/schema";
 
   const MAX_DURATION = 60 * 60 * 1000; // one hour
 
-  export let project: Project;
+  export let project: RealtimeProject;
 
-  let colors = project.activitySet.colors;
+  let colors = project.designModel.activities.map((activity) => activity.color);
 
   let duration = 0;
-  let sessions: Session[] = [];
+  let sessions: RealtimeSession[] = [];
   let i = project.sessions.length - 1;
   while (duration < MAX_DURATION && i >= 0) {
     sessions.unshift(project.sessions[i]);
@@ -33,7 +33,8 @@
   {#if project.sessions?.length}
     <svg
       preserveAspectRatio="none"
-      viewBox="{Math.max(0, duration - MAX_DURATION) / 1000} 0 {duration / 1000} {colors.length}"
+      viewBox="{Math.max(0, duration - MAX_DURATION) / 1000} 0 {duration /
+        1000} {colors.length}"
       xmlns="http://www.w3.org/2000/svg"
     >
       {#each renderData as { data, priorDuration }}
@@ -44,7 +45,9 @@
               width={(end - start) / 1000}
               y={i}
               height={1}
-              style="--color-light: #{colors[i][0]}; --color-dark: #{colors[i][1]}"
+              style="--color-light: #{colors[i][0]}; --color-dark: #{colors[
+                i
+              ][1]}"
             />
           {/each}
         {/each}

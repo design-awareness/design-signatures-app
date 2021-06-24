@@ -1,26 +1,26 @@
 <script lang="ts">
   import { onTrigger } from "../../../util/trigger";
   import type { ITriggerPassable, TriggerInvoker } from "../../../util/trigger";
-  import { getActivitySet, newActivitySet } from "../../../data/database";
-  import type { ActivitySet, DBModelName } from "../../../data/schema";
+  import { getDesignModel, newDesignModel } from "../../../data/database";
+  import type { DesignModel, EntityName } from "../../../data/schema";
   import EditorField from "./EditorField.svelte";
   import EditorFieldGroup from "./EditorFieldGroup.svelte";
 
-  export let setView: TriggerInvoker<[DBModelName, string | null]>;
+  export let setView: TriggerInvoker<[EntityName, string | null]>;
   export let save: ITriggerPassable<void>;
   export let remove: ITriggerPassable<void>;
   export let id: string;
 
-  let dbObj: ActivitySet;
+  let dbObj: DesignModel;
   let loadedId: string | null = null;
   let loading = true;
 
   async function loadObj() {
     loading = true;
     if (id === null) {
-      dbObj = newActivitySet();
+      dbObj = newDesignModel();
     } else {
-      dbObj = await getActivitySet(id);
+      dbObj = await getDesignModel(id);
     }
     loading = false;
   }
@@ -28,15 +28,15 @@
 
   onTrigger(save, async () => {
     await dbObj.save();
-    setView(["ActivitySet", dbObj.id]);
+    setView(["DesignModel", dbObj.id]);
   });
   onTrigger(remove, async () => {
     await dbObj.remove();
-    setView(["ActivitySet", null]);
+    setView(["DesignModel", null]);
   });
 </script>
 
-<p class="detail">{(dbObj && dbObj.id) || "New ActivitySet"}</p>
+<p class="detail">{(dbObj && dbObj.id) || "New DesignModel"}</p>
 <div class="editor">
   {#if !loading && dbObj}
     <EditorField name="name" type="string" bind:value={dbObj.name} />

@@ -6,21 +6,21 @@
   import SelectField from "../components/SelectField.svelte";
   import Header from "../components/type/Header.svelte";
   import SectionHeader from "../components/type/SectionHeader.svelte";
-  import { getProject } from "../data/database";
+  import { getRealtimeProject } from "../data/database";
   import {
     toActiveActivitiesTimeline,
     toEventTimeline,
     toStateTimeline,
   } from "../data/dataTransformers";
-  import type { Project, Session } from "../data/schema";
+  import type { RealtimeProject, RealtimeSession } from "../data/schema";
   import download from "../util/download";
 
   export let params: { id: string };
 
-  let projectPromise: Promise<Project>;
-  projectPromise = getProject(params.id);
+  let projectPromise: Promise<RealtimeProject>;
+  projectPromise = getRealtimeProject(params.id);
 
-  let project: Project;
+  let project: RealtimeProject;
   projectPromise.then((p) => (project = p));
 
   let exportType = "image";
@@ -79,7 +79,10 @@
     }
   }
 
-  function exportSession(session: Session, prevTime: number): readonly any[] {
+  function exportSession(
+    session: RealtimeSession,
+    prevTime: number
+  ): readonly any[] {
     if (dataFormat === 0) {
       return session.data;
     } else if (dataFormat === 1) {

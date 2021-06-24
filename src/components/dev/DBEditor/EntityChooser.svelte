@@ -1,13 +1,13 @@
 <script lang="ts">
-  import type { DBModelName } from "../../../data/schema";
+  import type { EntityName } from "../../../data/schema";
   import * as db from "../../../data/database";
   import { onTrigger } from "../../../util/trigger";
   import type { ITriggerPassable } from "../../../util/trigger";
   const typeOptions = ["ActivitySet", "Note", "Project", "Session"];
 
-  export let selectedType: DBModelName = "ActivitySet";
+  export let selectedType: EntityName = "DesignModel";
   export let selectedId: string | null = null;
-  export let setViewTrigger: ITriggerPassable<[DBModelName, string | null]>;
+  export let setViewTrigger: ITriggerPassable<[EntityName, string | null]>;
 
   let loading = true;
   let idOptions: string[] = [];

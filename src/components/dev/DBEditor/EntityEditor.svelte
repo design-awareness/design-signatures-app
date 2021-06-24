@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { DBModelName } from "../../../data/schema";
+  import type { EntityName } from "../../../data/schema";
   import { createTrigger } from "../../../util/trigger";
   import type { TriggerInvoker } from "../../../util/trigger";
 
@@ -11,9 +11,9 @@
   const [triggerSave, save] = createTrigger<MouseEvent>();
   const [triggerRemove, remove] = createTrigger<MouseEvent>();
 
-  export let entityType: DBModelName;
+  export let entityType: EntityName;
   export let id: string;
-  export let setView: TriggerInvoker<[DBModelName, string | null]>;
+  export let setView: TriggerInvoker<[EntityName, string | null]>;
 
   const editorComponents = {
     ActivitySet: ActivitySetEditor,

@@ -3,7 +3,9 @@
   "compileOnSave": true,
   "compilerOptions": {
     "strict": true,
-    "types": ["resize-observer-browser"]
+    "types": ["resize-observer-browser"],
+    "target": "es2019",
+    "moduleResolution": "node"
   },
   "include": ["src/**/*", "./global.d.ts"],
   "exclude": ["node_modules/*", "__sapper__/*", "public/*"]

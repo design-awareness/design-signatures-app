@@ -4,13 +4,13 @@
     toActiveActivitiesTimeline,
     toStateDurationTimeline,
   } from "../data/dataTransformers";
-  import type { ActivitySet, Session } from "../data/schema";
+  import type { DesignModel, RealtimeSession } from "../data/schema";
   import useInterval from "../util/interval";
   import { sortBy } from "../util/sort";
   import InvisibleButton from "./InvisibleButton.svelte";
 
-  export let session: Session;
-  export let activitySet: ActivitySet;
+  export let session: RealtimeSession;
+  export let activitySet: DesignModel;
   export let shouldUpdate: boolean;
   export let timelineMode: "timeline" | "bundle" | "none";
   export let currentTime: number;
@@ -28,11 +28,12 @@
 
   let duration: number;
   let timeline: readonly [[number, number], number[]][] = [];
-  let colors: readonly [string, string][] = activitySet.colors;
+  let colors: readonly (readonly [string, string])[] =
+    activitySet.activities.map((activity) => activity.color);
 
   let activityDurations: {
     duration: number;
-    color: [string, string];
+    color: readonly [string, string];
     previousDuration: number;
   }[] = [];
   let totalDuration = 0;

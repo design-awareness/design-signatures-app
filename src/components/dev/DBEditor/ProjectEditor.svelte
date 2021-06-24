@@ -1,27 +1,30 @@
 <script lang="ts">
   import { onTrigger } from "../../../util/trigger";
   import type { ITriggerPassable, TriggerInvoker } from "../../../util/trigger";
-  import { getProject, newProject } from "../../../data/database";
-  import type { DBModelName, Project } from "../../../data/schema";
+  import {
+    getRealtimeProject,
+    newRealtimeProject,
+  } from "../../../data/database";
+  import type { EntityName, RealtimeProject } from "../../../data/schema";
   import EditorField from "./EditorField.svelte";
   import EditorRefField from "./EditorRefField.svelte";
   import EditorFieldGroup from "./EditorFieldGroup.svelte";
 
-  export let setView: TriggerInvoker<[DBModelName, string | null]>;
+  export let setView: TriggerInvoker<[EntityName, string | null]>;
   export let save: ITriggerPassable<void>;
   export let remove: ITriggerPassable<void>;
   export let id: string;
 
-  let dbObj: Project;
+  let dbObj: RealtimeProject;
   let loadedId: string | null = null;
   let loading = true;
 
   async function loadObj() {
     loading = true;
     if (id === null) {
-      dbObj = newProject();
+      dbObj = newRealtimeProject();
     } else {
-      dbObj = await getProject(id);
+      dbObj = await getRealtimeProject(id);
     }
     loading = false;
   }
@@ -29,11 +32,11 @@
 
   onTrigger(save, async () => {
     await dbObj.save();
-    setView(["Project", dbObj.id]);
+    setView(["RealtimeProject", dbObj.id]);
   });
   onTrigger(remove, async () => {
     await dbObj.remove();
-    setView(["Project", null]);
+    setView(["RealtimeProject", null]);
   });
 </script>
 
@@ -48,26 +51,22 @@
     />
     <EditorField name="active" type="boolean" bind:value={dbObj.active} />
     <EditorField name="created" type="date" bind:value={dbObj.created} />
-    <EditorField
-      name="lastModified"
-      type="date"
-      bind:value={dbObj.lastModified}
-    />
+    <EditorField name="modified" type="date" bind:value={dbObj.modified} />
     <EditorRefField
-      name="activitySet"
-      type="ActivitySet"
-      bind:value={dbObj.activitySet}
+      name="designModel"
+      type="DesignModel"
+      bind:value={dbObj.designModel}
       {setView}
     />
     <EditorFieldGroup
       name="notes"
-      type={{ entity: "Note" }}
+      type={{ entity: "ProjectNote" }}
       bind:value={dbObj.notes}
       {setView}
     />
     <EditorFieldGroup
       name="sessions"
-      type={{ entity: "Session" }}
+      type={{ entity: "RealtimeSession" }}
       bind:value={dbObj.sessions}
       {setView}
     />

@@ -1,14 +1,17 @@
 <script lang="ts">
-  import type { ActivitySet } from "../data/schema";
+  import type { DesignModel } from "../data/schema";
 
-  export let forEach: ActivitySet | null = null;
-  let activitySet: ActivitySet;
-  $: activitySet = forEach as ActivitySet;
+  // FIXME: this probably shouldn't be a function of ActivityToken.
+  // I think it's only in the design model previewer, so since that's
+  // getting redone we should be able to take this away.
+  export let forEach: DesignModel | null = null;
+  let activitySet: DesignModel;
+  $: activitySet = forEach as DesignModel;
   export let align: "left" | "right" | "center" = "left";
   export let fixWidth = false;
   export let space = false;
 
-  export let color: [string, string] | null = null;
+  export let color: readonly [string, string] | null = null;
   export let code: string | null = null;
 
   const NBSP = " ";
@@ -16,9 +19,9 @@
 
 {#if forEach}
   <ul style="text-align: {align}">
-    {#each activitySet.activityCodes as code, i}
+    {#each activitySet.activities as { color, code }}
       <li>
-        <svelte:self space color={activitySet.colors[i]} {code} />
+        <svelte:self space {color} {code} />
       </li>
     {/each}
   </ul>
@@ -32,10 +35,11 @@
 {/if}
 
 <style lang="scss">
+  @use "sass:math";
   @import "src/styles/tokens";
   @import "src/styles/type";
   ul {
-    margin: ($input-spacing-inner / 2) 0 0 0;
+    margin: math.div($input-spacing-inner, 2) 0 0 0;
     padding: 0;
   }
   li {

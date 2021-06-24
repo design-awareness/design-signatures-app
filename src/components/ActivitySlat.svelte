@@ -7,7 +7,7 @@
   import type SessionTracker from "../util/track";
 
   export let activityName: string;
-  export let activityColor: [string, string];
+  export let activityColor: readonly [string, string];
   export let index: number;
   export let tracker: SessionTracker;
   export let showInfo: () => void;

@@ -1,8 +1,8 @@
 <script lang="ts">
-  import type { ActivitySet } from "../../data/schema";
+  import type { DesignModel } from "../../data/schema";
   import ActivityToken from "../ActivityToken.svelte";
 
-  export let activitySet: ActivitySet | null = null;
+  export let activitySet: DesignModel | null = null;
   export let selected = false;
   // export let empty = false;
 </script>

@@ -1,7 +1,7 @@
 <script lang="ts">
   import Header from "../components/type/Header.svelte";
-  import type { ActivitySet } from "../data/schema";
-  import { newProject } from "../data/database";
+  import type { DesignModel } from "../data/schema";
+  import { newRealtimeProject } from "../data/database";
   import { replace, location } from "svelte-spa-router/Router.svelte";
   import BackButton from "../components/BackButton.svelte";
   import ContentFrame from "../components/layout/ContentFrame.svelte";
@@ -15,7 +15,7 @@
   let name = "";
   let description = "";
 
-  let activitySet: ActivitySet;
+  let activitySet: DesignModel;
   let isCreating = false;
 
   const BUILDER_SUFFIX = "as";
@@ -28,12 +28,12 @@
 
   async function go() {
     isCreating = true;
-    const proj = newProject();
+    const proj = newRealtimeProject();
     proj.name = name;
     proj.description = description;
-    proj.activitySet = activitySet;
+    proj.designModel = activitySet;
     proj.created = new Date();
-    proj.lastModified = new Date();
+    proj.modified = new Date();
     proj.notes = [];
     proj.sessions = [];
     proj.active = true;

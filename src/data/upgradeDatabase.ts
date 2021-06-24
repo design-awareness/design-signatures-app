@@ -12,7 +12,6 @@ export function upgradeDatabase(from: number, db: IDBDatabase) {
   if (from <= 2) {
     // Upgrade v2 to v3:
     // create object store for static configuration and saved data
-    db.createObjectStore(CONFIG_STORE, { keyPath: "key" });
   }
 }
 

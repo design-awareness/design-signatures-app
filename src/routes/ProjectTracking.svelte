@@ -20,9 +20,9 @@
   import SelectField from "../components/SelectField.svelte";
   import TrackingTimer from "../components/TrackingTimer.svelte";
   import CONFIG from "../data/config";
-  import { getProject, newNote } from "../data/database";
+  import { getRealtimeProject, newTimedNote } from "../data/database";
   import { pushRecentProject } from "../data/recentProjects";
-  import type { Project } from "../data/schema";
+  import type { RealtimeProject } from "../data/schema";
   import { setInArray } from "../util/array";
   import { delay } from "../util/delay";
   import { goUpSafe } from "../util/history";
@@ -46,8 +46,8 @@
 
   let errorLoading = false;
   let hasProject = false;
-  let thenProject = getProject(params.id);
-  let project: Project;
+  let thenProject = getRealtimeProject(params.id);
+  let project: RealtimeProject;
   thenProject.then((_project) => {
     if (!_project) {
       errorLoading = true;
@@ -137,23 +137,20 @@
     tracker.save();
   }
 
+  // FIXME: Don't duplicate activity type here.
   interface ActivitySpec {
     name: string;
     code: string;
     description: string;
-    color: [string, string];
+    color: readonly [string, string];
     index: number;
   }
   let editingActivity = false;
   let selectedActivity: ActivitySpec, selectedActivityTemp: ActivitySpec;
   const openInfo = (i: number) => () => {
     editingActivity = false;
-    const as = project.activitySet;
     selectedActivity = {
-      name: as.activityNames[i],
-      code: as.activityCodes[i],
-      description: as.activityDescriptions[i],
-      color: as.colors[i],
+      ...project.designModel.activities[i],
       index: i,
     };
     openModal("info")();
@@ -181,26 +178,20 @@
     {
       label: "Save",
       onClick: function () {
-        const as = project.activitySet;
+        const model = project.designModel;
         const i = selectedActivity.index;
-        as.activityDescriptions = setInArray(
-          as.activityDescriptions,
-          i,
-          selectedActivityTemp.description
-        );
-        as.activityNames = setInArray(
-          as.activityNames,
-          i,
-          selectedActivityTemp.name
-        );
-        as.activityCodes = setInArray(
-          as.activityCodes,
-          i,
-          selectedActivityTemp.code.toUpperCase()
-        );
-        as.colors = setInArray(as.colors, i, selectedActivityTemp.color);
-        as.save();
-        project.activitySet = project.activitySet;
+        let { code, color, description, name } = selectedActivityTemp;
+        let newActivity = {
+          code,
+          color,
+          description,
+          name,
+        };
+        model.activities = setInArray(model.activities, i, newActivity);
+        model.save();
+        // This no-op is instrumented by svelte and updates accordingly
+        // FIXME: Activity detail modal isn't updated after saving.
+        project.designModel = project.designModel;
         editingActivity = false;
       },
     },
@@ -231,7 +222,7 @@
     if (!project) return;
     stopAllActivities(pastSessionTime);
     tracker.save();
-    project.lastModified = new Date();
+    project.modified = new Date();
     pushRecentProject(project.id);
     project.save();
   });
@@ -271,12 +262,10 @@
   async function saveNote() {
     noteSaving = true;
     const project = await thenProject;
-    const note = newNote();
-    note.contents = noteText;
-    note.project = project;
-    note.timed = true;
-    note.timestamp = projectTime + pastSessionTime;
-    project.notes = [...project.notes, note];
+    const note = newTimedNote();
+    note.content = noteText;
+    note.time = projectTime + pastSessionTime;
+    tracker.session.notes = [...tracker.session.notes, note];
     await project.save();
     await closeModal();
     noteText = "";
@@ -307,10 +296,10 @@
         </div>
 
         <div class="flexible-toggle-area">
-          {#each project.activitySet.activityNames as activityName, i (i)}
+          {#each project.designModel.activities as { color, name }, i (i)}
             <ActivitySlat
-              {activityName}
-              activityColor={project.activitySet.colors[i]}
+              activityName={name}
+              activityColor={color}
               index={i}
               showInfo={openInfo(i)}
               {tracker}
@@ -324,7 +313,7 @@
             shouldUpdate={hasProject && !params.wild}
             session={tracker.session}
             currentTime={subsessionTime + pastSessionTime}
-            activitySet={project.activitySet}
+            activitySet={project.designModel}
           />
         {/if}
 
@@ -421,7 +410,7 @@
           buttons={editingActivity ? infoButtonsEditing : infoButtons}
         >
           {#if editingActivity}
-            {#if !project.activitySet.wellKnown}
+            {#if !project.designModel.wellKnown}
               <InputField
                 label="Activity name"
                 bind:value={selectedActivityTemp.name}
@@ -435,7 +424,7 @@
             {/if}
             <ColorPicker bind:color={selectedActivityTemp.color} />
 
-            {#if !project.activitySet.wellKnown}
+            {#if !project.designModel.wellKnown}
               <InputField
                 large
                 label="Description"
