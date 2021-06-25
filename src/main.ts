@@ -1,5 +1,13 @@
 import App from "./App.svelte";
 
+import * as db from "./data/database";
+import { BUILD_ENV } from "./data/buildData";
+
+if (BUILD_ENV !== "prod") {
+  // in non production environments, expose db on the window object!
+  Object.assign(window, { db });
+}
+
 const app = new App({
   target: document.body,
 });
