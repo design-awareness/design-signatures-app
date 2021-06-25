@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
   import { onTrigger } from "../../../util/trigger";
   import type { ITriggerPassable, TriggerInvoker } from "../../../util/trigger";
   import { getTimedNote, newTimedNote } from "../../../data/database";
@@ -66,4 +66,4 @@
     font-weight: 600;
     line-height: 2;
   }
-</style>
+</style> -->

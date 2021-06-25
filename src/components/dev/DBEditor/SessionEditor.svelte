@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
   import { onTrigger } from "../../../util/trigger";
   import type { ITriggerPassable, TriggerInvoker } from "../../../util/trigger";
   import {
@@ -78,4 +78,4 @@
   pre {
     white-space: pre-wrap;
   }
-</style>
+</style> -->

@@ -1,6 +1,7 @@
-import * as Schema from "./schema";
 import defer from "../util/defer";
-import { upgradeDatabase, initializeConfiguration } from "./upgradeDatabase";
+import { VERSION } from "./buildData";
+import * as Schema from "./schema";
+import { initializeConfiguration, upgradeDatabase } from "./upgradeDatabase";
 
 const DB_NAME = "design-awareness-local-store";
 const DEBUG_DELAY = 0;
@@ -454,6 +455,38 @@ function createClientObject(
       if (removing) {
         return removing;
       }
+    },
+
+    toSerializable() {
+      const rawObj: Record<string, any> = {};
+      for (let [name, isEntityType, repeated] of schema) {
+        if (isEntityType) {
+          if (repeated) {
+            rawObj[name] = data[name].map((member: Schema.Entity) =>
+              member.toSerializable()
+            );
+          } else {
+            rawObj[name] = data[name].toSerializable();
+          }
+        } else {
+          rawObj[name] = data[name];
+        }
+      }
+      rawObj.id = id;
+      return rawObj;
+    },
+
+    serialize(): string {
+      const entryData = this.toSerializable();
+      return JSON.stringify({
+        $format: "design-awareness",
+        version: "1.0.0",
+        type: store,
+        data: entryData,
+        meta: {
+          encoder: "design-awareness-app@" + VERSION,
+        },
+      });
     },
   });
 

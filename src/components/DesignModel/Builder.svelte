@@ -1,3 +1,8 @@
+<script lang="ts" context="module">
+  export const BUILDER_SUFFIX = "model";
+  export const BUILDER_MODAL_SUFFIX = "model!";
+</script>
+
 <script lang="ts">
   import add from "@iconify-icons/ic/baseline-add";
   import type { DesignModel } from "../../data/schema";
@@ -11,16 +16,17 @@
   import { newDesignModel } from "../../data/database";
   import { pop, push, location } from "svelte-spa-router";
 
-  export let activitySet: DesignModel;
+  export let designModel: DesignModel;
   export let showModal: boolean;
   let modalId = -1;
 
   function openModal(i: number) {
     modalId = i;
-    if ($location === "/projects/new/as") push("/projects/new/as!");
+    if ($location === "/projects/new/" + BUILDER_SUFFIX)
+      push("/projects/new/" + BUILDER_MODAL_SUFFIX);
   }
   function closeModal() {
-    if ($location === "/projects/new/as!") pop();
+    if ($location === "/projects/new/" + BUILDER_MODAL_SUFFIX) pop();
   }
 
   type ActivityWithID = {
@@ -83,7 +89,7 @@
     as.wellKnown = false;
     saving = true;
     await as.save();
-    activitySet = as;
+    designModel = as;
     await pop();
   }
 
@@ -115,11 +121,11 @@
   }
 </script>
 
-<Header>Create a Design Activity Set</Header>
+<Header>Create a Design Model</Header>
 {#if !saving}
   <InputField
     label="Title"
-    helptext="This will name the activity set you create below and will allow you to identify and use it on other projects."
+    helptext="This will name the model you create below and will allow you to identify and use it on other projects."
     bind:value={name}
   />
   <div class="label">Activities</div>

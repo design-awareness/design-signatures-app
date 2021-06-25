@@ -3,7 +3,6 @@
   import ContentFrame from "../../components/layout/ContentFrame.svelte";
   import Link from "../../components/Link.svelte";
   import Header from "../../components/type/Header.svelte";
-  import { ACTIVITY_SET_WELL_KNOWN_PREFIX } from "../../data/activitySetPresets";
   import CONFIG from "../../data/config";
   import {
     getAll,
@@ -21,22 +20,6 @@
   (async function () {
     reloadSuppressed = await CONFIG.getDevSuppressBeforeUnload();
   })();
-
-  async function resetWKAS() {
-    if (confirm("Are you sure? Built-in design models will be recreated.")) {
-      const activitySets = await getAll("DesignModel");
-      await Promise.all(
-        activitySets.map(async (asid) => {
-          if (asid.startsWith(ACTIVITY_SET_WELL_KNOWN_PREFIX)) {
-            const as = await getDesignModel(asid);
-            if (as) await as.remove();
-          }
-        })
-      );
-      alert("Reset complete.");
-      location.reload();
-    }
-  }
 
   async function deleteAll() {
     if (
@@ -135,9 +118,5 @@
   <p>Color scheme: {$colorScheme}</p>
 
   <Header>Danger zone</Header>
-  <p>
-    Reset well known activity sets:
-    <button on:click={resetWKAS}>reset</button>
-  </p>
   <p>Purge the entire database: <button on:click={deleteAll}>purge</button></p>
 </ContentFrame>

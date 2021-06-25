@@ -1,7 +1,10 @@
 <script lang="ts">
-  import AllProjects from "./routes/AllProjects.svelte";
+  import Router from "svelte-spa-router/Router.svelte";
+  import { createPresets } from "./data/designModelPresets";
+  import { awaitObjectUpgradeIfNeeded } from "./data/upgradeObjects";
   import AppDo from "./routes/about/AppDo.svelte";
   import Atmans from "./routes/about/Atmans.svelte";
+  import AllProjects from "./routes/AllProjects.svelte";
   import ComponentLibrary from "./routes/dev/ComponentLibrary.svelte";
   import DBEditor from "./routes/dev/DBEditor.svelte";
   import DevTools from "./routes/dev/DevTools.svelte";
@@ -12,11 +15,8 @@
   import ProjectExport from "./routes/ProjectExport.svelte";
   import ProjectTracking from "./routes/ProjectTracking.svelte";
   import RedirectAddPath from "./routes/RedirectAddPath.svelte";
-  import Router from "svelte-spa-router/Router.svelte";
   import Settings from "./routes/Settings.svelte";
   import Update from "./routes/Update.svelte";
-  import { createPresets } from "./data/activitySetPresets";
-  import { awaitObjectUpgradeIfNeeded } from "./data/upgradeObjects";
 
   awaitObjectUpgradeIfNeeded();
   createPresets(); // noop, but keeps the linter happy :)

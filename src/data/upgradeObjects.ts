@@ -2,8 +2,7 @@
 // this is done separately to avoid circular dependencies,
 // but that means we need to trigger this check in main instead :)
 
-import { createPresets } from "./activitySetPresets";
-import { getDesignModel, getAll, onUpgradeNeeded } from "./database";
+import { onUpgradeNeeded } from "./database";
 
 export function awaitObjectUpgradeIfNeeded() {
   onUpgradeNeeded.then(async function (from: number) {

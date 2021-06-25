@@ -1,6 +1,7 @@
 <script lang="ts">
   import { getRealtimeProject } from "../data/database";
-  import type { Project } from "../data/schema";
+  // FIXME: Project cards need to work with other types of project too
+  import type { RealtimeProject } from "../data/schema";
   import CardTimeline from "./CardTimeline.svelte";
 
   export let newRealtimeProjectPlaceholder = false;
@@ -8,7 +9,7 @@
   export let id: string | null = null;
 
   let loading = true;
-  let project: Project | null = null;
+  let project: RealtimeProject | null = null;
 
   if (newRealtimeProjectPlaceholder) {
     loading = false;

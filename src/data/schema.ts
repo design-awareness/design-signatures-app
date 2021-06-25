@@ -1,4 +1,5 @@
 export const DB_VERSION = 4;
+export const WELL_KNOWN_ENTITY_PREFIX = "well-known:";
 
 // Raw datatypes from design-awareness/data
 import type * as DataType from "design-awareness-data-types";
@@ -18,6 +19,8 @@ export interface Entity extends DataType.Entity {
   readonly deleted: boolean;
   save(): Promise<void>;
   remove(): Promise<void>;
+  toSerializable(): object;
+  serialize(): string;
 }
 
 // [key, model name, array?]
@@ -77,7 +80,7 @@ export interface AsyncProject
     SetPropertyTypes<
       Prepare<DataType.AsyncProject>,
       [
-        ["designModel", Entity],
+        ["designModel", DesignModel],
         ["entries", readonly AsyncEntry[]],
         ["notes", readonly ProjectNote[]]
       ]

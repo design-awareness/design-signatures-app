@@ -5,8 +5,8 @@
   // I think it's only in the design model previewer, so since that's
   // getting redone we should be able to take this away.
   export let forEach: DesignModel | null = null;
-  let activitySet: DesignModel;
-  $: activitySet = forEach as DesignModel;
+  let designModel: DesignModel;
+  $: designModel = forEach as DesignModel;
   export let align: "left" | "right" | "center" = "left";
   export let fixWidth = false;
   export let space = false;
@@ -19,7 +19,7 @@
 
 {#if forEach}
   <ul style="text-align: {align}">
-    {#each activitySet.activities as { color, code }}
+    {#each designModel.activities as { color, code }}
       <li>
         <svelte:self space {color} {code} />
       </li>

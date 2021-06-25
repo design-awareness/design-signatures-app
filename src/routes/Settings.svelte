@@ -1,6 +1,5 @@
 <script lang="ts">
   import { replace } from "svelte-spa-router/Router.svelte";
-
   import BackButton from "../components/BackButton.svelte";
   import Button from "../components/Button.svelte";
   import InvisibleButton from "../components/InvisibleButton.svelte";
@@ -8,19 +7,24 @@
   import Link from "../components/Link.svelte";
   import Header from "../components/type/Header.svelte";
   import SectionHeader from "../components/type/SectionHeader.svelte";
-  import { ACTIVITY_SET_WELL_KNOWN_PREFIX } from "../data/activitySetPresets";
   import { BRANCH, BUILD_ENV, BUILD_TIME, VERSION } from "../data/buildData";
-  import { getDesignModel, getAll, getRealtimeProject } from "../data/database";
+  import {
+    getAll,
+    getAsyncProject,
+    getDesignModel,
+    getRealtimeProject,
+  } from "../data/database";
   import type { DesignModel } from "../data/schema";
+  import { WELL_KNOWN_ENTITY_PREFIX } from "../data/schema";
 
-  async function resetWKAS() {
-    if (confirm("Are you sure? Built-in activity sets will be recreated.")) {
-      const activitySets = await getAll("DesignModel");
+  async function resetWellKnownModels() {
+    if (confirm("Are you sure? Built-in design models will be recreated.")) {
+      const designModels = await getAll("DesignModel");
       await Promise.all(
-        activitySets.map(async (asid) => {
-          if (asid.startsWith(ACTIVITY_SET_WELL_KNOWN_PREFIX)) {
-            const as = await getDesignModel(asid);
-            if (as) await as.remove();
+        designModels.map(async (id) => {
+          if (id.startsWith(WELL_KNOWN_ENTITY_PREFIX)) {
+            const model = await getDesignModel(id);
+            if (model) await model.remove();
           }
         })
       );
@@ -29,28 +33,35 @@
     }
   }
 
-  async function deleteUnusedAS() {
-    const setsToRemove = new Set<DesignModel>(
+  async function deleteUnusedModels() {
+    const eligibleModels = new Set<DesignModel>(
       await getAll("DesignModel").then((ids) =>
         Promise.all(ids.map((id) => getDesignModel(id)))
       )
     );
-    const projects = await getAll("RealtimeProject").then((ids) =>
-      Promise.all(ids.map((id) => getRealtimeProject(id)))
-    );
-    projects.forEach(({ designModel }) => setsToRemove.delete(designModel));
-    const sets = Array.from(setsToRemove.values());
-    if (!sets.length) {
-      alert("No unused activity sets to delete.");
+    const projects = (
+      await Promise.all([
+        getAll("RealtimeProject").then((ids) =>
+          Promise.all(ids.map((id) => getRealtimeProject(id)))
+        ),
+        getAll("AsyncProject").then((ids) =>
+          Promise.all(ids.map((id) => getAsyncProject(id)))
+        ),
+      ])
+    ).flat();
+    projects.forEach(({ designModel }) => eligibleModels.delete(designModel));
+    const modelsToRemove = Array.from(eligibleModels.values());
+    if (!modelsToRemove.length) {
+      alert("No unused design models to delete.");
     }
     if (
       confirm(
-        "The following unused activity sets will be deleted:\n" +
-          sets.map((set) => " - " + set.name).join("\n") +
-          "\nBuilt-in activity sets will be restored."
+        "The following unused design models will be deleted:\n" +
+          modelsToRemove.map((set) => " - " + set.name).join("\n") +
+          "\nBuilt-in design models will be restored."
       )
     ) {
-      await Promise.all(sets.map((set) => set.remove()));
+      await Promise.all(modelsToRemove.map((set) => set.remove()));
       alert("Done.");
       location.reload();
     }
@@ -74,14 +85,16 @@
     <BackButton href="/" />
     <Header>Settings</Header>
 
-    <SectionHeader>Activity sets</SectionHeader>
+    <SectionHeader>Design models</SectionHeader>
     <p>
-      <Button small on:click={deleteUnusedAS}>
-        Remove unused activity sets
+      <Button small on:click={deleteUnusedModels}>
+        Remove unused design models
       </Button>
     </p>
     <p>
-      <Button small on:click={resetWKAS}>Reset built-in activity sets</Button>
+      <Button small on:click={resetWellKnownModels}
+        >Reset built-in design models</Button
+      >
     </p>
 
     {#if BUILD_ENV !== "prod" || tapCount > 4}

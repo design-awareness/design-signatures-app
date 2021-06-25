@@ -1,12 +1,11 @@
 import type { DesignModel } from "design-awareness-data-types";
 import type { DeepRequired } from "../types/utility";
 import { getDesignModel, newDesignModel } from "./database";
+import { WELL_KNOWN_ENTITY_PREFIX } from "./schema";
 
-export const ACTIVITY_SET_WELL_KNOWN_PREFIX = "_well-known.";
-
-export const presetActivitySets = [
+export const presetDesignModels = [
   [
-    "atman_abbreviated",
+    "edu.washington.hcde.atman_abbreviated@0.1",
     {
       name: "Atman model (abbreviated)",
       description: null,
@@ -52,7 +51,7 @@ export const presetActivitySets = [
     },
   ],
   [
-    "atman",
+    "edu.washington.hcde.atman@0.1",
     {
       name: "Atman model",
       description: null,
@@ -110,7 +109,7 @@ export const presetActivitySets = [
     },
   ],
   [
-    "atman_extended",
+    "edu.washington.hcde.atman@0.1",
     {
       name: "Atman model (extended)",
       description: {
@@ -278,18 +277,16 @@ export const presetActivitySets = [
 
 export function createPresets(): Promise<void[]> {
   return Promise.all(
-    presetActivitySets.map(async ([id, { name, activities, description }]) => {
-      const existingSet = await getDesignModel(
-        ACTIVITY_SET_WELL_KNOWN_PREFIX + id
-      );
+    presetDesignModels.map(async ([id, { name, activities, description }]) => {
+      const existingSet = await getDesignModel(WELL_KNOWN_ENTITY_PREFIX + id);
       if (existingSet === null) {
-        const activitySet = newDesignModel();
-        activitySet.name = name;
-        activitySet.description = description;
-        activitySet.activities = activities;
-        activitySet.wellKnown = true;
-        await (activitySet.save as (id: string) => Promise<void>)(
-          ACTIVITY_SET_WELL_KNOWN_PREFIX + id
+        const designModel = newDesignModel();
+        designModel.name = name;
+        designModel.description = description;
+        designModel.activities = activities;
+        designModel.wellKnown = true;
+        await (designModel.save as (id: string) => Promise<void>)(
+          WELL_KNOWN_ENTITY_PREFIX + id
         );
       }
     })

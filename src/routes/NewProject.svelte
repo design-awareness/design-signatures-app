@@ -7,31 +7,32 @@
   import ContentFrame from "../components/layout/ContentFrame.svelte";
   import InputField from "../components/InputField.svelte";
   import BottomActionBar from "../components/BottomActionBar.svelte";
-  import ActivitySetChooser from "../components/ActivitySet/Chooser.svelte";
-  import BuilderFrame from "../components/ActivitySet/BuilderFrame.svelte";
+  import DesignModelChooser from "../components/DesignModel/Chooser.svelte";
+  import BuilderFrame from "../components/DesignModel/BuilderFrame.svelte";
   import { pushRecentProject } from "../data/recentProjects";
   import { push } from "svelte-spa-router";
+  import {
+    BUILDER_MODAL_SUFFIX,
+    BUILDER_SUFFIX,
+  } from "../components/DesignModel/Builder.svelte";
 
   let name = "";
   let description = "";
 
-  let activitySet: DesignModel;
+  let designModel: DesignModel;
   let isCreating = false;
-
-  const BUILDER_SUFFIX = "as";
-  const BUILDER_MODAL_SUFFIX = "as!";
 
   export let params: { wild: string };
 
-  let beginEnabled = false;
-  $: beginEnabled = name !== "" && activitySet !== null && !isCreating;
+  let canContinue = false;
+  $: canContinue = name !== "" && designModel !== null && !isCreating;
 
   async function go() {
     isCreating = true;
     const proj = newRealtimeProject();
     proj.name = name;
     proj.description = description;
-    proj.designModel = activitySet;
+    proj.designModel = designModel;
     proj.created = new Date();
     proj.modified = new Date();
     proj.notes = [];
@@ -55,20 +56,19 @@
         bind:value={name}
       />
       <InputField label="Description" large bind:value={description} />
-      <ActivitySetChooser
-        bind:activitySet
-        createNew={() => push($location + "as")}
+      <DesignModelChooser
+        bind:selectedDesignModel={designModel}
+        createNew={() => push($location + BUILDER_SUFFIX)}
       />
     </ContentFrame>
     <BottomActionBar
       label="Create project"
       on:click={go}
-      disabled={!beginEnabled}
+      disabled={!canContinue}
     />
   {:else}
-    <!-- newSetOverlay -->
     <BuilderFrame
-      bind:activitySet
+      bind:designModel
       showModal={params.wild === BUILDER_MODAL_SUFFIX}
     />
   {/if}

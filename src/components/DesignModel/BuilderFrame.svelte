@@ -8,7 +8,7 @@
   import Chooser from "./Chooser.svelte";
 
   let startingPoint: DesignModel | null = null;
-  export let activitySet: DesignModel;
+  export let designModel: DesignModel;
 
   export let showModal: boolean;
 </script>
@@ -17,14 +17,14 @@
   <ContentFrame>
     <BackButton button={() => pop()} />
     {#if startingPoint === null}
-      <Header>Create a Design Activity Set</Header>
+      <Header>Create a Design Model</Header>
       <Chooser
         label="Starting point"
         withEmpty
-        bind:activitySet={startingPoint}
+        bind:selectedDesignModel={startingPoint}
       />
     {:else}
-      <Builder {startingPoint} bind:activitySet {showModal} />
+      <Builder {startingPoint} bind:designModel {showModal} />
     {/if}
   </ContentFrame>
 </div>

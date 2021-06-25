@@ -7,7 +7,7 @@
   import undoIcon from "@iconify-icons/ic/baseline-history";
   import { onDestroy } from "svelte";
   import { pop, push, replace } from "svelte-spa-router/Router.svelte";
-  import ColorPicker from "../components/ActivitySet/ColorPicker.svelte";
+  import ColorPicker from "../components/DesignModel/ColorPicker.svelte";
   import ActivitySlat from "../components/ActivitySlat.svelte";
   import ActivityToken from "../components/ActivityToken.svelte";
   import Button from "../components/Button.svelte";
@@ -313,7 +313,7 @@
             shouldUpdate={hasProject && !params.wild}
             session={tracker.session}
             currentTime={subsessionTime + pastSessionTime}
-            activitySet={project.designModel}
+            designModel={project.designModel}
           />
         {/if}
 
@@ -432,12 +432,12 @@
               />
               <p class="hint">
                 Changes will also apply to any other projects using the same
-                Activity Set.
+                design model.
               </p>
             {:else}
               <p class="hint">
                 Activity names, codes, and descriptions cannot be changed for
-                built-in Activity Sets.
+                built-in design models.
               </p>
             {/if}
           {:else}

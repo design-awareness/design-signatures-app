@@ -1,23 +1,25 @@
 <script lang="ts">
-  import EntityChooser from "../../components/dev/DBEditor/EntityChooser.svelte";
-  import EntityEditor from "../../components/dev/DBEditor/EntityEditor.svelte";
-  import { createTrigger } from "../../util/trigger";
-  import type { EntityName } from "../../data/schema";
+  // import EntityChooser from "../../components/dev/DBEditor/EntityChooser.svelte";
+  // import EntityEditor from "../../components/dev/DBEditor/EntityEditor.svelte";
+  // import { createTrigger } from "../../util/trigger";
+  // import type { EntityName } from "../../data/schema";
   import BackButton from "../../components/BackButton.svelte";
-  let type: EntityName, id: string;
+  // let type: EntityName, id: string;
 
-  const [setView, setViewTrigger] =
-    createTrigger<[EntityName, string | null]>();
+  // const [setView, setViewTrigger] =
+  //   createTrigger<[EntityName, string | null]>();
 </script>
 
 <BackButton href="/" />
 <div class="editor">
-  <EntityChooser
+  <!-- FIXME: Get this working again :) -->
+  <p>Database editor will be returning soon!</p>
+  <!-- <EntityChooser
     bind:selectedType={type}
     bind:selectedId={id}
     {setViewTrigger}
   />
-  <EntityEditor entityType={type} {id} {setView} />
+  <EntityEditor entityType={type} {id} {setView} /> -->
 </div>
 
 <style lang="scss">

@@ -8,21 +8,21 @@
   import InvisibleButton from "../InvisibleButton.svelte";
   import Item from "./Item.svelte";
 
-  export let activitySet: DesignModel | null = null;
+  export let selectedDesignModel: DesignModel | null = null;
   export let label = "Design Model";
   export let createNew: (() => void) | null = null;
   export let withEmpty = false;
 
-  let allDesignModels: Promise<DesignModel[]>;
+  let allDesignModelsPromise: Promise<DesignModel[]>;
   function refreshSets() {
-    allDesignModels = getAll("DesignModel").then((ids) =>
+    allDesignModelsPromise = getAll("DesignModel").then((ids) =>
       Promise.all(ids.map(getDesignModel))
     );
   }
   refreshSets();
 
-  function set(as: DesignModel) {
-    activitySet = as;
+  function set(newModel: DesignModel) {
+    selectedDesignModel = newModel;
   }
 </script>
 
@@ -32,9 +32,9 @@
     <Button inlabel on:click={createNew} icon={add}>Create new</Button>
   {/if}
 </div>
-{#await allDesignModels}
-  <div>Loading activity sets…</div>
-{:then activitySets}
+{#await allDesignModelsPromise}
+  <div>Loading design models…</div>
+{:then designModels}
   <ul class="container">
     {#if withEmpty}
       <li>
@@ -43,13 +43,10 @@
         </InvisibleButton>
       </li>
     {/if}
-    {#each sortBy("wellKnown", sortBy("name", activitySets)) as activitySetItem}
+    {#each sortBy("wellKnown", sortBy("name", designModels)) as designModel}
       <li>
-        <InvisibleButton on:click={() => set(activitySetItem)}>
-          <Item
-            activitySet={activitySetItem}
-            selected={activitySetItem === activitySet}
-          />
+        <InvisibleButton on:click={() => set(designModel)}>
+          <Item {designModel} selected={designModel === selectedDesignModel} />
         </InvisibleButton>
       </li>
     {/each}

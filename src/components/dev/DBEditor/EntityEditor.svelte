@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
   import type { EntityName } from "../../../data/schema";
   import { createTrigger } from "../../../util/trigger";
   import type { TriggerInvoker } from "../../../util/trigger";
@@ -32,4 +32,4 @@
   {setView}
   {save}
   {remove}
-/>
+/> -->

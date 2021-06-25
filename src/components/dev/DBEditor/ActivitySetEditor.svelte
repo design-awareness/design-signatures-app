@@ -4,7 +4,7 @@
   import { getDesignModel, newDesignModel } from "../../../data/database";
   import type { DesignModel, EntityName } from "../../../data/schema";
   import EditorField from "./EditorField.svelte";
-  import EditorFieldGroup from "./EditorFieldGroup.svelte";
+  // import EditorFieldGroup from "./EditorFieldGroup.svelte";
 
   export let setView: TriggerInvoker<[EntityName, string | null]>;
   export let save: ITriggerPassable<void>;
@@ -40,7 +40,7 @@
 <div class="editor">
   {#if !loading && dbObj}
     <EditorField name="name" type="string" bind:value={dbObj.name} />
-    <EditorField
+    <!-- <EditorField
       name="description"
       type="string"
       bind:value={dbObj.description}
@@ -65,7 +65,7 @@
       type={{ primitive: "string" }}
       bind:value={dbObj.colors}
       isSpecialColor={true}
-    />
+    /> -->
     <EditorField
       name="wellKnown"
       type="boolean"
