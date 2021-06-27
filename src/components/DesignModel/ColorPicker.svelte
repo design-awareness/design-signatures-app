@@ -1,11 +1,12 @@
 <script lang="ts">
-  import Icon from "@iconify/svelte/dist/Icon.svelte";
   import check from "@iconify-icons/ic/baseline-check";
+  import Icon from "@iconify/svelte/dist/Icon.svelte";
   import colorPresets from "../../data/colorPresets";
+  import { randomID } from "../../util/id";
 
   export let color: readonly [string, string];
 
-  let idPrefix = Math.random().toString(36).substr(2);
+  let idPrefix = randomID();
 </script>
 
 <div class="label">Color</div>

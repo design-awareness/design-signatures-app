@@ -1,8 +1,10 @@
 <script lang="ts">
+  import { randomID } from "../util/id";
+
   export let checked: boolean;
   export let activityName: string;
 
-  const id = Math.random().toString(36).substr(2, 8);
+  const id = randomID();
 </script>
 
 <div class="container">

@@ -1,5 +1,9 @@
 <script lang="ts" context="module">
+  import caretDownIcon from "@iconify-icons/ic/baseline-keyboard-arrow-down";
+  import caretUpIcon from "@iconify-icons/ic/baseline-keyboard-arrow-up";
+  import Icon from "@iconify/svelte/dist/Icon.svelte";
   import type { IconifyIcon } from "../types/IconifyIcon";
+  import { randomID } from "../util/id";
   interface OptionDescriptor {
     label: string;
     action: () => void;
@@ -15,17 +19,13 @@
 </script>
 
 <script lang="ts">
-  import caretDownIcon from "@iconify-icons/ic/baseline-keyboard-arrow-down";
-  import caretUpIcon from "@iconify-icons/ic/baseline-keyboard-arrow-up";
-  import Icon from "@iconify/svelte/dist/Icon.svelte";
-
   export let alignment: "left" | "right";
-
   export let label: string;
   export let descriptor: PopupMenuDescriptor;
 
   let opened = false;
-  let id = Math.random().toString(36).substr(2);
+  let id = randomID();
+  s;
 
   let selectedItem = 0;
 

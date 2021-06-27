@@ -1,5 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
+  import { randomID } from "../../../util/id";
   const dispatch = createEventDispatcher();
 
   export let name: string;
@@ -9,7 +10,7 @@
   export let disabled = false;
   export let isSpecialColor = false;
 
-  const id = Math.random().toString(36).substr(2, 8);
+  const id = randomID();
 
   function blur(this: HTMLInputElement) {
     dispatch("set", this.value);

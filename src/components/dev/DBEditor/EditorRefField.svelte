@@ -3,6 +3,7 @@
   import type { EntityName } from "../../../data/schema";
   import * as db from "../../../data/database";
   import type { TriggerInvoker } from "../../../util/trigger";
+  import { randomID } from "../../../util/id";
   const dispatch = createEventDispatcher();
 
   export let name: string;
@@ -11,7 +12,7 @@
   export let hasRemove = false;
   export let setView: TriggerInvoker<[EntityName, string]>;
 
-  const id = Math.random().toString(36).substr(2, 8);
+  const id = randomID();
 
   $: refid = value ? value.id : "(no reference!)";
   async function validate(this: HTMLInputElement | { value: any }) {
