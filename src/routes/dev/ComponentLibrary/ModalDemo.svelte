@@ -20,7 +20,7 @@
 
 <ContentFrame>
   <BackButton href="/dev/component-library/" />
-  <Header>ActivityToggle</Header>
+  <Header>Modal</Header>
   <p>
     <Button on:click={() => (visible = true)}>Show modal</Button>
   </p>
