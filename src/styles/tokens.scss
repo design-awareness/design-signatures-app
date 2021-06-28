@@ -61,6 +61,14 @@ $popup-menu-separator-width: 2px;
 $popup-menu-separator-color: getvar(popup-separator);
 $popup-menu-item-selected-color: getvar(active-selection-background);
 
+// SEGMENTED SELECTOR
+$segmented-selector-padding: 0.5rem;
+$segmented-selector-padding-inlabel-horizontal: 0.5rem;
+$segmented-selector-border-color: getvar(button-border);
+$segmented-selector-background-color: getvar(button-background);
+$segmented-selector-selected-color: getvar(active-selection-background);
+$segmented-selector-border-size: 1px;
+
 // INPUT
 $input-border-color: getvar(input-border);
 $input-border-size: 1px;

@@ -48,6 +48,12 @@ $type-button-small: (
   height: 20,
 );
 
+$type-segmented-selector: (
+  size: 14,
+  weight: 500,
+  height: 16,
+);
+
 $type-popup-button: (
   size: 14,
   weight: 400,
@@ -63,6 +69,12 @@ $type-input-label: (
   size: 16,
   weight: 500,
   height: 24,
+);
+
+$type-segmented-selector-inlabel: (
+  size: 12,
+  weight: 500,
+  height: map-get($type-input-label, height),
 );
 
 $type-button-inlabel: (
