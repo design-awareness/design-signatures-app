@@ -7,7 +7,6 @@
   // export let empty = false;
 </script>
 
-<!-- should clean up the loop -->
 <div class="item designmodelcard" class:selected>
   {#if !designModel}
     <p>Start from scratch</p>
@@ -16,12 +15,7 @@
       <p>{designModel.name}</p>
     </div>
     <div class="activities">
-      {#each designModel.activities as {name, code, color}}
-      <div class="activity">
-        <div class="token"><ActivityToken color={color} code={code}/></div>
-        <p>{name}</p>
-      </div>
-      {/each}
+      <ActivityToken forEach={designModel} />
     </div>
   {/if}
 </div>
@@ -40,18 +34,14 @@
   .designmodelcard {
     padding: 0;
   }
-  .activity {
-    display: inline;
-  }
-  .token {
-    float:right;
-  }
   .header {
     background-color: $design-model-header-background;
   }
   .selected {
     .header {
       background-color: $design-model-header-selected;
+    }
+    p {
       font-weight: bold;
     }
     background-color: $input-active-selection-background-color;

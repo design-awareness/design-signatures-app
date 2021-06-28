@@ -8,6 +8,7 @@
   import InvisibleButton from "../InvisibleButton.svelte";
   import Item from "./Item.svelte";
   import RichLabel from "../RichLabel.svelte";
+  import Masonry from 'svelte-masonry/Masonry.svelte'
 
   export let selectedDesignModel: DesignModel | null = null;
   export let label = "Design Model";
@@ -43,13 +44,15 @@
         </InvisibleButton>
       </li>
     {/if}
-    {#each sortBy("wellKnown", sortBy("name", designModels)) as designModel}
-      <li>
-        <InvisibleButton on:click={() => set(designModel)}>
-          <Item {designModel} selected={designModel === selectedDesignModel} />
-        </InvisibleButton>
-      </li>
-    {/each}
+    <Masonry colWidth={'minmax(10rem, Min(20rem, 100%))'}>
+      {#each sortBy("wellKnown", sortBy("name", designModels)) as designModel}
+        <li>
+          <InvisibleButton on:click={() => set(designModel)}>
+            <Item {designModel} selected={designModel === selectedDesignModel} />
+          </InvisibleButton>
+        </li>
+      {/each}
+    </Masonry>
   </ul>
 {/await}
 
