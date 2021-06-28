@@ -68,4 +68,19 @@
     background-color: $background-color;
     color: $text-primary-color;
   }
+
+  :global(:focus) {
+    outline: none;
+    box-shadow: 0 0 0 2px rgb(34, 154, 235);
+  }
+
+  @supports #{"selector(:focus-visible)"} {
+    :global(:focus) {
+      box-shadow: none;
+    }
+    :global(:focus-visible) {
+      outline: none;
+      box-shadow: 0 0 0 2px rgb(34, 154, 235);
+    }
+  }
 </style>

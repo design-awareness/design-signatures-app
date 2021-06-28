@@ -18,8 +18,3 @@ html {
 .device-frame {
   margin: 0;
 }
-
-:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px rgb(34, 154, 235);
-}

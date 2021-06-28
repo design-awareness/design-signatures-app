@@ -14,11 +14,13 @@ $neutral-70: #333333;
 $neutral-80: #212121;
 $neutral-90: #000000;
 
-$accentmain: #5372e0;
-$accentdark: #202372;
-$accentoverlay: #2375ef3f;
-$accentdim: #8697ee;
-$accentdimdrk: #3D4572;
+$accent-main: #5372e0;
+$accent-dark: #202372;
+$accent-overlay: #2375ef3f;
+$accent-dim: #8697ee;
+$accent-dim-dark: #3d4572;
+
+$focus-ring-color: #229aeb;
 
 @mixin color-theme-light {
   @include setvars(
@@ -41,9 +43,9 @@ $accentdimdrk: #3D4572;
       popup-separator: $neutral-20,
       input-background: $neutral-00,
       input-border: $neutral-20,
-      active-selection-background: $accentoverlay,
-      action-bar-background: $accentmain,
-      action-bar-background_disabled: $accentdim,
+      active-selection-background: $accent-overlay,
+      action-bar-background: $accent-main,
+      action-bar-background_disabled: $accent-dim,
       tracking-background: $neutral-00,
       mini-timeline-card-background: $neutral-00,
       mini-timeline-inactive: $neutral-10,
@@ -51,8 +53,9 @@ $accentdimdrk: #3D4572;
       timeline-gridline: $neutral-20,
       toggle-switch-neutral: $neutral-50,
       design-model-header: $neutral-20,
-      design-model-header-selected: $accentmain,
+      design-model-header-selected: $accent-main,
       accent-danger: #b71c1c,
+      focus-ring: $focus-ring-color,
     )
   );
 }
@@ -78,8 +81,8 @@ $accentdimdrk: #3D4572;
       popup-separator: $neutral-60,
       input-background: $neutral-70,
       input-border: $neutral-40,
-      active-selection-background: $accentoverlay,
-      action-bar-background: $accentmain,
+      active-selection-background: $accent-overlay,
+      action-bar-background: $accent-main,
       action-bar-background_disabled: #485495,
       tracking-background: $neutral-80,
       mini-timeline-card-background: $neutral-70,
@@ -88,8 +91,9 @@ $accentdimdrk: #3D4572;
       timeline-gridline: $neutral-50,
       toggle-switch-neutral: $neutral-20,
       design-model-header: $neutral-60,
-      design-model-header-selected: $accentmain,
+      design-model-header-selected: $accent-main,
       accent-danger: #e53c3c,
+      focus-ring: $focus-ring-color,
     )
   );
 }
