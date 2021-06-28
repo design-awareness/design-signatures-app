@@ -25,7 +25,6 @@
 
   let opened = false;
   let id = randomID();
-  s;
 
   let selectedItem = 0;
 
