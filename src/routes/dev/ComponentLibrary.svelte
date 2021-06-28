@@ -7,14 +7,16 @@
   import CanvasDemo from "./ComponentLibrary/CanvasDemo.svelte";
   import ModalDemo from "./ComponentLibrary/ModalDemo.svelte";
   import PopupMenuDemo from "./ComponentLibrary/PopupMenuDemo.svelte";
+  import SegmentedSelectorDemo from "./ComponentLibrary/SegmentedSelectorDemo.svelte";
 
   export let params: { wild: string };
 
   let components: Record<string, any> = {
     "activity-toggle": ActivityToggleDemo,
-    "popup-menu": PopupMenuDemo,
-    modal: ModalDemo,
     canvas: CanvasDemo,
+    modal: ModalDemo,
+    "popup-menu": PopupMenuDemo,
+    "segmented-selector": SegmentedSelectorDemo,
   };
 </script>
 
