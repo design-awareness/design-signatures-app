@@ -28,7 +28,7 @@
       {#each Object.entries(components) as [slug, component]}
         <li>
           <Link href="/dev/component-library/{slug}">
-            {component.name.replace("Demo", "")}
+            {component.name.replace("Demo", "")} ({slug})
           </Link>
         </li>
       {/each}
