@@ -7,6 +7,7 @@
   import Button from "../Button.svelte";
   import InvisibleButton from "../InvisibleButton.svelte";
   import Item from "./Item.svelte";
+  import RichLabel from "../RichLabel.svelte";
 
   export let selectedDesignModel: DesignModel | null = null;
   export let label = "Design Model";
@@ -26,12 +27,11 @@
   }
 </script>
 
-<div class="label">
-  <span>{label}</span>
+<RichLabel {label}>
   {#if createNew}
     <Button inlabel on:click={createNew} icon={add}>Create new</Button>
   {/if}
-</div>
+</RichLabel>
 {#await allDesignModelsPromise}
   <div>Loading design models…</div>
 {:then designModels}
@@ -56,12 +56,6 @@
 <style lang="scss">
   @import "src/styles/tokens";
   @import "src/styles/type";
-  .label {
-    @include type-style($type-input-label);
-    margin: $block-vertical-spacing 0 $input-spacing-inner 0;
-    display: flex;
-    justify-content: space-between;
-  }
   .container {
     // border: $input-border-size solid $input-border-color;
     border-radius: $input-border-radius;
