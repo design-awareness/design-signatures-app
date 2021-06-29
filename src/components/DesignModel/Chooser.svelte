@@ -44,7 +44,7 @@
         </InvisibleButton>
       </li>
     {/if}
-    <Masonry colWidth={'minmax(10rem, Min(20rem, 100%))'}>
+    <Masonry colWidth={'minmax(Min(9rem, 44%), Min(12rem, 100%))'} gridGap={'1rem'}>
       {#each sortBy("wellKnown", sortBy("name", designModels)) as designModel}
         <li>
           <InvisibleButton on:click={() => set(designModel)}>
@@ -72,7 +72,7 @@
     background-color: $input-background-color;
     padding: 0;
     border-radius: 4px;
-    margin: $block-vertical-spacing 0 $block-vertical-spacing 0;
+    margin: 0 0 $block-vertical-spacing 0;
     border: $input-border-size solid $input-border-color;
   }
 </style>

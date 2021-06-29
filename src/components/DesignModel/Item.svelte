@@ -18,7 +18,7 @@
     <div class="activities">
       {#each designModel.activities as {name, code, color}}
       <div class="activity">
-        <div class="token"><ActivityToken color={color} code={code}/></div>
+        <div class="token"><ActivityToken mini color={color} code={code}/></div>
         <p>{name}</p>
       </div>
       {/each}
@@ -41,10 +41,12 @@
     padding: 0;
   }
   .activity {
-    display: inline;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
   }
   .token {
-    float:right;
+    float:left;
   }
   .header {
     background-color: $design-model-header-background;

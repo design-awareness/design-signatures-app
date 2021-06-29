@@ -10,6 +10,7 @@
   export let align: "left" | "right" | "center" = "left";
   export let fixWidth = false;
   export let space = false;
+  export let mini = false;
 
   export let color: readonly [string, string] | null = null;
   export let code: string | null = null;
@@ -29,6 +30,7 @@
   <i
     class:fixWidth
     class:space
+    class:mini
     style="--color-light: #{color?.[0]}; --color-dark: #{color?.[1]}"
     >{code || NBSP}</i
   >
@@ -68,6 +70,11 @@
     }
     &.fixWidth {
       width: $token-fixed-width;
+    }
+    &.mini {
+      @include type-style($type-token-mini);
+      width: $token-mini-width;
+      padding: $token-vertical-spacing .5rem;
     }
   }
 </style>
