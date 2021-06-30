@@ -44,7 +44,7 @@
         </InvisibleButton>
       </li>
     {/if}
-    <Masonry colWidth={'minmax(Min(9rem, 44%), Min(12rem, 100%))'} gridGap={'1rem'}>
+    <Masonry colWidth={'minmax(8rem, 1fr)'} gridGap={'1rem'}>
       {#each sortBy("wellKnown", sortBy("name", designModels)) as designModel}
         <li>
           <InvisibleButton on:click={() => set(designModel)}>

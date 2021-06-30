@@ -7,7 +7,6 @@
   // export let empty = false;
 </script>
 
-<!-- should clean up the loop -->
 <div class="item designmodelcard" class:selected>
   {#if !designModel}
     <p>Start from scratch</p>
@@ -15,7 +14,7 @@
     <div class="header">
       <p>{designModel.name}</p>
     </div>
-    <div class="activities">
+    <div>
       {#each designModel.activities as {name, code, color}}
       <div class="activity">
         <div class="token"><ActivityToken mini color={color} code={code}/></div>
@@ -29,6 +28,7 @@
 <style lang="scss">
   @use "sass:math";
   @import "src/styles/tokens";
+  @import "src/styles/type";
 
   div {
     padding: max(
@@ -44,6 +44,9 @@
     padding: 0;
     display: inline-flex;
     align-items: center;
+    p{
+      @include type-style($type-caption);
+    }
   }
   .token {
     float:left;
