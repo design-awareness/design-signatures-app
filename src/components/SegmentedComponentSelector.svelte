@@ -120,7 +120,9 @@
       width: 0;
       height: 0;
       margin: 0;
+      border: 0;
       outline: 0;
+      appearance: none;
 
       &:focus,
       &:focus-visible {
