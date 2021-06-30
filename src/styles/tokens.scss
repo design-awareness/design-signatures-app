@@ -17,6 +17,9 @@ $focus-ring: 0 0 0 2px getvar(focus-ring);
 // CONTENT FRAME
 $content-frame-pad: 1rem;
 
+// PAGE SEPARATOR
+$page-separator-size: 1px;
+
 // BUTTON
 $button-border-color: getvar(button-border);
 $button-background-color: getvar(button-background);
