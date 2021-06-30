@@ -52,11 +52,18 @@
   let editDescription = project.description;
   function saveInfo() {
     editName = editName.trim();
+    editDescription = editDescription.trim();
+    if (editName === project.name && editDescription === project.description) {
+      return;
+    }
     if (!editName) editName = project.name;
     project.name = editName;
     project.description = editDescription;
     editProjectOpen = false;
     project.save();
+    if (project.active) {
+      pushRecentProject(project.id);
+    }
     project = project;
   }
 
