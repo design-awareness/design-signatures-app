@@ -10,8 +10,9 @@
   export let direction: "horizontal" | "vertical" = "horizontal";
   export let options: [Options, InnerComponentType["$$"]["props"]][];
   export let value: Options | null;
-  export let label: string | undefined;
+  export let label: string = "";
   export let inlabel: boolean = false;
+  export let fullWidth: boolean = false;
 
   let idPrefix = randomID();
 </script>
@@ -19,7 +20,7 @@
 {#if label}
   <div class="label">{label}</div>
 {/if}
-<div class="selector dir-{direction}" class:inlabel>
+<div class="selector dir-{direction}" class:inlabel class:fullWidth>
   {#each options as [optionValue, optionProps], i}
     <input
       id="{idPrefix}__{i}"
@@ -45,6 +46,7 @@
     display: flex;
 
     > label {
+      position: relative;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -63,6 +65,10 @@
     }
     > input:checked + label {
       background-color: $segmented-selector-selected-color;
+    }
+
+    &.fullWidth > label {
+      flex-grow: 1;
     }
 
     &.dir-horizontal {

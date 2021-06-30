@@ -22,11 +22,12 @@
 
   function openModal(i: number) {
     modalId = i;
-    if ($location === "/projects/new/" + BUILDER_SUFFIX)
-      push("/projects/new/" + BUILDER_MODAL_SUFFIX);
+    if ($location.endsWith(BUILDER_SUFFIX)) {
+      push($location.replace(BUILDER_SUFFIX, BUILDER_MODAL_SUFFIX));
+    }
   }
   function closeModal() {
-    if ($location === "/projects/new/" + BUILDER_MODAL_SUFFIX) pop();
+    if ($location.endsWith(BUILDER_MODAL_SUFFIX)) pop();
   }
 
   type ActivityWithID = {

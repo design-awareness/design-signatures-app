@@ -9,9 +9,11 @@
   import DBEditor from "./routes/dev/DBEditor.svelte";
   import DevTools from "./routes/dev/DevTools.svelte";
   import Home from "./routes/Home.svelte";
-  import NewProject from "./routes/NewProject.svelte";
+  import NewAsyncProject from "./routes/NewAsyncProject.svelte";
+  import NewProjectType from "./routes/NewProjectType.svelte";
+  import NewRealtimeProject from "./routes/NewRealtimeProject.svelte";
   import NotFound from "./routes/NotFound.svelte";
-  import ProjectDetail from "./routes/ProjectDetail.svelte";
+  import Project from "./routes/ProjectDetail.svelte";
   import ProjectExport from "./routes/ProjectExport.svelte";
   import ProjectTracking from "./routes/ProjectTracking.svelte";
   import RedirectAddPath from "./routes/RedirectAddPath.svelte";
@@ -24,10 +26,16 @@
   const routes: object = {
     "/": Home, // Home
 
+    "/new/realtime/*": NewRealtimeProject,
+    "/new/realtime": RedirectAddPath,
+    "/new/async/*": NewAsyncProject,
+    "/new/async": RedirectAddPath,
+    "/new/": NewProjectType,
+    "/new": RedirectAddPath,
     "/projects/": AllProjects, // Projects
-    "/projects/new/*": NewProject, // New project
-    "/projects/new": RedirectAddPath,
-    "/projects/:id/": ProjectDetail, // Project detail
+    "/projects": RedirectAddPath, // Projects
+    "/projects/:id/": Project, // Project detail
+    "/projects/:id": RedirectAddPath,
     "/projects/:id/export": ProjectExport,
     "/projects/:id/track/*": ProjectTracking, // Project tracking
     "/projects/:id/track": RedirectAddPath,
@@ -37,10 +45,12 @@
     "/about/atmans": Atmans,
 
     "/settings/": Settings, // Settings
+    "/settings": RedirectAddPath, // Settings
 
     "/update/:n": Update,
 
     "/dev/": DevTools,
+    "/dev": RedirectAddPath,
     "/dev/dbeditor/": DBEditor, // Database editor
     "/dev/component-library/*": ComponentLibrary, // Component library
     "/dev/component-library": RedirectAddPath,

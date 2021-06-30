@@ -19,7 +19,7 @@
     <HorizontalScrollArea>
       <ul>
         <li>
-          <a href="#/projects/new/">
+          <a href="#/new/">
             <ProjectCard newRealtimeProjectPlaceholder />
           </a>
         </li>

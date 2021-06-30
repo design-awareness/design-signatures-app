@@ -57,6 +57,7 @@ $focus-ring-color: #229aeb;
       design-model-header-selected: $accent-main,
       accent-danger: #b71c1c,
       focus-ring: $focus-ring-color,
+      dim: rgba($neutral-90, 0.1),
     )
   );
 }
@@ -96,6 +97,7 @@ $focus-ring-color: #229aeb;
       design-model-header-selected: $accent-main,
       accent-danger: #e53c3c,
       focus-ring: $focus-ring-color,
+      dim: rgba($neutral-00, 0.1),
     )
   );
 }

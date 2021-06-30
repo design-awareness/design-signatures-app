@@ -48,10 +48,10 @@
 <main class="device-frame page">
   {#if !(params.wild === BUILDER_SUFFIX || params.wild === BUILDER_MODAL_SUFFIX)}
     <ContentFrame>
-      <BackButton href="/" />
+      <BackButton href="/new/" />
       <Header>Create project</Header>
       <InputField
-        label="Project Name"
+        label="Project name"
         placeholder="My cool project"
         bind:value={name}
       />

@@ -9,6 +9,7 @@
   export let value: Options | null;
   export let label: string | undefined = undefined;
   export let inlabel: boolean | undefined = undefined;
+  export let fullWidth: boolean | undefined = undefined;
 </script>
 
 <SegmentedComponentSelector
@@ -18,4 +19,5 @@
   {direction}
   {label}
   {inlabel}
+  {fullWidth}
 />
