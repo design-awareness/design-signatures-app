@@ -5,6 +5,7 @@
   import Header from "../../components/type/Header.svelte";
   import ActivityToggleDemo from "./ComponentLibrary/ActivityToggleDemo.svelte";
   import CanvasDemo from "./ComponentLibrary/CanvasDemo.svelte";
+  import CheckboxDemo from "./ComponentLibrary/CheckboxDemo.svelte";
   import ModalDemo from "./ComponentLibrary/ModalDemo.svelte";
   import PopupMenuDemo from "./ComponentLibrary/PopupMenuDemo.svelte";
   import SegmentedSelectorDemo from "./ComponentLibrary/SegmentedSelectorDemo.svelte";
@@ -14,6 +15,7 @@
   let components: Record<string, any> = {
     "activity-toggle": ActivityToggleDemo,
     canvas: CanvasDemo,
+    checkbox: CheckboxDemo,
     modal: ModalDemo,
     "popup-menu": PopupMenuDemo,
     "segmented-selector": SegmentedSelectorDemo,

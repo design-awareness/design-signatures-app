@@ -1,17 +1,18 @@
 <script lang="ts">
   import createIcon from "@iconify-icons/ic/baseline-create";
+  import undoIcon from "@iconify-icons/ic/baseline-history";
   import pauseIcon from "@iconify-icons/ic/baseline-pause";
   import playIcon from "@iconify-icons/ic/baseline-play-arrow";
   import settingsIcon from "@iconify-icons/ic/baseline-settings";
   import stopIcon from "@iconify-icons/ic/baseline-stop";
-  import undoIcon from "@iconify-icons/ic/baseline-history";
   import { onDestroy } from "svelte";
   import { pop, push, replace } from "svelte-spa-router/Router.svelte";
-  import ColorPicker from "../components/DesignModel/ColorPicker.svelte";
   import ActivitySlat from "../components/ActivitySlat.svelte";
   import ActivityToken from "../components/ActivityToken.svelte";
   import Button from "../components/Button.svelte";
   import ButtonGroup from "../components/ButtonGroup.svelte";
+  import Checkbox from "../components/Checkbox.svelte";
+  import ColorPicker from "../components/DesignModel/ColorPicker.svelte";
   import InputField from "../components/InputField.svelte";
   import ContentFrame from "../components/layout/ContentFrame.svelte";
   import Link from "../components/Link.svelte";
@@ -19,6 +20,7 @@
   import Modal from "../components/Modal.svelte";
   import SelectField from "../components/SelectField.svelte";
   import TrackingTimer from "../components/TrackingTimer.svelte";
+  import UndoTrackingModal from "../components/UndoTrackingModal.svelte";
   import CONFIG from "../data/config";
   import { getRealtimeProject, newTimedNote } from "../data/database";
   import { pushRecentProject } from "../data/recentProjects";
@@ -29,7 +31,6 @@
   import useInterval from "../util/interval";
   import { shortDuration } from "../util/time";
   import SessionTracker from "../util/track";
-  import UndoTrackingModal from "../components/UndoTrackingModal.svelte";
 
   type ModalName = "note" | "paused" | "options" | "info" | "undo";
 
@@ -394,13 +395,11 @@
               ["none", "None (hide visualization)"],
             ]}
           />
-          <label
-            ><input
-              type="checkbox"
-              bind:checked={tracker.singleActivity}
-              disabled={false}
-            />Single activity mode</label
-          >
+          <Checkbox
+            label="Single activity mode"
+            helptext="When enabled, only one activity can be active at a time."
+            bind:checked={tracker.singleActivity}
+          />
         </Modal>
       {:else if params.wild === "info" && selectedActivity}
         <Modal
