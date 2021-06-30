@@ -1,30 +1,32 @@
 <script lang="ts">
-  import { getRealtimeProject } from "../data/database";
-  // FIXME: Project cards need to work with other types of project too
-  import type { RealtimeProject } from "../data/schema";
+  import { getProjectOrFail } from "../data/database";
+  import type { AsyncProject, RealtimeProject } from "../data/schema";
+  import { hasOwnProperty } from "../types/utility";
   import CardTimeline from "./CardTimeline.svelte";
 
-  export let newRealtimeProjectPlaceholder = false;
+  export let newProjectPlaceholder = false;
   export let loadingPlaceholder = false;
   export let id: string | null = null;
 
   let loading = true;
-  let project: RealtimeProject | null = null;
+  let project: RealtimeProject | AsyncProject | null = null;
 
-  if (newRealtimeProjectPlaceholder) {
+  if (newProjectPlaceholder) {
     loading = false;
   } else if (!loadingPlaceholder) {
     (async function load() {
       if (id) {
-        project = await getRealtimeProject(id);
+        project = (await getProjectOrFail(id))[1];
         loading = false;
       }
-    })();
+    })().catch(() => {
+      project = null;
+    });
   }
 </script>
 
 <div class="project-card" class:loading>
-  {#if newRealtimeProjectPlaceholder}
+  {#if newProjectPlaceholder}
     <div class="card new">
       <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 62 62"
         ><circle cx="31" cy="31" r="30.75" fill="none" stroke-width=".5" />
@@ -36,14 +38,18 @@
     </div>
   {:else}
     <div class="card">
-      {#if !loading && project?.sessions?.length}
-        <CardTimeline {project} />
+      {#if !loading && project}
+        {#if hasOwnProperty(project, "sessions") && project.sessions.length}
+          <CardTimeline {project} />
+        {:else if hasOwnProperty(project, "entries")}
+          Async({project.reportingPeriod})
+        {/if}
       {/if}
     </div>
   {/if}
 
-  <div class="link" class:loading class:new={newRealtimeProjectPlaceholder}>
-    {#if !loading && !newRealtimeProjectPlaceholder && project}
+  <div class="link" class:loading class:new={newProjectPlaceholder}>
+    {#if !loading && !newProjectPlaceholder && project}
       <span>{project.name}</span>
     {:else if !loading}New project{/if}
   </div>
@@ -59,6 +65,20 @@
     background: $project-card-background-color;
     box-shadow: $project-card-shadow;
     border-radius: $project-card-border-radius;
+    overflow: hidden;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &.new {
+      svg {
+        fill: $project-card-new-plus-color;
+        stroke: $project-card-new-plus-color;
+        width: $project-card-new-plus-size;
+        height: $project-card-new-plus-size;
+      }
+    }
   }
   .link {
     @include type-style($type-card-link);
@@ -85,19 +105,5 @@
       display: inline-block;
       transform: translateX(0.5rem);
     }
-  }
-  .card {
-    &.new {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      svg {
-        fill: $project-card-new-plus-color;
-        stroke: $project-card-new-plus-color;
-        width: $project-card-new-plus-size;
-        height: $project-card-new-plus-size;
-      }
-    }
-    overflow: hidden;
   }
 </style>

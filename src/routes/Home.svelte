@@ -20,7 +20,7 @@
       <ul>
         <li>
           <a href="#/new/">
-            <ProjectCard newRealtimeProjectPlaceholder />
+            <ProjectCard newProjectPlaceholder />
           </a>
         </li>
         {#await getRecentProjects()}
