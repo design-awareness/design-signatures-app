@@ -1,20 +1,21 @@
 <script lang="ts">
-  import Header from "../components/type/Header.svelte";
-  import type { DesignModel } from "../data/schema";
-  import { newRealtimeProject } from "../data/database";
-  import { replace, location } from "svelte-spa-router/Router.svelte";
+  import { pop, push } from "svelte-spa-router";
+  import { location, replace } from "svelte-spa-router/Router.svelte";
   import BackButton from "../components/BackButton.svelte";
-  import ContentFrame from "../components/layout/ContentFrame.svelte";
-  import InputField from "../components/InputField.svelte";
   import BottomActionBar from "../components/BottomActionBar.svelte";
-  import DesignModelChooser from "../components/DesignModel/Chooser.svelte";
-  import BuilderFrame from "../components/DesignModel/BuilderFrame.svelte";
-  import { pushRecentProject } from "../data/recentProjects";
-  import { push } from "svelte-spa-router";
   import {
     BUILDER_MODAL_SUFFIX,
     BUILDER_SUFFIX,
   } from "../components/DesignModel/Builder.svelte";
+  import BuilderFrame from "../components/DesignModel/BuilderFrame.svelte";
+  import DesignModelChooser from "../components/DesignModel/Chooser.svelte";
+  import InputField from "../components/InputField.svelte";
+  import ContentFrame from "../components/layout/ContentFrame.svelte";
+  import Header from "../components/type/Header.svelte";
+  import { newRealtimeProject } from "../data/database";
+  import { pushRecentProject } from "../data/recentProjects";
+  import type { DesignModel } from "../data/schema";
+  import { delay } from "../util/delay";
 
   let name = "";
   let description = "";
@@ -41,6 +42,9 @@
     await proj.save();
     const id = proj.id;
     pushRecentProject(id);
+
+    await pop();
+    await delay(16);
     await replace(`/projects/${id}/`);
   }
 </script>
