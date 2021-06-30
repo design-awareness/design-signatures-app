@@ -106,7 +106,7 @@
     <Modal
       bind:visible={editProjectOpen}
       title="Edit project"
-      buttons={[{ label: "Close", onClick: saveInfo }]}
+      buttons={[{ label: "Save", onClick: saveInfo }]}
     >
       <InputField label="Name" placeholder="" bind:value={editName} />
       <InputField label="Description" large bind:value={editDescription} />
