@@ -180,7 +180,15 @@ export const rawDatabaseOperations = {
  * the database, to prevent duplicate objects for one entry.
  * getEntry and the model-specific get methods perform this check.
  */
-const resolving = new Map<DBID, Promise<void>>();
+const resolving = {
+  AsyncEntry: new Map<DBID, Promise<void>>(),
+  AsyncProject: new Map<DBID, Promise<void>>(),
+  DesignModel: new Map<DBID, Promise<void>>(),
+  ProjectNote: new Map<DBID, Promise<void>>(),
+  RealtimeProject: new Map<DBID, Promise<void>>(),
+  RealtimeSession: new Map<DBID, Promise<void>>(),
+  TimedNote: new Map<DBID, Promise<void>>(),
+};
 
 /**
  * internal object lookup containing already resolved objects.
@@ -242,16 +250,6 @@ export function saveAll(objects: Schema.Entity[]): Promise<void[]> {
  * or use the helper methods (getDesignModel, etc.) that do this for you.
  * (Type checking is no longer enforced at runtime, so using the interfaces
  * will help you ensure type correctness when setting properties.)
- *
- * ======
- * There is a weird timing condition here where it's possible to get
- * an entry which doesn't have children fully resolved here, if we call
- * this again between the call to resolver() and before childResolutionPromise
- * resolves. Since we put clientObj in the object store, later calls will
- * resolve instantly, even if the first one isn't done recursively resolving
- * children yet. Is there a better way to fix this than creating another
- * promise map for full resolution and adding an additional (optional)
- * parameter to request full resolution?
  */
 async function getEntry(
   store: Schema.EntityName,
@@ -260,18 +258,20 @@ async function getEntry(
   if (id === null) return null;
 
   const typeStore = objStore[store] as Map<DBID, Schema.Entity>;
+  const resolveStore = resolving[store];
   if (!typeStore.has(id)) {
-    if (resolving.has(id)) {
-      await resolving.get(id);
+    if (resolveStore.has(id)) {
+      await resolveStore.get(id);
     } else {
       // needs to be resolved!
       const [promise, resolver] = defer<void>();
-      resolving.set(id, promise);
+      resolveStore.set(id, promise);
 
       // lookup entry from db;
       const obj = (await get(store, id)) as Schema.Entity;
       if (!obj) {
-        resolving.delete(id);
+        resolveStore.delete(id);
+        resolver();
         return null;
       }
 
@@ -281,12 +281,13 @@ async function getEntry(
         id
       );
 
+      // no cyclic objects, or we'll never resolve!
+      await childResolutionPromise;
+
       // resolve complete
-      resolving.delete(id);
+      resolveStore.delete(id);
       typeStore.set(id, clientObj);
       resolver();
-
-      await childResolutionPromise;
     }
   }
   return typeStore.get(id) ?? null;
@@ -513,6 +514,25 @@ export function getRealtimeSession(id: DBID) {
 }
 export function getTimedNote(id: DBID) {
   return getEntry("TimedNote", id) as Promise<Schema.TimedNote>;
+}
+
+export async function getProjectOrFail(
+  id: DBID
+): Promise<
+  | ["AsyncProject", Schema.AsyncProject]
+  | ["RealtimeProject", Schema.RealtimeProject]
+> {
+  let projects = (await Promise.all([
+    getEntry("AsyncProject", id),
+    getEntry("RealtimeProject", id),
+  ])) as [Schema.AsyncProject | null, Schema.RealtimeProject | null];
+  if (projects[0]) {
+    return ["AsyncProject", projects[0]];
+  }
+  if (projects[1]) {
+    return ["RealtimeProject", projects[1]];
+  }
+  throw new Error("No project found.");
 }
 
 export function getEntityOrFail<T>(promise: Promise<T>): Promise<T> {
