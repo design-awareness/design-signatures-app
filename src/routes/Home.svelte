@@ -39,9 +39,14 @@
       </ul>
     </HorizontalScrollArea>
 
-    <Button on:click={async () => await push("/projects/")}>
-      All Projects
-    </Button>
+    <div class="button-holder">
+      <Button on:click={async () => await push("/projects/")}>
+        All Projects
+      </Button>
+      <Button on:click={async () => await push("/reflect/")}>
+        Reflect
+      </Button>
+    </div>
 
     {#if location.hostname.indexOf("design") === -1}
       <Header>Developer</Header>
@@ -91,5 +96,9 @@
       height: 12rem;
       margin-bottom: 1.5rem;
     }
+  }
+  .button-holder{
+    display: flex;
+    justify-content: space-between;
   }
 </style>

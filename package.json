@@ -38,5 +38,8 @@
     "workbox-expiration": "^6.1.5",
     "workbox-routing": "^6.1.5",
     "workbox-strategies": "^6.1.5"
+  },
+  "dependencies": {
+    "svelte-collapsible": "^0.1.1"
   }
 }

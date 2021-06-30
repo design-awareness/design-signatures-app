@@ -50,6 +50,7 @@
   }
   .token {
     float:left;
+    padding-left: 0;
   }
   .header {
     background-color: $design-model-header-background;

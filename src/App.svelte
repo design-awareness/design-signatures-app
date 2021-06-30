@@ -17,6 +17,7 @@
   import ProjectExport from "./routes/ProjectExport.svelte";
   import ProjectTracking from "./routes/ProjectTracking.svelte";
   import RedirectAddPath from "./routes/RedirectAddPath.svelte";
+  import ReflectionQuestions from "./routes/ReflectionQuestions.svelte";
   import Settings from "./routes/Settings.svelte";
   import Update from "./routes/Update.svelte";
 
@@ -32,6 +33,7 @@
     "/new/async": RedirectAddPath,
     "/new/": NewProjectType,
     "/new": RedirectAddPath,
+    "/reflect/": ReflectionQuestions, //Reflection Qs
     "/projects/": AllProjects, // Projects
     "/projects": RedirectAddPath, // Projects
     "/projects/:id/": Project, // Project detail
@@ -39,6 +41,7 @@
     "/projects/:id/export": ProjectExport,
     "/projects/:id/track/*": ProjectTracking, // Project tracking
     "/projects/:id/track": RedirectAddPath,
+
 
     "/about/": NotFound, // About design awareness
     "/about/appdo": AppDo, // What does this app do?
