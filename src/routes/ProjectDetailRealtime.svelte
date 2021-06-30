@@ -26,7 +26,7 @@
       <ProjectMenu bind:project />
     </div>
     <Header>{project.name || "No project here!"}</Header>
-    <p>{project.description}</p>
+    <p class="description">{project.description}</p>
     <SectionHeader>Tracking overview</SectionHeader>
     <RichTimeline {project} scalable />
 
@@ -71,6 +71,10 @@
   .page {
     background-color: $background-color;
     min-height: 100%;
+  }
+
+  .description {
+    color: $text-secondary-color;
   }
 
   .top-bar {
