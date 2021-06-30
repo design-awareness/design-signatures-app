@@ -81,3 +81,16 @@ export type SetPropertyTypes<I, PropDefs extends [keyof I, any][]> =
         : never
       : never
     : I;
+
+/**
+ * Test for presence of a property
+ * @param obj object to test
+ * @param prop property name
+ * @returns whether the property exists on the object
+ */
+export function hasOwnProperty<X extends {}, Y extends PropertyKey>(
+  obj: X,
+  prop: Y
+): obj is X & Record<Y, unknown> {
+  return obj.hasOwnProperty(prop);
+}
