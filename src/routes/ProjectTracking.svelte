@@ -469,7 +469,7 @@
 
   .device-frame {
     height: 100%;
-    background-color: $tracking-background-color;
+    background-color: $alt-background-color;
     display: flex;
     > :global(div) {
       flex: 1;

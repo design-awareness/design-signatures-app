@@ -26,6 +26,7 @@ $focus-ring-color: #229aeb;
   @include setvars(
     (
       background: $neutral-05,
+      alt-background: $neutral-00,
       modal-background: $neutral-00,
       modal-status-background: $neutral-50,
       modal-status-text: $neutral-00,
@@ -48,7 +49,6 @@ $focus-ring-color: #229aeb;
       active-selection-background: $accent-overlay,
       action-bar-background: $accent-main,
       action-bar-background_disabled: $accent-dim,
-      tracking-background: $neutral-00,
       mini-timeline-card-background: $neutral-00,
       mini-timeline-inactive: $neutral-10,
       timeline-background: $neutral-00,
@@ -67,6 +67,7 @@ $focus-ring-color: #229aeb;
   @include setvars(
     (
       background: $neutral-80,
+      alt-background: $neutral-80,
       modal-background: $neutral-70,
       modal-status-background: $neutral-30,
       modal-status-text: $neutral-70,
@@ -89,7 +90,6 @@ $focus-ring-color: #229aeb;
       active-selection-background: $accent-overlay,
       action-bar-background: $accent-main,
       action-bar-background_disabled: #485495,
-      tracking-background: $neutral-80,
       mini-timeline-card-background: $neutral-70,
       mini-timeline-inactive: $neutral-80,
       timeline-background: $neutral-70,
