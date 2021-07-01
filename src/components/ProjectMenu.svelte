@@ -59,6 +59,7 @@
     if (!editName) editName = project.name;
     project.name = editName;
     project.description = editDescription;
+    project.modified = new Date();
     editProjectOpen = false;
     project.save();
     if (project.active) {
