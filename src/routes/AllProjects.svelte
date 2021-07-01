@@ -1,37 +1,51 @@
 <script lang="ts">
+  import loadingIcon from "@iconify-icons/ic/baseline-hourglass-empty";
+  import BackButton from "../components/BackButton.svelte";
   import ContentFrame from "../components/layout/ContentFrame.svelte";
   import ProjectCard from "../components/ProjectCard.svelte";
-  import BackButton from "../components/BackButton.svelte";
+  import SplashScreen from "../components/SplashScreen.svelte";
   import Header from "../components/type/Header.svelte";
-  import { getAll } from "../data/database";
+  import {
+    getAll,
+    getAsyncProject,
+    getRealtimeProject,
+  } from "../data/database";
+  import { sortBy } from "../util/sort";
 
-  let getRealtimeProjects = () => getAll("RealtimeProject");
+  let projectPromise = (async function () {
+    let realtimeProjects = getAll("RealtimeProject").then((ids) =>
+      Promise.all(ids.map((id) => getRealtimeProject(id)))
+    );
+    let asyncProjects = getAll("AsyncProject").then((ids) =>
+      Promise.all(ids.map((id) => getAsyncProject(id)))
+    );
+
+    let unsortedProjects = (
+      await Promise.all([realtimeProjects, asyncProjects])
+    ).flat();
+    return sortBy("modified", unsortedProjects, false);
+  })();
 </script>
 
-<main class="device-frame page">
-  <ContentFrame>
-    <BackButton href="/" />
-    <Header>All projects</Header>
-    <ul>
-      {#await getRealtimeProjects()}
-        <!-- loading placeholder? -->
-        {#each [1, 2, 3, 4] as _}
-          <li>
-            <ProjectCard loadingPlaceholder />
-          </li>
-        {/each}
-      {:then projects}
-        {#each projects as id}
+{#await projectPromise}
+  <SplashScreen icon={loadingIcon} label="Loading projects…" delay={100} />
+{:then projects}
+  <main class="device-frame page">
+    <ContentFrame>
+      <BackButton href="/" />
+      <Header>All projects</Header>
+      <ul>
+        {#each projects as { id }}
           <li>
             <a href={"#/projects/" + id}>
               <ProjectCard {id} />
             </a>
           </li>
         {/each}
-      {/await}
-    </ul>
-  </ContentFrame>
-</main>
+      </ul>
+    </ContentFrame>
+  </main>
+{/await}
 
 <style lang="scss">
   @import "src/styles/tokens";

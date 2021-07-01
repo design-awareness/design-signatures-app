@@ -1,5 +1,5 @@
 export function sortBy<P extends Record<string, any>>(
-  key: string,
+  key: keyof P,
   list: P[],
   ascending = true
 ): P[] {
