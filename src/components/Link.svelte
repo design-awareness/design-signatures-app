@@ -52,7 +52,7 @@
 <style lang="scss">
   @import "src/styles/tokens";
   a {
-    color: $text-secondary-color;
+    color: $text-actionable-color;
     text-decoration: none;
   }
 </style>
