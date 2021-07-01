@@ -18,6 +18,7 @@
     toDateString,
   } from "../util/date";
   import type { SimpleDate } from "../util/date";
+  import { tick } from "svelte";
 
   export let project: AsyncProject;
 
@@ -36,6 +37,10 @@
   let viewDate: Date = getToday();
   let columns: SimpleDate[] = [];
 
+  let userDate: string = toDateString(viewDate);
+  let userDateField: HTMLInputElement;
+  let showUserDate = false;
+
   /**
    * Change to a particular date. If not given, recalculates based on the
    * currently set date.
@@ -44,7 +49,9 @@
   function calculateDateView() {
     viewDate = viewDate; // FIXME: probably won't be necessary once grid is done
     let date = viewDate;
-    let { day, month, year } = fromDate(date);
+    let simpleDate = fromDate(date);
+    let { day, month, year } = simpleDate;
+    userDate = toDateString(simpleDate);
 
     if (view === "day") {
       viewContextDisplay = `${MONTH_NAME[month]} ${day}`;
@@ -102,6 +109,18 @@
     calculateDateView();
   }
 
+  function updateFromUserDate() {
+    let date: Date;
+    if (!userDate) {
+      date = getToday();
+    } else {
+      date = new Date(userDate);
+      if (!date) return;
+    }
+    viewDate = date;
+    calculateDateView();
+  }
+
   function nudgeDateDown() {
     if (view === "day") {
       addDays(viewDate, -1);
@@ -155,7 +174,26 @@
 
     <div class="dotgrid-context-controls">
       <button on:click={nudgeDateDown}>&lt;-</button>
-      <button class="grow">{viewContextDisplay}</button>
+      {#if showUserDate}
+        <input
+          class="grow"
+          type="date"
+          bind:this={userDateField}
+          bind:value={userDate}
+          on:change={updateFromUserDate}
+          on:blur={() => (showUserDate = false)}
+        />
+      {:else}
+        <button
+          class="grow"
+          on:click={async () => {
+            showUserDate = true;
+            await tick();
+            userDateField?.focus();
+            userDateField?.click();
+          }}>{viewContextDisplay}</button
+        >
+      {/if}
       <button on:click={nudgeDateUp}>-&gt;</button>
     </div>
     {#if view !== reportingPeriod}
