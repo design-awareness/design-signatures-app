@@ -4,13 +4,13 @@ import type { DateString } from "./date";
 import { floorDateToWeekday, toDateString } from "./date";
 
 // week -> date -> entry
-type DailyEntryTable = Map<DateString, Map<DateString, AsyncEntry>>;
+export type EntryTable = Map<DateString, Map<DateString, AsyncEntry>>;
 
 export function makeEntryTable({
   entries,
   periodAlignment,
   reportingPeriod,
-}: AsyncProject): DailyEntryTable {
+}: AsyncProject): EntryTable {
   let table = new Map<DateString, Map<DateString, AsyncEntry>>();
   entries.forEach((entry) =>
     insertIntoEntryTable(table, entry, reportingPeriod, periodAlignment)
@@ -19,7 +19,7 @@ export function makeEntryTable({
 }
 
 export function insertIntoEntryTable(
-  table: DailyEntryTable,
+  table: EntryTable,
   entry: AsyncEntry,
   reportingPeriod: AsyncProject["reportingPeriod"],
   periodAlignment: Weekday
@@ -34,4 +34,20 @@ export function insertIntoEntryTable(
   }
 
   weekTable.set(day, entry);
+}
+
+export function sumActivityTimes(
+  entries: Iterable<AsyncEntry>,
+  activityCount: number
+): AsyncEntry["data"] {
+  let resultData: number[] = new Array(activityCount).fill(0);
+  for (let entry of entries) {
+    entry.data.forEach(({ value }, i) => {
+      resultData[i] += value;
+    });
+  }
+  return resultData.map((value) => ({
+    value,
+    note: "",
+  }));
 }
