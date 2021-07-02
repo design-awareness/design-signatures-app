@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { AsyncEntry } from "../data/schema";
+  import NoteCorner from "./NoteCorner.svelte";
 
   export let data: AsyncEntry["data"][0] | undefined;
   export let max: number;
@@ -10,14 +11,10 @@
   }
 </script>
 
-<div
-  class="cell"
-  class:no-data={data === undefined}
-  class:has-time={data && data.value}
->
+<div class="cell" class:has-time={data?.value}>
   {#if data}
     {#if data.note}
-      <div class="note-indicator" />
+      <NoteCorner />
     {/if}
     <div class="cell-content">
       {#if data.value}
@@ -37,6 +34,9 @@
   .cell {
     height: 100%;
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     &.has-time::before {
       content: "";
       display: block;
@@ -48,20 +48,13 @@
       opacity: 0.1;
       background-color: var(--activity-color);
     }
-    &.no-data {
-      background-color: $background-color;
-    }
   }
+
+  $cell-height: 2.5rem;
   .cell-content {
     width: 100%;
-    max-height: 100%;
-    // FIXME: This doesn't work on iOS. Let's just
-    // assume the width is always larger :/
-    aspect-ratio: 1/1;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+    max-width: $cell-height;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;

@@ -9,11 +9,13 @@
   import Icon from "@iconify/svelte/dist/Icon.svelte";
   import { tick } from "svelte";
   import { pop, push, querystring } from "svelte-spa-router";
+  import ActivityToken from "../components/ActivityToken.svelte";
   import BackButton from "../components/BackButton.svelte";
   import Button from "../components/Button.svelte";
   import DotGridCell from "../components/DotGridCell.svelte";
   import ContentFrame from "../components/layout/ContentFrame.svelte";
   import Modal from "../components/Modal.svelte";
+  import NoteCorner from "../components/NoteCorner.svelte";
   import PageSeparator from "../components/PageSeparator.svelte";
   import ProjectMenu from "../components/ProjectMenu.svelte";
   import SegmentedSelector from "../components/SegmentedSelector.svelte";
@@ -59,6 +61,7 @@
   let viewDate: Date = getToday();
   let columns: SimpleDate[] = [];
   let columnData: (AsyncEntry["data"] | undefined)[] = [];
+  let columnNotes: boolean[] = [];
   let activeEntry: AsyncEntry | null = null;
   let pointMax: number = 0;
 
@@ -128,9 +131,13 @@
       } else {
         let weekString = toDateString(startDate);
         let weekTable = entryTable.get(weekString);
-        columnData = columns.map(
-          (columnDate) => weekTable?.get(toDateString(columnDate))?.data
-        );
+        columnData = [];
+        columnNotes = [];
+        columns.forEach((columnDate) => {
+          let entry = weekTable?.get(toDateString(columnDate));
+          columnData.push(entry?.data);
+          columnNotes.push(!!entry?.note);
+        });
         getPointMax();
       }
     } else {
@@ -141,23 +148,30 @@
       movingDate.setUTCDate(1);
       movingDate = floorDateToWeekday(movingDate, periodAlignment);
       columns = [];
+      columnData = [];
+      columnNotes = [];
       do {
         columns.push(fromDate(movingDate));
         addDays(movingDate, 7);
       } while (movingDate.getUTCMonth() === month);
 
-      columnData = columns.map((columnDate) => {
+      columns.forEach((columnDate) => {
         let columnDateString = toDateString(columnDate);
         if (reportingPeriod === "week") {
-          return entryTable.get(columnDateString)?.get(columnDateString)?.data;
+          let entry = entryTable.get(columnDateString)?.get(columnDateString);
+          columnData.push(entry?.data);
+          columnNotes.push(!!entry?.note);
         } else {
           let weekEntries = entryTable.get(columnDateString)?.values();
-          return weekEntries
-            ? sumActivityTimes(
-                weekEntries,
-                project.designModel.activities.length
-              )
-            : undefined;
+          columnData.push(
+            weekEntries
+              ? sumActivityTimes(
+                  weekEntries,
+                  project.designModel.activities.length
+                )
+              : undefined
+          );
+          columnNotes.push(false);
         }
       });
       getPointMax();
@@ -507,6 +521,9 @@
                 <button class="dotgrid-column" on:click={drillDown(column)}>
                   <div class="dotgrid-column-header">
                     {getColumnHeader(column)}
+                    {#if columnNotes[columnIdx]}
+                      <NoteCorner />
+                    {/if}
                   </div>
                   {#each project.designModel.activities as activity, i}
                     <div
@@ -526,6 +543,34 @@
           </div>
         </div>
       </div>
+
+      {#if view === reportingPeriod && activeEntry !== null && (activeEntry.note || activeEntry.data.some(({ note }) => note))}
+        <div class="contextual-notes">
+          {#if selectedActivity === -1 || activeEntry.data[selectedActivity].note}
+            <SectionHeader>Entry notes</SectionHeader>
+          {/if}
+          {#if activeEntry.note && selectedActivity === -1}
+            <div class="note-card">
+              <p>{activeEntry.note}</p>
+            </div>
+          {/if}
+          {#each activeEntry?.data ?? [] as { value, note }, i}
+            {#if note && (selectedActivity === -1 || selectedActivity === i)}
+              <div class="note-card">
+                <div class="note-meta">
+                  <ActivityToken
+                    mini
+                    code={project.designModel.activities[i].code}
+                    color={project.designModel.activities[i].color}
+                  />
+                  <span>{expressiveDurationM(value)}</span>
+                </div>
+                <p>{note}</p>
+              </div>
+            {/if}
+          {/each}
+        </div>
+      {/if}
 
       <PageSeparator />
 
@@ -591,6 +636,8 @@
   $horizontal-gap: 0.25rem;
   $vertical-cell-gap: 0.25rem;
 
+  // FIXME: tokenize
+  // IMPORTANT: update in DotGridCell also!
   $cell-height: 2.5rem;
   $bar-height: 2rem;
 
@@ -606,6 +653,7 @@
       border: 0;
       appearance: none;
       -webkit-appearance: none;
+      margin: 0;
       background-color: transparent;
       border-right: 1px solid $text-ghost-color;
       border-radius: 0.01px;
@@ -642,6 +690,7 @@
         border: 0;
         appearance: none;
         -webkit-appearance: none;
+        margin: 0;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -651,13 +700,17 @@
     }
     &-control-nudge {
       background-color: transparent;
-      border-radius: 0.01px;
+      border-radius: 4px;
       font-size: 1.5rem;
+      &:hover {
+        background-color: $button-background-color;
+      }
     }
     &-control-context {
       background-color: $button-background-color;
       border-radius: 4px;
       text-transform: uppercase;
+      @include type-style($type-detail);
     }
     &-columns {
       display: flex;
@@ -672,6 +725,7 @@
       border: 0;
       appearance: none;
       -webkit-appearance: none;
+      margin: 0;
       background-color: transparent;
       border-right: 1px solid $text-ghost-color;
       border-radius: 0.01px;
@@ -685,6 +739,7 @@
       text-align: center;
       @include type-style($type-detail);
       color: $text-secondary-color;
+      position: relative;
     }
     &-cell {
       height: $cell-height;
@@ -723,6 +778,7 @@
       .tiny {
         appearance: none;
         -webkit-appearance: none;
+        margin: 0;
         border: 0;
         background-color: transparent;
         border-radius: 2px;
@@ -732,6 +788,7 @@
         padding: 0 0.5rem;
         gap: 0.25rem;
         color: $text-secondary-color;
+        @include type-style($type-detail);
         :global(svg) {
           font-size: 1rem;
         }
@@ -740,7 +797,7 @@
           margin-right: 0.25rem;
         }
         &:hover {
-          background-color: $background-color;
+          background-color: $button-background-color;
         }
         &.edit {
           color: $text-actionable-color;
@@ -755,6 +812,7 @@
       border: 0;
       appearance: none;
       -webkit-appearance: none;
+      margin: 0;
       background-color: transparent;
       border-radius: 0.01px;
       padding: 0;
@@ -778,5 +836,27 @@
   }
   .grow {
     flex-grow: 1;
+  }
+
+  .contextual-notes {
+    margin-top: $block-vertical-spacing;
+  }
+  .note-card {
+    .note-meta {
+      display: flex;
+      align-items: center;
+      span {
+        @include type-style($type-detail);
+        color: $text-secondary-color;
+        &::before {
+          content: "·";
+          margin: 0 0.5rem;
+        }
+      }
+    }
+    p {
+      @include type-style($type-body);
+      margin: 0.25rem 0 1rem 0;
+    }
   }
 </style>
