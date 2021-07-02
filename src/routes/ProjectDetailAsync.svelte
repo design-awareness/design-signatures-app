@@ -605,6 +605,7 @@
       align-items: stretch;
       border: 0;
       appearance: none;
+      -webkit-appearance: none;
       background-color: transparent;
       border-right: 1px solid $text-ghost-color;
       border-radius: 0.01px;
@@ -640,6 +641,7 @@
       input {
         border: 0;
         appearance: none;
+        -webkit-appearance: none;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -669,6 +671,7 @@
       gap: $vertical-cell-gap;
       border: 0;
       appearance: none;
+      -webkit-appearance: none;
       background-color: transparent;
       border-right: 1px solid $text-ghost-color;
       border-radius: 0.01px;
@@ -719,6 +722,7 @@
       }
       .tiny {
         appearance: none;
+        -webkit-appearance: none;
         border: 0;
         background-color: transparent;
         border-radius: 2px;
@@ -750,6 +754,7 @@
       height: $cell-height;
       border: 0;
       appearance: none;
+      -webkit-appearance: none;
       background-color: transparent;
       border-radius: 0.01px;
       padding: 0;

@@ -140,6 +140,7 @@
       width: 2.5rem;
       @include type-style($type-input);
       appearance: none;
+      -webkit-appearance: none;
       color: $text-primary-color;
       background: $input-background-color;
       border: $input-border-size solid $input-border-color;

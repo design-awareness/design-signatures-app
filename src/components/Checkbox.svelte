@@ -35,6 +35,7 @@
     border-radius: $input-border-radius;
     background-color: $input-background-color;
     appearance: none;
+    -webkit-appearance: none;
     height: $checkbox-size;
     width: $checkbox-size;
     flex-shrink: 0;
