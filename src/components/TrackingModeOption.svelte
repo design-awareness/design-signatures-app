@@ -57,6 +57,7 @@
     font-size: 1.5rem;
     color: $text-secondary-color;
     appearance: none;
+    -webkit-appearance: none;
     background: transparent;
     border: 0;
     padding: 0.25rem;

@@ -2,20 +2,33 @@
   import addIcon from "@iconify-icons/ic/baseline-add";
   import leftChevron from "@iconify-icons/ic/baseline-chevron-left";
   import rightChevron from "@iconify-icons/ic/baseline-chevron-right";
+  import clearIcon from "@iconify-icons/ic/baseline-clear";
+  import deleteIcon from "@iconify-icons/ic/baseline-delete";
+  import editIcon from "@iconify-icons/ic/baseline-edit";
   import infoIcon from "@iconify-icons/ic/baseline-info";
   import Icon from "@iconify/svelte/dist/Icon.svelte";
   import { tick } from "svelte";
+  import { pop, push, querystring } from "svelte-spa-router";
+  import ActivityToken from "../components/ActivityToken.svelte";
   import BackButton from "../components/BackButton.svelte";
   import Button from "../components/Button.svelte";
   import DotGridCell from "../components/DotGridCell.svelte";
   import ContentFrame from "../components/layout/ContentFrame.svelte";
+  import Modal from "../components/Modal.svelte";
+  import NoteCorner from "../components/NoteCorner.svelte";
   import PageSeparator from "../components/PageSeparator.svelte";
   import ProjectMenu from "../components/ProjectMenu.svelte";
   import SegmentedSelector from "../components/SegmentedSelector.svelte";
   import Header from "../components/type/Header.svelte";
   import SectionHeader from "../components/type/SectionHeader.svelte";
+  import { newAsyncEntry } from "../data/database";
   import type { AsyncEntry, AsyncProject } from "../data/schema";
-  import { makeEntryTable, sumActivityTimes } from "../util/asyncEntry";
+  import {
+    insertIntoEntryTable,
+    makeEntryTable,
+    removeFromEntryTable,
+    sumActivityTimes,
+  } from "../util/asyncEntry";
   import type { SimpleDate } from "../util/date";
   import {
     addDays,
@@ -27,6 +40,8 @@
     MONTH_SHORT_NAME,
     toDateString,
   } from "../util/date";
+  import { expressiveDurationM } from "../util/time";
+  import AsyncEntryEditor from "./AsyncEntryEditor.svelte";
 
   export let project: AsyncProject;
 
@@ -46,13 +61,20 @@
   let viewDate: Date = getToday();
   let columns: SimpleDate[] = [];
   let columnData: (AsyncEntry["data"] | undefined)[] = [];
+  let columnNotes: boolean[] = [];
   let activeEntry: AsyncEntry | null = null;
   let pointMax: number = 0;
 
-  let totals = sumActivityTimes(
-    project.entries,
-    project.designModel.activities.length
-  ).map(({ value }) => value);
+  let projectTotals: number[];
+  function updateProjectTotals() {
+    projectTotals = sumActivityTimes(
+      project.entries,
+      project.designModel.activities.length
+    ).map(({ value }) => value);
+  }
+  updateProjectTotals();
+
+  let selectedActivity = -1;
 
   let userDate: string = toDateString(viewDate);
   let userDateField: HTMLInputElement;
@@ -76,6 +98,7 @@
       viewYearDisplay = year.toString();
       let weekString = toDateString(floorDateToWeekday(date, periodAlignment));
       activeEntry = entryTable.get(weekString)?.get(dateString) ?? null;
+      calculateEntryGraph();
     } else if (view === "week") {
       date = floorDateToWeekday(date, periodAlignment);
       let startDate = fromDate(date);
@@ -104,12 +127,17 @@
         let activeDateString = toDateString(startDate);
         activeEntry =
           entryTable.get(activeDateString)?.get(activeDateString) ?? null;
+        calculateEntryGraph();
       } else {
         let weekString = toDateString(startDate);
         let weekTable = entryTable.get(weekString);
-        columnData = columns.map(
-          (columnDate) => weekTable?.get(toDateString(columnDate))?.data
-        );
+        columnData = [];
+        columnNotes = [];
+        columns.forEach((columnDate) => {
+          let entry = weekTable?.get(toDateString(columnDate));
+          columnData.push(entry?.data);
+          columnNotes.push(!!entry?.note);
+        });
         getPointMax();
       }
     } else {
@@ -120,23 +148,30 @@
       movingDate.setUTCDate(1);
       movingDate = floorDateToWeekday(movingDate, periodAlignment);
       columns = [];
+      columnData = [];
+      columnNotes = [];
       do {
         columns.push(fromDate(movingDate));
         addDays(movingDate, 7);
       } while (movingDate.getUTCMonth() === month);
 
-      columnData = columns.map((columnDate) => {
+      columns.forEach((columnDate) => {
         let columnDateString = toDateString(columnDate);
         if (reportingPeriod === "week") {
-          return entryTable.get(columnDateString)?.get(columnDateString)?.data;
+          let entry = entryTable.get(columnDateString)?.get(columnDateString);
+          columnData.push(entry?.data);
+          columnNotes.push(!!entry?.note);
         } else {
           let weekEntries = entryTable.get(columnDateString)?.values();
-          return weekEntries
-            ? sumActivityTimes(
-                weekEntries,
-                project.designModel.activities.length
-              )
-            : undefined;
+          columnData.push(
+            weekEntries
+              ? sumActivityTimes(
+                  weekEntries,
+                  project.designModel.activities.length
+                )
+              : undefined
+          );
+          columnNotes.push(false);
         }
       });
       getPointMax();
@@ -156,6 +191,9 @@
   let lastView = view;
   $: if (lastView !== view) {
     lastView = view;
+    if (view === "day") {
+      selectedActivity = -1;
+    }
     recalculate();
   }
 
@@ -207,132 +245,350 @@
   function getColumnHeader(date: SimpleDate): string {
     let result: string = date.day.toString();
     if (view === "month") {
-      result += "–" + getWeekLastDay(date);
+      result += "–" + getWeekLastDayNumber(date);
     }
     return result;
   }
 
-  function getWeekLastDay(date: SimpleDate): number {
+  function getWeekLastDay(date: SimpleDate): SimpleDate {
+    let mutDate = makeDate(date);
+    addDays(mutDate, 6);
+    return fromDate(mutDate);
+  }
+  function getWeekLastDayNumber(date: SimpleDate): number {
     let mutDate = makeDate(date);
     addDays(mutDate, 6);
     return mutDate.getUTCDate();
   }
+
+  let showEntry: boolean;
+  let wasShowingEntry = false;
+  $: {
+    showEntry = $querystring === "entry";
+    if (showEntry && !activeEntry) pop();
+    if (wasShowingEntry && !showEntry && activeEntry && activeEntry.dirty) {
+      project.save();
+      updateProjectTotals();
+    }
+    wasShowingEntry = showEntry;
+  }
+  let entryLabel: string;
+
+  function addEntry() {
+    entryGraphMax = 0;
+    let entry = newAsyncEntry();
+    entry.period = new Date(viewDate);
+    entry.data = project.designModel.activities.map((_) => ({
+      value: 0,
+      note: "",
+    }));
+    project.entries = [...project.entries, entry];
+    insertIntoEntryTable(entryTable, entry, reportingPeriod, periodAlignment);
+    activeEntry = entry;
+
+    editEntry();
+  }
+
+  function editEntry() {
+    let entryDate = fromDate(viewDate);
+    if (reportingPeriod === "day") {
+      entryLabel = `${MONTH_NAME[entryDate.month]} ${entryDate.day}, ${
+        entryDate.year
+      }`;
+    } else {
+      let endDate = getWeekLastDay(entryDate);
+      if (entryDate.month === endDate.month) {
+        entryLabel = `${MONTH_NAME[entryDate.month]} ${entryDate.day}–${
+          endDate.day
+        }, ${entryDate.year}`;
+      } else if (entryDate.year === endDate.year) {
+        entryLabel = `${MONTH_NAME[entryDate.month]} ${entryDate.day}–${
+          MONTH_NAME[endDate.month]
+        } ${endDate.day}, ${entryDate.year}`;
+      } else {
+        entryLabel = `${MONTH_NAME[entryDate.month]} ${entryDate.day}, ${
+          entryDate.year
+        }–${MONTH_NAME[endDate.month]} ${endDate.day}, ${endDate.year}`;
+      }
+    }
+
+    push(`/projects/${project.id}/?entry`);
+  }
+
+  async function saveEntry() {
+    if (!activeEntry) return;
+    activeEntry.modified = new Date();
+    project.modified = new Date();
+    await project.save();
+    calculateEntryGraph();
+    updateProjectTotals();
+    wasShowingEntry = false;
+    await pop();
+  }
+
+  function showDelete() {
+    push(`/projects/${project.id}/?delete`);
+  }
+
+  let isDeletingEntry = false;
+  async function deleteEntry() {
+    if (isDeletingEntry) return;
+    isDeletingEntry = true;
+    if (activeEntry) {
+      project.entries = project.entries.filter(
+        (entry) => entry !== activeEntry
+      );
+      let entryToDelete = activeEntry;
+      removeFromEntryTable(
+        entryTable,
+        entryToDelete,
+        reportingPeriod,
+        periodAlignment
+      );
+      activeEntry = null;
+      await entryToDelete.remove();
+      await project.save();
+      updateProjectTotals();
+    }
+    await pop();
+    isDeletingEntry = false;
+  }
+
+  let entryGraphMax = 0;
+  function calculateEntryGraph() {
+    if (!activeEntry) {
+      entryGraphMax = 0;
+    } else {
+      entryGraphMax = Math.max(...activeEntry.data.map((d) => d.value));
+    }
+  }
+
+  function getEntryTotal() {
+    if (!activeEntry) return 0;
+    return activeEntry.data.reduce((a, b) => a + b.value, 0);
+  }
+
+  const selectActivity = (i: number) => () => {
+    if (selectedActivity === i) {
+      selectedActivity = -1;
+    } else {
+      selectedActivity = i;
+    }
+  };
 </script>
 
 <main class="device-frame page">
-  <ContentFrame>
-    <div class="top-bar">
-      <BackButton href="/" />
-      <ProjectMenu bind:project />
-    </div>
-    <Header>{project.name || "No project here!"}</Header>
-    <p class="description">{project.description}</p>
+  {#if showEntry && activeEntry}
+    <AsyncEntryEditor
+      entry={activeEntry}
+      label={entryLabel}
+      save={saveEntry}
+      designModel={project.designModel}
+    />
+  {:else}
+    <ContentFrame>
+      <div class="top-bar">
+        <BackButton href="/" />
+        <ProjectMenu bind:project />
+      </div>
+      <Header>{project.name || "No project here!"}</Header>
+      <p class="description">{project.description}</p>
 
-    <PageSeparator />
+      <PageSeparator />
 
-    <div class="dotgrid-header">
-      <h2><strong>{viewMonthDisplay}</strong> {viewYearDisplay}</h2>
-      <SegmentedSelector inlabel bind:value={view} options={viewOptions} />
-    </div>
+      <div class="dotgrid-header">
+        <h2><strong>{viewMonthDisplay}</strong> {viewYearDisplay}</h2>
+        <SegmentedSelector inlabel bind:value={view} options={viewOptions} />
+      </div>
 
-    <div class="dotgrid-body">
-      <button class="dotgrid-activities">
-        <div class="dotgrid-column-header">
-          <Icon icon={infoIcon} />
-        </div>
-        {#each project.designModel.activities as activity}
-          <div
-            class="dotgrid-activity choose-theme-color"
-            style="--activity-color-light: #{activity
-              .color[0]}; --activity-color-dark: #{activity.color[1]}"
-          >
-            <i>{activity.code}</i>
+      <div class="dotgrid-body">
+        <button class="dotgrid-activities">
+          <div class="dotgrid-column-header">
+            <Icon icon={infoIcon} />
           </div>
-        {/each}
-      </button>
-
-      <div class="dotgrid-column-area">
-        <div class="dotgrid-context-controls">
-          <button on:click={nudgeDateDown} class="dotgrid-control-nudge"
-            ><Icon icon={leftChevron} /></button
-          >
-          {#if showUserDate}
-            <input
-              class="grow dotgrid-control-context"
-              type="date"
-              bind:this={userDateField}
-              bind:value={userDate}
-              on:change={updateFromUserDate}
-              on:blur={() => (showUserDate = false)}
-            />
-          {:else}
-            <button
-              class="grow dotgrid-control-context"
-              on:click={async () => {
-                showUserDate = true;
-                await tick();
-                userDateField?.focus();
-                userDateField?.click();
-              }}>{viewContextDisplay}</button
+          {#each project.designModel.activities as activity}
+            <div
+              class="dotgrid-activity choose-theme-color"
+              style="--activity-color-light: #{activity
+                .color[0]}; --activity-color-dark: #{activity.color[1]}"
             >
-          {/if}
-          <button on:click={nudgeDateUp} class="dotgrid-control-nudge"
-            ><Icon icon={rightChevron} /></button
-          >
-        </div>
-
-        <div class="dotgrid-columns">
-          {#if view === reportingPeriod || view === "day"}
-            <div class="dotgrid-chart">
-              {#if !activeEntry}
-                <div class="dotgrid-chart-banner">
-                  No data for this period.
-                  <Button small icon={addIcon}>Add new entry</Button>
-                </div>
-              {/if}
-              <div class="dotgrid-chart-header">
-                {#if activeEntry}
-                  Entry
-                {/if}
-              </div>
-              {#each project.designModel.activities as activity, i}
-                <button class="dotgrid-chart-row">
-                  {#if activeEntry}
-                    <div class="dotgrid-chart-bar" />
-                  {/if}
-                </button>
-              {/each}
+              <i>{activity.code}</i>
             </div>
-          {:else}
-            {#each columns as column, columnIdx}
-              <button class="dotgrid-column" on:click={drillDown(column)}>
-                <div class="dotgrid-column-header">
-                  {getColumnHeader(column)}
+          {/each}
+        </button>
+
+        <div class="dotgrid-column-area">
+          <div class="dotgrid-context-controls">
+            <button on:click={nudgeDateDown} class="dotgrid-control-nudge"
+              ><Icon icon={leftChevron} /></button
+            >
+            {#if showUserDate}
+              <input
+                class="grow dotgrid-control-context"
+                type="date"
+                bind:this={userDateField}
+                bind:value={userDate}
+                on:change={updateFromUserDate}
+                on:blur={() => (showUserDate = false)}
+              />
+            {:else}
+              <button
+                class="grow dotgrid-control-context"
+                on:click={async () => {
+                  showUserDate = true;
+                  await tick();
+                  userDateField?.focus();
+                  userDateField?.click();
+                }}>{viewContextDisplay}</button
+              >
+            {/if}
+            <button on:click={nudgeDateUp} class="dotgrid-control-nudge"
+              ><Icon icon={rightChevron} /></button
+            >
+          </div>
+
+          <div class="dotgrid-columns">
+            {#if view === reportingPeriod || view === "day"}
+              <div class="dotgrid-chart">
+                {#if !activeEntry}
+                  <div class="dotgrid-chart-banner">
+                    No data for this period.
+                    <Button small icon={addIcon} on:click={addEntry}
+                      >Add new entry</Button
+                    >
+                  </div>
+                {/if}
+                <div class="dotgrid-chart-header">
+                  {#if activeEntry}
+                    {#if selectedActivity !== -1}
+                      <button
+                        class="tiny clear"
+                        on:click={() => (selectedActivity = -1)}
+                      >
+                        <Icon icon={clearIcon} />
+                      </button>
+                    {/if}
+                    <div class="label">
+                      {#if selectedActivity === -1}
+                        Total time: {expressiveDurationM(getEntryTotal())}
+                      {:else}
+                        {project.designModel.activities[selectedActivity].name}:
+                        {expressiveDurationM(
+                          activeEntry.data[selectedActivity].value
+                        )}
+                      {/if}
+                    </div>
+                    <button class="tiny edit" on:click={editEntry}>
+                      <Icon icon={editIcon} />
+                      Edit entry
+                    </button>
+                    <button
+                      class="tiny delete"
+                      aria-label="delete entry"
+                      on:click={showDelete}
+                    >
+                      <Icon icon={deleteIcon} />
+                    </button>
+                  {/if}
                 </div>
                 {#each project.designModel.activities as activity, i}
-                  <div
-                    class="dotgrid-cell choose-theme-color"
+                  <button
+                    class="dotgrid-chart-row choose-theme-color"
+                    on:click={selectActivity(i)}
                     style="--activity-color-light: #{activity
                       .color[0]}; --activity-color-dark: #{activity.color[1]}"
                   >
-                    <DotGridCell
-                      data={columnData[columnIdx]?.[i]}
-                      max={pointMax}
-                    />
-                  </div>
+                    {#if activeEntry && activeEntry.data[i].value}
+                      <div
+                        class="dotgrid-chart-bar"
+                        class:highlight={selectedActivity === -1 ||
+                          selectedActivity === i}
+                        style="width: {entryGraphMax &&
+                          (activeEntry.data[i].value / entryGraphMax) * 100}%"
+                      >
+                        <span
+                          >{expressiveDurationM(
+                            activeEntry.data[i].value
+                          )}</span
+                        >
+                      </div>
+                    {/if}
+                  </button>
                 {/each}
-              </button>
-            {/each}
-          {/if}
+              </div>
+            {:else}
+              {#each columns as column, columnIdx}
+                <button class="dotgrid-column" on:click={drillDown(column)}>
+                  <div class="dotgrid-column-header">
+                    {getColumnHeader(column)}
+                    {#if columnNotes[columnIdx]}
+                      <NoteCorner />
+                    {/if}
+                  </div>
+                  {#each project.designModel.activities as activity, i}
+                    <div
+                      class="dotgrid-cell choose-theme-color"
+                      style="--activity-color-light: #{activity
+                        .color[0]}; --activity-color-dark: #{activity.color[1]}"
+                    >
+                      <DotGridCell
+                        data={columnData[columnIdx]?.[i]}
+                        max={pointMax}
+                      />
+                    </div>
+                  {/each}
+                </button>
+              {/each}
+            {/if}
+          </div>
         </div>
       </div>
-    </div>
 
-    <PageSeparator />
+      {#if view === reportingPeriod && activeEntry !== null && (activeEntry.note || activeEntry.data.some(({ note }) => note))}
+        <div class="contextual-notes">
+          {#if selectedActivity === -1 || activeEntry.data[selectedActivity].note}
+            <SectionHeader>Entry notes</SectionHeader>
+          {/if}
+          {#if activeEntry.note && selectedActivity === -1}
+            <div class="note-card">
+              <p>{activeEntry.note}</p>
+            </div>
+          {/if}
+          {#each activeEntry?.data ?? [] as { value, note }, i}
+            {#if note && (selectedActivity === -1 || selectedActivity === i)}
+              <div class="note-card">
+                <div class="note-meta">
+                  <ActivityToken
+                    mini
+                    code={project.designModel.activities[i].code}
+                    color={project.designModel.activities[i].color}
+                  />
+                  <span>{expressiveDurationM(value)}</span>
+                </div>
+                <p>{note}</p>
+              </div>
+            {/if}
+          {/each}
+        </div>
+      {/if}
 
-    <!-- FIXME: add notes  -->
-    <SectionHeader>Project comments</SectionHeader>
-  </ContentFrame>
+      <PageSeparator />
+
+      <!-- FIXME: add notes  -->
+      <SectionHeader>Project comments</SectionHeader>
+    </ContentFrame>
+    <Modal
+      visible={$querystring === "delete"}
+      title="Delete entry?"
+      closeWithScrim={false}
+      buttons={[
+        { label: "Cancel", onClick: pop, disabled: isDeletingEntry },
+        { label: "Delete", onClick: deleteEntry, disabled: isDeletingEntry },
+      ]}
+    >
+      <p>You can't undo this action.</p>
+    </Modal>
+  {/if}
 </main>
 
 <style lang="scss">
@@ -380,7 +636,10 @@
   $horizontal-gap: 0.25rem;
   $vertical-cell-gap: 0.25rem;
 
+  // FIXME: tokenize
+  // IMPORTANT: update in DotGridCell also!
   $cell-height: 2.5rem;
+  $bar-height: 2rem;
 
   .dotgrid {
     &-body {
@@ -393,6 +652,8 @@
       align-items: stretch;
       border: 0;
       appearance: none;
+      -webkit-appearance: none;
+      margin: 0;
       background-color: transparent;
       border-right: 1px solid $text-ghost-color;
       border-radius: 0.01px;
@@ -428,6 +689,8 @@
       input {
         border: 0;
         appearance: none;
+        -webkit-appearance: none;
+        margin: 0;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -437,13 +700,17 @@
     }
     &-control-nudge {
       background-color: transparent;
-      border-radius: 0.01px;
+      border-radius: 4px;
       font-size: 1.5rem;
+      &:hover {
+        background-color: $button-background-color;
+      }
     }
     &-control-context {
       background-color: $button-background-color;
       border-radius: 4px;
       text-transform: uppercase;
+      @include type-style($type-detail);
     }
     &-columns {
       display: flex;
@@ -457,6 +724,8 @@
       gap: $vertical-cell-gap;
       border: 0;
       appearance: none;
+      -webkit-appearance: none;
+      margin: 0;
       background-color: transparent;
       border-right: 1px solid $text-ghost-color;
       border-radius: 0.01px;
@@ -470,6 +739,7 @@
       text-align: center;
       @include type-style($type-detail);
       color: $text-secondary-color;
+      position: relative;
     }
     &-cell {
       height: $cell-height;
@@ -496,19 +766,97 @@
       box-shadow: $modal-shadow;
     }
     &-chart-header {
+      @include type-style($type-detail);
       height: $column-header-height;
       display: flex;
+      align-items: center;
+      padding: 0 0 0 0.5rem;
+
+      .label {
+        flex-grow: 1;
+      }
+      .tiny {
+        appearance: none;
+        -webkit-appearance: none;
+        margin: 0;
+        border: 0;
+        background-color: transparent;
+        border-radius: 2px;
+        display: flex;
+        align-items: center;
+        height: 100%;
+        padding: 0 0.5rem;
+        gap: 0.25rem;
+        color: $text-secondary-color;
+        @include type-style($type-detail);
+        :global(svg) {
+          font-size: 1rem;
+        }
+        &.clear {
+          padding: 0 0.25rem;
+          margin-right: 0.25rem;
+        }
+        &:hover {
+          background-color: $button-background-color;
+        }
+        &.edit {
+          color: $text-actionable-color;
+        }
+        &.delete:hover {
+          color: $accent-danger-color;
+        }
+      }
     }
     &-chart-row {
       height: $cell-height;
       border: 0;
       appearance: none;
+      -webkit-appearance: none;
+      margin: 0;
       background-color: transparent;
       border-radius: 0.01px;
       padding: 0;
     }
+    &-chart-bar {
+      height: $bar-height;
+      line-height: $bar-height;
+      box-sizing: border-box;
+      border-radius: 0 4px 4px 0;
+      background-color: var(--activity-color);
+      opacity: 0.5;
+      text-align: right;
+      &.highlight {
+        opacity: 1;
+      }
+      span {
+        color: $text-opposing-color;
+        padding-right: 0.25rem;
+      }
+    }
   }
   .grow {
     flex-grow: 1;
+  }
+
+  .contextual-notes {
+    margin-top: $block-vertical-spacing;
+  }
+  .note-card {
+    .note-meta {
+      display: flex;
+      align-items: center;
+      span {
+        @include type-style($type-detail);
+        color: $text-secondary-color;
+        &::before {
+          content: "·";
+          margin: 0 0.5rem;
+        }
+      }
+    }
+    p {
+      @include type-style($type-body);
+      margin: 0.25rem 0 1rem 0;
+    }
   }
 </style>

@@ -123,6 +123,7 @@
       border: 0;
       outline: 0;
       appearance: none;
+      -webkit-appearance: none;
 
       &:focus,
       &:focus-visible {

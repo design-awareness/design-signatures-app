@@ -36,6 +36,24 @@ export function insertIntoEntryTable(
   weekTable.set(day, entry);
 }
 
+export function removeFromEntryTable(
+  table: EntryTable,
+  entry: AsyncEntry,
+  reportingPeriod: AsyncProject["reportingPeriod"],
+  periodAlignment: Weekday
+): void {
+  let week = toDateString(floorDateToWeekday(entry.period, periodAlignment));
+  let day = reportingPeriod === "week" ? week : toDateString(entry.period);
+
+  let weekTable = table.get(week);
+  if (weekTable) {
+    weekTable.delete(day);
+    if (weekTable.size === 0) {
+      table.delete(week);
+    }
+  }
+}
+
 export function sumActivityTimes(
   entries: Iterable<AsyncEntry>,
   activityCount: number
