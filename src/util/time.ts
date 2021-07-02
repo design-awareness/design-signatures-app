@@ -16,6 +16,19 @@ export function shortDuration(total: number) {
   }
 }
 
+export function expressiveDurationM(mins: number) {
+  let { minutes, hours } = splitDuration(mins * 60 * 1000);
+  if (hours) {
+    let str = hours + "h";
+    if (minutes) {
+      str += " " + pad(minutes) + "m";
+    }
+    return str;
+  } else {
+    return minutes + "m";
+  }
+}
+
 export function pad(n: number) {
   return ("0" + n).substr(-2);
 }
