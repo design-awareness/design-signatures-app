@@ -168,3 +168,6 @@ $timeline-gridline-color: getvar(timeline-gridline);
 
 // COLLAPSABLE CARDS
 $collapse-card-background: getvar(modal-background);
+$collapse-card-border-color: getvar(input-border);
+$collapse-padding-vertical: 1rem;
+$collapse-padding-horizontal: 0.5rem;

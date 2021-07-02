@@ -21,9 +21,9 @@
     <Accordion>
       {#each reflectionQuestions as { name, questions }}
         <AccordionItem key={name}>
-          <h2 slot="header" class="cat-name">
+          <h3 slot="header" class="cat-name">
             {name}
-          </h2>
+          </h3>
           <div slot="body" class="questions">
             <ul>
               {#each questions as question}
@@ -37,14 +37,25 @@
   </ContentFrame>
 </main>
 
-<style>
+<style lang="scss">
   @import "src/styles/tokens";
   @import "src/styles/type";
 
   .cat-name {
-    border-radius: 1rem 1rem 0 0;
+    border-radius: .5rem .5rem 0 0;
+    border: $collapse-card-border-color;
+    background-color: $modal-background-color;
+    margin-bottom: 0;
+    padding: $collapse-padding-horizontal $collapse-padding-vertical;
   }
   .questions {
-    border-radius: 0 0 1rem 1rem;
+    border-radius: 0 0 .5rem .5rem;
+    border: $collapse-card-border-color;
+    background-color: $modal-background-color;
+    padding: $collapse-padding-horizontal $collapse-padding-vertical;
+  }
+  li{
+    list-style-type: decimal;
+    line-height: 2rem;
   }
 </style>
