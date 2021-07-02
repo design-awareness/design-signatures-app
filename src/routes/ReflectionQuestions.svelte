@@ -21,9 +21,9 @@
     <Accordion>
       {#each reflectionQuestions as { name, questions }}
         <AccordionItem key={name}>
-          <h3 slot="header" class="cat-name">
+          <h4 slot="header" class="cat-name">
             {name}
-          </h3>
+          </h4>
           <div slot="body" class="questions">
             <ul>
               {#each questions as question}
@@ -41,21 +41,32 @@
   @import "src/styles/tokens";
   @import "src/styles/type";
 
+  :global(.accordion-item) {
+    box-shadow: $collapse-card-boxshadow;
+  }
   .cat-name {
     border-radius: .5rem .5rem 0 0;
     border: $collapse-card-border-color;
-    background-color: $modal-background-color;
+    background-color: $collapse-card-background;
     margin-bottom: 0;
-    padding: $collapse-padding-horizontal $collapse-padding-vertical;
+    padding: $collapse-padding-vertical;
+    color: $collapse-category-color;
+    font-weight: 600;
   }
   .questions {
     border-radius: 0 0 .5rem .5rem;
     border: $collapse-card-border-color;
-    background-color: $modal-background-color;
-    padding: $collapse-padding-horizontal $collapse-padding-vertical;
+    background-color: $collapse-card-background;
+    padding: $collapse-padding-vertical;
+    padding-top: $collapse-padding-horizontal;
+    color: $collapse-secondary-text;
+  }
+  ul{
+    margin: 0;
+    padding-inline-start: $collapse-padding-vertical;
   }
   li{
     list-style-type: decimal;
-    line-height: 2rem;
+    padding-top: $collapse-padding-vertical;
   }
 </style>
