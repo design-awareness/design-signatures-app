@@ -572,6 +572,12 @@
         </div>
       {/if}
 
+      <div class="reflect-button">
+        <Button on:click={async () => await push("/reflect/")}>
+          Reflect
+        </Button>
+      </div>
+
       <PageSeparator />
 
       <!-- FIXME: add notes  -->
@@ -838,6 +844,11 @@
     flex-grow: 1;
   }
 
+  .reflect-button{
+    display: flex;
+    justify-content: flex-end;
+    margin: 1rem 0;
+  }
   .contextual-notes {
     margin-top: $block-vertical-spacing;
   }
