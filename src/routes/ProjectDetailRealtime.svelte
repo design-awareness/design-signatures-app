@@ -1,6 +1,7 @@
 <script lang="ts">
   import { push } from "svelte-spa-router/Router.svelte";
   import BackButton from "../components/BackButton.svelte";
+  import Button from "../components/Button.svelte";
   import BottomActionBar from "../components/BottomActionBar.svelte";
   import ContentFrame from "../components/layout/ContentFrame.svelte";
   import ProjectMenu from "../components/ProjectMenu.svelte";
@@ -29,6 +30,12 @@
     <p class="description">{project.description}</p>
     <SectionHeader>Tracking overview</SectionHeader>
     <RichTimeline {project} scalable />
+
+    <div class="reflect-button">
+      <Button on:click={async () => await push("/reflect/")}>
+        Reflect
+      </Button>
+    </div>
 
     <!-- FIXME: This should have both project and session-level notes?  -->
     <SectionHeader>Project comments</SectionHeader>
@@ -80,6 +87,12 @@
   .top-bar {
     display: flex;
     justify-content: space-between;
+  }
+
+  .reflect-button{
+    display: flex;
+    justify-content: flex-end;
+    margin: 1rem 0;
   }
 
   .note-meta {
