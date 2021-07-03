@@ -371,11 +371,11 @@
         <Modal
           bind:visible={bindModalOpen}
           status="Tracking is paused."
-          title="Tracking options"
+          title="Tracking Options"
           buttons={[{ label: "Done", onClick: closeModal }]}
         >
           <Button on:click={replaceModal("undo")} icon={undoIcon}
-            >Undo Tracking</Button
+            >Undo tracking</Button
           >
           <SelectField
             label="Timer"
@@ -405,7 +405,7 @@
         <Modal
           bind:visible={bindModalOpen}
           status="Tracking is paused"
-          title={editingActivity ? "Edit activity" : selectedActivity.name}
+          title={editingActivity ? "Edit Activity" : selectedActivity.name}
           buttons={editingActivity ? infoButtonsEditing : infoButtons}
         >
           {#if editingActivity}

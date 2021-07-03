@@ -35,10 +35,10 @@
 
 <ContentFrame>
   <BackButton href="/dev/component-library/" />
-  <Header>Static canvas</Header>
+  <Header>Static Canvas</Header>
   <button on:click={triggerDraw1}>trigger redraw ({i1})</button>
   <canvas use:canvasAction1 />
-  <Header>Animated canvas</Header>
+  <Header>Animated Canvas</Header>
   <canvas use:canvasAction2 />
 </ContentFrame>
 

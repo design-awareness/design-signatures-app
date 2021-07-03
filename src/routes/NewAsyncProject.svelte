@@ -63,7 +63,7 @@
   {#if !(params.wild === BUILDER_SUFFIX || params.wild === BUILDER_MODAL_SUFFIX)}
     <ContentFrame>
       <BackButton href="/new/" />
-      <Header>Create project</Header>
+      <Header>Create Project</Header>
       <InputField
         label="Project name"
         placeholder="My cool project"

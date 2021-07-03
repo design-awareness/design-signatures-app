@@ -25,7 +25,7 @@
 {#if !params.wild}
   <ContentFrame>
     <BackButton href="/dev/" />
-    <Header>Component library</Header>
+    <Header>Component Library</Header>
     <ul>
       {#each Object.entries(components) as [slug, component]}
         <li>

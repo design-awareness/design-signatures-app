@@ -34,7 +34,7 @@
 <Modal
   bind:visible
   status="Tracking is paused"
-  title="Undo tracking"
+  title="Undo Tracking"
   buttons={[
     { label: "Cancel", onClick: closeModal },
     {

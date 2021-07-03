@@ -386,7 +386,7 @@
         <BackButton href="/" />
         <ProjectMenu bind:project />
       </div>
-      <Header>{project.name || "No project here!"}</Header>
+      <Header>{project.name}</Header>
       <p class="description">{project.description}</p>
 
       <PageSeparator />
@@ -583,7 +583,7 @@
     </ContentFrame>
     <Modal
       visible={$querystring === "delete"}
-      title="Delete entry?"
+      title="Delete Entry?"
       closeWithScrim={false}
       buttons={[
         { label: "Cancel", onClick: pop, disabled: isDeletingEntry },

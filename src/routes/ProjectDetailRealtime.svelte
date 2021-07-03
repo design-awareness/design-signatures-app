@@ -58,7 +58,7 @@
       <BackButton href="/" />
       <ProjectMenu bind:project />
     </div>
-    <Header>{project.name || "No project here!"}</Header>
+    <Header>{project.name}</Header>
     <p class="description">{project.description}</p>
 
     <PageSeparator />
