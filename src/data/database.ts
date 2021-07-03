@@ -570,7 +570,7 @@ export function newAsyncProject() {
 export function newDesignModel() {
   return newEntity("DesignModel")[0] as Schema.DesignModel;
 }
-export function newRealtimeProjectNote() {
+export function newProjectNote() {
   return newEntity("ProjectNote")[0] as Schema.ProjectNote;
 }
 export function newRealtimeProject() {

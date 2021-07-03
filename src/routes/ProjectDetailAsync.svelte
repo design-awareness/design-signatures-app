@@ -18,6 +18,7 @@
   import NoteCorner from "../components/NoteCorner.svelte";
   import PageSeparator from "../components/PageSeparator.svelte";
   import ProjectMenu from "../components/ProjectMenu.svelte";
+  import ProjectNotes from "../components/ProjectNotes.svelte";
   import ProjectSummaryAsync from "../components/ProjectSummaryAsync.svelte";
   import SegmentedSelector from "../components/SegmentedSelector.svelte";
   import Header from "../components/type/Header.svelte";
@@ -574,10 +575,11 @@
 
       <ProjectSummaryAsync {project} bind:update={updateSummary} />
 
-      <PageSeparator />
+      {#if project.active || project.notes.length > 0}
+        <PageSeparator />
 
-      <!-- FIXME: add notes  -->
-      <SectionHeader>Project comments</SectionHeader>
+        <ProjectNotes {project} />
+      {/if}
     </ContentFrame>
     <Modal
       visible={$querystring === "delete"}

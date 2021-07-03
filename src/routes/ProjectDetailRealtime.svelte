@@ -6,10 +6,12 @@
   import ContentFrame from "../components/layout/ContentFrame.svelte";
   import PageSeparator from "../components/PageSeparator.svelte";
   import ProjectMenu from "../components/ProjectMenu.svelte";
+  import ProjectNotes from "../components/ProjectNotes.svelte";
   import ProjectSummaryRealtime from "../components/ProjectSummaryRealtime.svelte";
   import RichTimeline from "../components/RichTimeline.svelte";
   import Header from "../components/type/Header.svelte";
   import SectionHeader from "../components/type/SectionHeader.svelte";
+  import { newProjectNote } from "../data/database";
   import { checkNeedsRepair, repair } from "../data/repairRealtimeSession";
   import type { RealtimeProject } from "../data/schema";
   import { shortDuration } from "../util/time";
@@ -39,7 +41,15 @@
     push(`/projects/${project.id}/track/`);
   }
 
-  let showProjectTimestamps = false;
+  function getPreviousSessionTotal(i: number) {
+    let total = 0;
+    for (let j = 0; j < i; j++) {
+      total += project.sessions[j].duration;
+    }
+    return total;
+  }
+
+  let showProjectTimestamps = true;
 </script>
 
 <main class="device-frame page">
@@ -63,32 +73,41 @@
 
     <ProjectSummaryRealtime {project} />
 
-    <PageSeparator />
+    {#if project.sessions?.some((session) => session.notes.length > 0)}
+      <PageSeparator />
 
-    <!-- FIXME: This should have both project and session-level notes?  -->
-    <SectionHeader>Project comments</SectionHeader>
+      <!-- FIXME: This should have both project and session-level notes?  -->
+      <Header>Tracking Notes</Header>
 
-    {#each project.sessions.flatMap((session) => session.notes) as note}
-      <div
-        class="note-meta"
-        on:click={() => (showProjectTimestamps = !showProjectTimestamps)}
-      >
-        {#if showProjectTimestamps}
-          {shortDuration(note.time)} [WRONG!]
-        {:else}
-          {note.created.toLocaleDateString(undefined, {
-            day: "numeric",
-            month: "numeric",
-            year: "2-digit",
-          })}
-          {note.created.toLocaleString(undefined, {
-            hour: "numeric",
-            minute: "2-digit",
-          })}
-        {/if}
-      </div>
-      <div class="content">{note.content}</div>
-    {/each}
+      {#each project.sessions as session, i}
+        {#each session.notes as note}
+          <div
+            class="note-meta"
+            on:click={() => (showProjectTimestamps = !showProjectTimestamps)}
+          >
+            {#if showProjectTimestamps}
+              {shortDuration(getPreviousSessionTotal(i) + note.time)}
+            {:else}
+              {note.created.toLocaleDateString(undefined, {
+                day: "numeric",
+                month: "numeric",
+                year: "2-digit",
+              })}
+              {note.created.toLocaleString(undefined, {
+                hour: "numeric",
+                minute: "2-digit",
+              })}
+            {/if}
+          </div>
+          <div class="content">{note.content}</div>
+        {/each}
+      {/each}
+    {/if}
+
+    {#if project.active || project.notes.length > 0}
+      <PageSeparator />
+      <ProjectNotes {project} />
+    {/if}
 
     {#if project.active}
       <BottomActionBar
