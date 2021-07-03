@@ -1,17 +1,39 @@
 <script lang="ts">
   import { push } from "svelte-spa-router/Router.svelte";
   import BackButton from "../components/BackButton.svelte";
-  import Button from "../components/Button.svelte";
   import BottomActionBar from "../components/BottomActionBar.svelte";
+  import Button from "../components/Button.svelte";
   import ContentFrame from "../components/layout/ContentFrame.svelte";
+  import PageSeparator from "../components/PageSeparator.svelte";
   import ProjectMenu from "../components/ProjectMenu.svelte";
+  import ProjectSummaryRealtime from "../components/ProjectSummaryRealtime.svelte";
   import RichTimeline from "../components/RichTimeline.svelte";
   import Header from "../components/type/Header.svelte";
   import SectionHeader from "../components/type/SectionHeader.svelte";
+  import { checkNeedsRepair, repair } from "../data/repairRealtimeSession";
   import type { RealtimeProject } from "../data/schema";
   import { shortDuration } from "../util/time";
 
   export let project: RealtimeProject;
+
+  // it's possible that the last session could have been corrupted
+  // due to, for example, the user closing the app with tracking in
+  // progress and some activities enabled. Starting at the end,
+  // check sessions and repair if necessary, stopping when a session
+  // doesn't need repairing. More than one should be pretty unlikely :-)
+  if (project.sessions.length > 0) {
+    let sessionIdxToRepair = project.sessions.length - 1;
+    let needsRepair = false;
+    do {
+      let session = project.sessions[sessionIdxToRepair];
+      needsRepair = checkNeedsRepair(session);
+      if (needsRepair) {
+        repair(session);
+        session.save();
+      }
+      sessionIdxToRepair--;
+    } while (needsRepair && sessionIdxToRepair >= 0);
+  }
 
   function startTracking() {
     push(`/projects/${project.id}/track/`);
