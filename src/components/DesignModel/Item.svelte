@@ -7,19 +7,19 @@
   // export let empty = false;
 </script>
 
-<div class="item designmodelcard" class:selected>
+<div class="item card" class:selected>
   {#if !designModel}
-    <p>Start from scratch</p>
+    <p class="inner">Start from scratch</p>
   {:else}
     <div class="header">
-      <p>{designModel.name}</p>
+      <h4>{designModel.name}</h4>
     </div>
-    <div>
-      {#each designModel.activities as {name, code, color}}
-      <div class="activity">
-        <div class="token"><ActivityToken mini color={color} code={code}/></div>
-        <p>{name}</p>
-      </div>
+    <div class="body">
+      {#each designModel.activities as { name, code, color }}
+        <div class="activity">
+          <div class="token"><ActivityToken mini {color} {code} /></div>
+          <p>{name}</p>
+        </div>
       {/each}
     </div>
   {/if}
@@ -30,39 +30,56 @@
   @import "src/styles/tokens";
   @import "src/styles/type";
 
-  div {
-    padding: max(
-        math.div($input-padding-vertical, 2),
-        math.div($input-padding-horizontal, 2)
-      )
-      math.div($input-padding-horizontal, 2);
-  }
-  .designmodelcard {
+  $pad-v: max(
+    math.div($input-padding-vertical, 2),
+    math.div($input-padding-horizontal, 2)
+  );
+  $pad-h: math.div($input-padding-horizontal, 2);
+
+  .card {
     padding: 0;
   }
   .activity {
     padding: 0;
-    display: inline-flex;
+    display: flex;
+    gap: 0.5rem;
     align-items: center;
-    p{
+    p {
       @include type-style($type-caption);
     }
   }
   .token {
-    float:left;
+    display: flex;
     padding-left: 0;
   }
   .header {
     background-color: $design-model-header-background;
+    padding: $pad-v $pad-h;
+    h4 {
+      color: $text-primary-color;
+      @include type-style($type-input);
+      margin: 0;
+    }
   }
+  .body {
+    display: flex;
+    flex-direction: column;
+    gap: $pad-v;
+    padding: $pad-v $pad-h;
+  }
+  .inner {
+    padding: $pad-v $pad-h;
+    text-align: center;
+  }
+
   .selected {
     .header {
       background-color: $design-model-header-selected;
-      font-weight: bold;
     }
     background-color: $input-active-selection-background-color;
     border: $design-model-header-selected;
   }
+
   p {
     margin: 0;
     color: $text-primary-color;

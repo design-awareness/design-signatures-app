@@ -8,7 +8,7 @@
   import InvisibleButton from "../InvisibleButton.svelte";
   import Item from "./Item.svelte";
   import RichLabel from "../RichLabel.svelte";
-  import Masonry from 'svelte-masonry/Masonry.svelte'
+  import Masonry from "svelte-masonry/Masonry.svelte";
 
   export let selectedDesignModel: DesignModel | null = null;
   export let label = "Design Model";
@@ -38,17 +38,20 @@
 {:then designModels}
   <ul class="container">
     {#if withEmpty}
-      <li>
+      <li class="empty">
         <InvisibleButton on:click={() => set(newDesignModel())}>
           <Item />
         </InvisibleButton>
       </li>
     {/if}
-    <Masonry colWidth={'minmax(8rem, 1fr)'} gridGap={'1rem'}>
+    <Masonry colWidth={"minmax(10rem, 1fr)"} gridGap={"1rem"}>
       {#each sortBy("wellKnown", sortBy("name", designModels)) as designModel}
         <li>
           <InvisibleButton on:click={() => set(designModel)}>
-            <Item {designModel} selected={designModel === selectedDesignModel} />
+            <Item
+              {designModel}
+              selected={designModel === selectedDesignModel}
+            />
           </InvisibleButton>
         </li>
       {/each}
@@ -60,19 +63,25 @@
   @import "src/styles/tokens";
   @import "src/styles/type";
   .container {
-    // border: $input-border-size solid $input-border-color;
     border-radius: $input-border-radius;
     background-color: none;
     list-style-type: none;
     margin: 0;
     padding: 0;
     overflow: none;
+    > :global(div) {
+      padding: 0;
+    }
   }
   li {
     background-color: $input-background-color;
     padding: 0;
     border-radius: 4px;
-    margin: 0 0 $block-vertical-spacing 0;
+    overflow: hidden;
+    margin: 0;
     border: $input-border-size solid $input-border-color;
+  }
+  .empty {
+    margin-bottom: 1rem;
   }
 </style>
