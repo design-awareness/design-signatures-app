@@ -28,14 +28,20 @@
     </div>
     <Header>{project.name || "No project here!"}</Header>
     <p class="description">{project.description}</p>
-    <SectionHeader>Tracking overview</SectionHeader>
+
+    <PageSeparator />
+
     <RichTimeline {project} scalable />
 
     <div class="reflect-button">
-      <Button on:click={async () => await push("/reflect/")}>
-        Reflect
-      </Button>
+      <Button on:click={async () => await push("/reflect/")}>Reflect</Button>
     </div>
+
+    <PageSeparator />
+
+    <ProjectSummaryRealtime {project} />
+
+    <PageSeparator />
 
     <!-- FIXME: This should have both project and session-level notes?  -->
     <SectionHeader>Project comments</SectionHeader>
@@ -89,7 +95,7 @@
     justify-content: space-between;
   }
 
-  .reflect-button{
+  .reflect-button {
     display: flex;
     justify-content: flex-end;
     margin: 1rem 0;
