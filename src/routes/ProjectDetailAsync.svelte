@@ -18,6 +18,8 @@
   import NoteCorner from "../components/NoteCorner.svelte";
   import PageSeparator from "../components/PageSeparator.svelte";
   import ProjectMenu from "../components/ProjectMenu.svelte";
+  import ProjectNotes from "../components/ProjectNotes.svelte";
+  import ProjectSummaryAsync from "../components/ProjectSummaryAsync.svelte";
   import SegmentedSelector from "../components/SegmentedSelector.svelte";
   import Header from "../components/type/Header.svelte";
   import SectionHeader from "../components/type/SectionHeader.svelte";
@@ -65,20 +67,13 @@
   let activeEntry: AsyncEntry | null = null;
   let pointMax: number = 0;
 
-  let projectTotals: number[];
-  function updateProjectTotals() {
-    projectTotals = sumActivityTimes(
-      project.entries,
-      project.designModel.activities.length
-    ).map(({ value }) => value);
-  }
-  updateProjectTotals();
-
   let selectedActivity = -1;
 
   let userDate: string = toDateString(viewDate);
   let userDateField: HTMLInputElement;
   let showUserDate = false;
+
+  let updateSummary: () => void;
 
   /**
    * Change to a particular date. If not given, recalculates based on the
@@ -268,7 +263,7 @@
     if (showEntry && !activeEntry) pop();
     if (wasShowingEntry && !showEntry && activeEntry && activeEntry.dirty) {
       project.save();
-      updateProjectTotals();
+      updateSummary?.();
     }
     wasShowingEntry = showEntry;
   }
@@ -321,7 +316,7 @@
     project.modified = new Date();
     await project.save();
     calculateEntryGraph();
-    updateProjectTotals();
+    updateSummary?.();
     wasShowingEntry = false;
     await pop();
   }
@@ -348,7 +343,7 @@
       activeEntry = null;
       await entryToDelete.remove();
       await project.save();
-      updateProjectTotals();
+      updateSummary?.();
     }
     await pop();
     isDeletingEntry = false;
@@ -391,7 +386,7 @@
         <BackButton href="/" />
         <ProjectMenu bind:project />
       </div>
-      <Header>{project.name || "No project here!"}</Header>
+      <Header>{project.name}</Header>
       <p class="description">{project.description}</p>
 
       <PageSeparator />
@@ -573,19 +568,22 @@
       {/if}
 
       <div class="reflect-button">
-        <Button on:click={async () => await push("/reflect/")}>
-          Reflect
-        </Button>
+        <Button on:click={async () => await push("/reflect/")}>Reflect</Button>
       </div>
 
       <PageSeparator />
 
-      <!-- FIXME: add notes  -->
-      <SectionHeader>Project comments</SectionHeader>
+      <ProjectSummaryAsync {project} bind:update={updateSummary} />
+
+      {#if project.active || project.notes.length > 0}
+        <PageSeparator />
+
+        <ProjectNotes {project} />
+      {/if}
     </ContentFrame>
     <Modal
       visible={$querystring === "delete"}
-      title="Delete entry?"
+      title="Delete Entry?"
       closeWithScrim={false}
       buttons={[
         { label: "Cancel", onClick: pop, disabled: isDeletingEntry },
@@ -639,12 +637,16 @@
   $context-control-height: 2rem;
   $column-header-height: 1.5rem;
   $controls-vertical-space: 0.25rem;
-  $horizontal-gap: 0.25rem;
-  $vertical-cell-gap: 0.25rem;
 
   // FIXME: tokenize
+  // IMPORTANT: update in BarChart also!
+  $horizontal-gap: 0.25rem;
+  // IMPORTANT: update in BarChart also!
+  $vertical-cell-gap: 0.25rem;
   // IMPORTANT: update in DotGridCell also!
+  // IMPORTANT: update in BarChart also!
   $cell-height: 2.5rem;
+  // IMPORTANT: update in BarChart also!
   $bar-height: 2rem;
 
   .dotgrid {
@@ -652,6 +654,7 @@
       display: flex;
       align-items: flex-end;
     }
+    // FIXME: duplicated in BarChart.svelte
     &-activities {
       display: flex;
       flex-direction: column;
@@ -836,7 +839,7 @@
       }
       span {
         color: $text-opposing-color;
-        padding-right: 0.25rem;
+        padding-right: 0.5rem;
       }
     }
   }
@@ -844,7 +847,7 @@
     flex-grow: 1;
   }
 
-  .reflect-button{
+  .reflect-button {
     display: flex;
     justify-content: flex-end;
     margin: 1rem 0;

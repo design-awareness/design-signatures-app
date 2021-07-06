@@ -106,7 +106,7 @@
 
 <Modal
   bind:visible={editProjectOpen}
-  title="Edit project"
+  title="Edit Project"
   buttons={[{ label: "Save", onClick: saveInfo }]}
 >
   <InputField label="Name" placeholder="" bind:value={editName} />
@@ -115,7 +115,7 @@
 
 <Modal
   bind:visible={deleteProjectOpen}
-  title="Delete project"
+  title="Delete Project"
   buttons={[
     {
       label: "Cancel",
@@ -135,7 +135,7 @@
 
 <Modal
   bind:visible={toggleProjectCompleteOpen}
-  title="{project.active ? 'Archive' : 'Unarchive'} this project?"
+  title="{project.active ? 'Archive' : 'Unarchive'} This Project?"
   buttons={[
     {
       label: "Cancel",

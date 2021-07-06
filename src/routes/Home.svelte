@@ -14,7 +14,7 @@
   <PageHeader />
 
   <ContentFrame>
-    <Header>Recent projects</Header>
+    <Header>Recent Projects</Header>
 
     <HorizontalScrollArea>
       <ul>
@@ -41,11 +41,9 @@
 
     <div class="button-holder">
       <Button on:click={async () => await push("/projects/")}>
-        All Projects
+        All projects
       </Button>
-      <Button on:click={async () => await push("/reflect/")}>
-        Reflect
-      </Button>
+      <Button on:click={async () => await push("/reflect/")}>Reflect</Button>
     </div>
 
     {#if location.hostname.indexOf("design") === -1}
@@ -97,7 +95,7 @@
       margin-bottom: 1.5rem;
     }
   }
-  .button-holder{
+  .button-holder {
     display: flex;
     justify-content: space-between;
   }

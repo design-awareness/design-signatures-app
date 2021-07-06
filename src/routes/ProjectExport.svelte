@@ -1,35 +1,39 @@
 <script lang="ts">
+  import loadingIcon from "@iconify-icons/ic/baseline-hourglass-empty";
+  import notFoundIcon from "@iconify-icons/ic/baseline-search-off";
   import BackButton from "../components/BackButton.svelte";
   import BottomActionBar from "../components/BottomActionBar.svelte";
   import ContentFrame from "../components/layout/ContentFrame.svelte";
+  import Link from "../components/Link.svelte";
   import RichTimeline from "../components/RichTimeline.svelte";
   import SelectField from "../components/SelectField.svelte";
+  import SplashScreen from "../components/SplashScreen.svelte";
   import Header from "../components/type/Header.svelte";
   import SectionHeader from "../components/type/SectionHeader.svelte";
-  import { getRealtimeProject } from "../data/database";
-  import type { RealtimeProject } from "../data/schema";
+  import { getProjectOrFail, getRealtimeProject } from "../data/database";
+  import type { AsyncProject, RealtimeProject } from "../data/schema";
   import download from "../util/download";
 
   export let params: { id: string };
 
-  // FIXME: handle exporting both project types
-  let projectPromise: Promise<RealtimeProject>;
-  projectPromise = getRealtimeProject(params.id);
+  let projectPromise = getProjectOrFail(params.id);
 
-  let project: RealtimeProject;
-  projectPromise.then((p) => (project = p));
+  let project: RealtimeProject | AsyncProject;
+  projectPromise.then(([_, p]) => (project = p));
 
-  let exportType = "image";
+  let exportType = "data";
 
-  let imageSize = 500;
+  // FIXME: add support for exporting project visualizations
 
-  let timelineRef: HTMLElement;
-  function setTimeline(ref: HTMLElement) {
-    timelineRef = ref;
-  }
+  // let imageSize = 500;
+
+  // let timelineRef: HTMLElement;
+  // function setTimeline(ref: HTMLElement) {
+  //   timelineRef = ref;
+  // }
 
   async function doExport() {
-    if (exportType === "image") {
+    /*if (exportType === "image") {
       download(
         "export.svg",
         "image/svg+xml",
@@ -42,34 +46,40 @@
           )
           .toString() as string
       );
-    } else if (exportType === "data") {
-      if (!project) await projectPromise;
-      download(
-        // FIXME: use filename based on project name
-        "export.json",
-        "application/json",
-        project.serialize()
-      );
-    }
+    } else if (exportType === "data") {*/
+    if (!project) await projectPromise;
+    download(
+      `${safeName(project.name)}.json`,
+      "application/json",
+      project.serialize()
+    );
+    //}
+  }
+
+  function safeName(name: string) {
+    return name.trim().replace(/[\W\:\/\\]+/g, "-");
   }
 </script>
 
-<main class="device-frame page">
-  <ContentFrame>
-    <BackButton href="/" />
-    {#await projectPromise}
-      <p>loading…</p>
-    {:then _}
-      <Header>Export {project.name}</Header>
-      <SelectField
-        label="Type"
-        bind:value={exportType}
-        options={[
-          ["image", "Timeline image (SVG)"],
-          ["data", "Session data (JSON)"],
-        ]}
-      />
-      {#if exportType === "image"}
+{#await projectPromise}
+  <SplashScreen icon={loadingIcon} label="Loading project…" delay={100} />
+{:then [_, project]}
+  <main class="device-frame page">
+    <ContentFrame>
+      <BackButton href="/" />
+      {#await projectPromise}
+        <p>loading…</p>
+      {:then _}
+        <Header>Export {project.name}</Header>
+        <SelectField
+          label="Type"
+          bind:value={exportType}
+          options={[
+            // ["image", "Timeline image (SVG)"],
+            ["data", "Project data (JSON)"],
+          ]}
+        />
+        <!-- {#if exportType === "image"}
         <SelectField
           label="Size"
           bind:value={imageSize}
@@ -84,18 +94,24 @@
         <SectionHeader>Preview</SectionHeader>
         <div use:setTimeline>
           <RichTimeline {project} width={imageSize} fixedCodes={false} />
-        </div>
-      {:else if exportType === "data"}
+        </div> -->
+        <!-- {:else if exportType === "data"} -->
         <p>
           <a href="https://data.design-awareness.com/" target="_blank"
             >Learn more about the design awareness data export format</a
           >
         </p>
-      {/if}
-      <BottomActionBar label="Export" on:click={doExport} />
-    {/await}
-  </ContentFrame>
-</main>
+        <!-- {/if} -->
+        <BottomActionBar label="Export" on:click={doExport} />
+      {/await}
+    </ContentFrame>
+  </main>
+{:catch}
+  <SplashScreen icon={notFoundIcon} label="Project not found.">
+    <Link href="/">Go home</Link>
+    <Link href="/projects/">All projects</Link>
+  </SplashScreen>
+{/await}
 
 <style lang="scss">
   @import "src/styles/tokens";

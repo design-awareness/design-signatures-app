@@ -1,6 +1,6 @@
 export function sortBy<P extends Record<string, any>>(
   key: keyof P,
-  list: P[],
+  list: readonly P[],
   ascending = true
 ): P[] {
   return sortWith((el) => el[key], list, ascending);
@@ -8,12 +8,12 @@ export function sortBy<P extends Record<string, any>>(
 
 export function sortWith<P, Q>(
   transformer: (arg0: P) => Q,
-  list: P[],
+  list: readonly P[],
   ascending = true
 ): P[] {
-  list = [...list]; // copy - sort() mutates!
+  let newList = [...list]; // copy - sort() mutates!
   const sign = ascending ? 1 : -1;
-  list.sort((a, b) => {
+  newList.sort((a, b) => {
     const _a = transformer(a);
     const _b = transformer(b);
     if (_a > _b) {
@@ -24,5 +24,5 @@ export function sortWith<P, Q>(
       return 0;
     }
   });
-  return list;
+  return newList;
 }

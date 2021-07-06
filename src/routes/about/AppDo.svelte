@@ -7,7 +7,7 @@
 <main class="device-frame page">
   <ContentFrame>
     <BackButton href="/" />
-    <Header>What does this app do?</Header>
+    <Header>What Does This App Do?</Header>
     <p>
       The design awareness app helps designers monitor their own design
       processes with a goal of modifying their process when they think they are

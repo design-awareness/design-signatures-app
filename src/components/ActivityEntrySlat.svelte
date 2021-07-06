@@ -147,7 +147,7 @@
       border-radius: $input-border-radius;
       padding: math.div($input-padding-vertical, 2)
         math.div($input-padding-horizontal, 2);
-      text-align: right;
+      text-align: left;
       &:disabled {
         border-color: transparent;
         background-color: transparent;

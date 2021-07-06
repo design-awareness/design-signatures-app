@@ -95,7 +95,7 @@
 
 <ContentFrame>
   <BackButton href="/" />
-  <Header>Developer tools</Header>
+  <Header>Developer Tools</Header>
   <p>
     <Link href="/dev/DBEditor">Database inspector</Link>
   </p>
@@ -103,7 +103,7 @@
     <Link href="/dev/component-library/">Component library</Link>
   </p>
 
-  <Header>Developer configuration</Header>
+  <Header>Developer Configuration</Header>
   <p>
     Prevent reload/close while tracking:
     <button
@@ -114,9 +114,9 @@
     >
   </p>
 
-  <Header>Device properties</Header>
+  <Header>Device Properties</Header>
   <p>Color scheme: {$colorScheme}</p>
 
-  <Header>Danger zone</Header>
+  <Header>Danger Zone</Header>
   <p>Purge the entire database: <button on:click={deleteAll}>purge</button></p>
 </ContentFrame>

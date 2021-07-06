@@ -33,7 +33,7 @@
   <main class="device-frame page">
     <ContentFrame>
       <BackButton href="/" />
-      <Header>All projects</Header>
+      <Header>All Projects</Header>
       <ul>
         {#each projects as { id }}
           <li>
