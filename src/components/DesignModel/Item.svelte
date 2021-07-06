@@ -9,7 +9,7 @@
 
 <div class="item designmodelcard" class:selected>
   {#if !designModel}
-    <p>Start from scratch</p>
+    <p class="from-scratch">Start from scratch</p>
   {:else}
     <div class="header">
       <p>{designModel.name}</p>
@@ -30,6 +30,9 @@
   @import "src/styles/tokens";
   @import "src/styles/type";
 
+  .from-scratch{
+    text-align: center;
+  }
   div {
     padding: max(
         math.div($input-padding-vertical, 2),
