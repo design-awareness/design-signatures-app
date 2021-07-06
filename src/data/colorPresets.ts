@@ -1,6 +1,6 @@
 export default [
   ["530D17", "FF9EA5"],
-  ["AE1E60", "D93FC0"],
+  ["AE1E60", "FFFFFF"],
   ["DE1B54", "FF4D70"],
   ["F06E0A", "FF8324"],
   ["B3820F", "EFC31A"],
