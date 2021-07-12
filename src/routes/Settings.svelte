@@ -85,6 +85,13 @@
     <BackButton href="/" />
     <Header>Settings</Header>
 
+    <SectionHeader>Import</SectionHeader>
+    <p>
+      <Button small on:click={() => replace("/import/")}>
+        Import a project
+      </Button>
+    </p>
+
     <SectionHeader>Design models</SectionHeader>
     <p>
       <Button small on:click={deleteUnusedModels}>
