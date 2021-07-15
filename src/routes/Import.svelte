@@ -114,8 +114,9 @@
       });
       buildDryRunResults(result);
     } catch (e) {
+      errorStack = e?.stack;
       console.error(e);
-      return bail("This file can't be imported.", e?.message);
+      bail("This file can't be imported.", e?.message);
     }
   }
 
