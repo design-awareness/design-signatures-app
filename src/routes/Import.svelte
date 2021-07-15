@@ -286,6 +286,7 @@
   }
 
   let projectID: string = "";
+  let errorStack: string | undefined = undefined;
   async function doImport() {
     state = "importing";
     try {
@@ -314,8 +315,15 @@
       projectID = result.entity.id;
       state = "done";
     } catch (e) {
+      errorStack = e?.stack;
       console.error(e);
       bail("An error occured while importing.", e?.message);
+    }
+  }
+
+  function copyStack() {
+    if (errorStack) {
+      navigator.clipboard?.writeText?.(errorStack);
     }
   }
 </script>
@@ -337,9 +345,18 @@
       {#if errDetail}
         {#if showErr}
           <p class="error-detail status">{errDetail}</p>
+          {#if errorStack}
+            <pre>{errorStack}</pre>
+          {/if}
         {/if}
-        <Button small on:click={() => (showErr = !showErr)}
-          >{showErr ? "Hide" : "Show"} details</Button
+        <div class="button-area">
+          <Button small on:click={() => (showErr = !showErr)}
+            >{showErr ? "Hide" : "Show"} details</Button
+          >
+          {#if showErr && errorStack}
+            <Button small on:click={copyStack}>Copy to clipboard</Button>
+          {/if}
+        </div>
         >
       {/if}
     {/if}
@@ -433,5 +450,13 @@
     @include type-style($type-detail);
     color: $text-secondary-color;
     margin-top: 0.5rem;
+  }
+
+  pre {
+    background-color: $alt-background-color;
+    padding: 1rem;
+    overflow: auto;
+    @include type-style($type-caption);
+    color: $text-secondary-color;
   }
 </style>
