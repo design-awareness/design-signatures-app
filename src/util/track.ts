@@ -225,6 +225,15 @@ export default class SessionTracker {
       return mutableData;
     });
 
+    // remove notes from later than the rewound-to time
+    this.session.notes = this.session.notes.filter((note) => {
+      if (note.time > time) {
+        note.remove();
+        return false;
+      }
+      return true;
+    });
+
     this.invalidate();
   }
 
