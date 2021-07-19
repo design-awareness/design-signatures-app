@@ -9,11 +9,9 @@
 
   let duration = 0;
   let sessions: RealtimeSession[] = [];
-  let i = project.sessions.length - 1;
-  while (duration < MAX_DURATION && i >= 0) {
-    sessions.unshift(project.sessions[i]);
+  for (let i = 0; duration < MAX_DURATION && i < project.sessions.length; i++) {
+    sessions.push(project.sessions[i]);
     duration += project.sessions[i].duration;
-    i--;
   }
 
   let priorDuration = 0;
@@ -33,8 +31,7 @@
   {#if project.sessions?.length}
     <svg
       preserveAspectRatio="none"
-      viewBox="{Math.max(0, duration - MAX_DURATION) / 1000} 0 {duration /
-        1000} {colors.length}"
+      viewBox="0 0 {Math.min(duration, MAX_DURATION) / 1000} {colors.length}"
       xmlns="http://www.w3.org/2000/svg"
     >
       {#each renderData as { data, priorDuration }}
@@ -42,7 +39,7 @@
           {#each points as [start, end]}
             <rect
               x={(priorDuration + start - 1) / 1000}
-              width={(end - start) / 1000}
+              width={Math.max(0, (end - start) / 1000)}
               y={i}
               height={1}
               style="--color-light: #{colors[i][0]}; --color-dark: #{colors[
