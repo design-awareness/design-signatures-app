@@ -19,6 +19,16 @@
 
   export let isTotalRow = false;
   export let isTotalDisabled = false;
+
+  function select(this: HTMLInputElement) {
+    // We don't use select() because this seems to show the context menu, too
+    // which obscures previous inputs. However, Chrome doesn't support
+    // setSelectionRange on number inputs. Setting the type to text temporarily
+    // seems to work for this.
+    this.type = "text";
+    this.setSelectionRange(0, this.value.length);
+    this.type = "number";
+  }
 </script>
 
 <div
@@ -43,6 +53,7 @@
       type="number"
       bind:value
       on:blur
+      on:focus={select}
       disabled={isTotalDisabled}
       min={0}
     />
