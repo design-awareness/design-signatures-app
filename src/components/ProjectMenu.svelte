@@ -54,6 +54,7 @@
     editName = editName.trim();
     editDescription = editDescription.trim();
     if (editName === project.name && editDescription === project.description) {
+      editProjectOpen = false;
       return;
     }
     if (!editName) editName = project.name;
