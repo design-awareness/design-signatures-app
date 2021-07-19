@@ -2,6 +2,7 @@
   import { getProjectOrFail } from "../data/database";
   import type { AsyncProject, RealtimeProject } from "../data/schema";
   import { hasOwnProperty } from "../types/utility";
+  import CardDotGrid from "./CardDotGrid.svelte";
   import CardTimeline from "./CardTimeline.svelte";
 
   export let newProjectPlaceholder = false;
@@ -42,7 +43,7 @@
         {#if hasOwnProperty(project, "sessions") && project.sessions.length}
           <CardTimeline {project} />
         {:else if hasOwnProperty(project, "entries")}
-          Async({project.reportingPeriod})
+          <CardDotGrid {project} />
         {/if}
       {/if}
     </div>
