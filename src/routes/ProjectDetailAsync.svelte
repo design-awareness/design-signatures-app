@@ -6,10 +6,12 @@
   import deleteIcon from "@iconify-icons/ic/baseline-delete";
   import editIcon from "@iconify-icons/ic/baseline-edit";
   import infoIcon from "@iconify-icons/ic/baseline-info";
+  import bellIcon from "@iconify-icons/ic/baseline-notifications-none";
   import Icon from "@iconify/svelte/dist/Icon.svelte";
   import { tick } from "svelte";
   import { pop, push, querystring } from "svelte-spa-router";
   import ActivityToken from "../components/ActivityToken.svelte";
+  import Alert from "../components/Alert.svelte";
   import BackButton from "../components/BackButton.svelte";
   import Button from "../components/Button.svelte";
   import DotGridCell from "../components/DotGridCell.svelte";
@@ -390,6 +392,13 @@
       <p class="description">{project.description}</p>
 
       <PageSeparator />
+
+      {#if project.entries.length === 0}
+        <Alert type="info" icon={bellIcon}>
+          <strong>Document your first entry!</strong>
+          Select a time interval below to add an entry.
+        </Alert>
+      {/if}
 
       <div class="dotgrid-header">
         <h2><strong>{viewMonthDisplay}</strong> {viewYearDisplay}</h2>
