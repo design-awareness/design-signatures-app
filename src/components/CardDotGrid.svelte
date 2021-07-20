@@ -1,12 +1,11 @@
 <script lang="ts">
   import type { AsyncEntry, AsyncProject } from "../data/schema";
-  import { makeEntryTable } from "../util/asyncEntry";
   import { makeCanvasAction } from "../util/canvas";
   import { colorScheme } from "../util/colorScheme";
 
   export let project: AsyncProject;
 
-  const ENTRIES_TO_SHOW = 3;
+  const ENTRIES_TO_SHOW = 4;
   const TAU = 2 * Math.PI;
   const PADDING_PX = 2;
 
