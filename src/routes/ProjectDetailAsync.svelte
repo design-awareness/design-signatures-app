@@ -576,9 +576,12 @@
         </div>
       {/if}
 
-      <div class="reflect-button">
-        <Button on:click={async () => await push("/reflect/")}>Reflect</Button>
-      </div>
+      {#if project.entries.length !== 0}
+        <div class="reflect-button">
+          <Button on:click={async () => await push("/reflect/")}>Reflect</Button
+          >
+        </div>
+      {/if}
 
       <PageSeparator />
 

@@ -65,9 +65,11 @@
 
     <RichTimeline {project} scalable />
 
-    <div class="reflect-button">
-      <Button on:click={async () => await push("/reflect/")}>Reflect</Button>
-    </div>
+    {#if project.sessions.length !== 0}
+      <div class="reflect-button">
+        <Button on:click={async () => await push("/reflect/")}>Reflect</Button>
+      </div>
+    {/if}
 
     <PageSeparator />
 
