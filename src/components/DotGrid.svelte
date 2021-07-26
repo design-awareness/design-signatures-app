@@ -742,6 +742,7 @@
       background-color: transparent;
       border-radius: 0.01px;
       padding: 0;
+      color: $text-primary-color;
     }
     &-definition-row {
       display: flex;
