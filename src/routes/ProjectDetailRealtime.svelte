@@ -67,7 +67,15 @@
 
     {#if project.sessions.length !== 0}
       <div class="reflect-button">
-        <Button on:click={async () => await push("/reflect/")}>Reflect</Button>
+        <Button on:click={async () => await push("/reflect/")}>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440.7 470.4" class="reflect-icon">
+            <path d="M84.3 334.5C-68 183.8 49.5 12.8 205.1 15.7c125.2 2.3 175 90.7 178.6 140.6.8 11.5-.8 34.2-4.5 38.3l46.6 97.2-37.2.9s4 45.4 3.2 53.8c-3.3 34-11.1 42.5-81.5 40.4l1.5 66.9H104.1v-72.9" fill="none" stroke-width="25" stroke-linecap="square" stroke-linejoin="round" stroke-miterlimit="10"/>
+            <g stroke-miterlimit="10"><path d="M145.4 316.1L62.6 446 24 412.6l91-117.8c-61.5-60-42.9-140.7.3-187.2s117.2-51.3 175.1 1.3c64.1 58.3 42.2 135.5 13.7 174.1-28.8 39.1-84.5 64.8-158.7 33.1z" fill="none" stroke-width="33" stroke-linejoin="round"/>
+              <path d="M121.011 279.458l36.054 26.086-99.01 136.843L22.003 416.3z" stroke-width="1.00003"/>
+            </g>
+          </svg>
+          Reflect
+        </Button>
       </div>
     {/if}
 
