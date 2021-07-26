@@ -1,9 +1,7 @@
 <script lang="ts">
-  import data from "@iconify-icons/ic/baseline-arrow-back";
-
   import type { RealtimeProject } from "../data/schema";
-  import { sumActivityTimes } from "../util/asyncEntry";
-  import { fromDate, MONTH_SHORT_NAME } from "../util/date";
+  import { MONTH_SHORT_NAME } from "../util/date";
+  import { expressiveDurationM } from "../util/time";
   import ProjectSummary from "./ProjectSummary.svelte";
 
   export let project: RealtimeProject;
@@ -16,6 +14,11 @@
     )
   );
   let activityTotals = sums.map((v) => v / 1000 / 60);
+
+  let totalDuration = project.sessions.reduce(
+    (acc, session) => acc + session.duration,
+    0
+  );
 
   let firstLast: [string, string];
   if (project.sessions.length === 0) {
@@ -50,3 +53,4 @@
   {firstLast}
   firstLastType="session"
 />
+<p>Total time logged: {expressiveDurationM(totalDuration / 60 / 1000)}</p>

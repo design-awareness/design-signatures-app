@@ -55,6 +55,8 @@
   .header {
     background-color: $design-model-header-background;
     padding: $pad-v $pad-h;
+    display: flex;
+    justify-content: space-between;
     h4 {
       color: $text-primary-color;
       @include type-style($type-input);

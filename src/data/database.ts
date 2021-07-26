@@ -100,14 +100,14 @@ function getDb(onblocked?: (evt: any) => void) {
  *          transaction is complete, and the database object store on which
  *          operations can be performed.
  */
-async function transaction(
+function transaction(
+  db: IDBDatabase,
   store: ObjectStoreName,
   accessLevel = "readonly" as IDBTransactionMode
-): Promise<{
+): {
   complete: Promise<Event>;
   objectStore: IDBObjectStore;
-}> {
-  const db = await getDb();
+} {
   const transaction = db.transaction(store, accessLevel);
   return {
     complete: new Promise((res, rej) => {
@@ -123,7 +123,8 @@ async function transaction(
  * transaction is complete. Use update to update an existing entry.
  */
 async function add(store: ObjectStoreName, data: any) {
-  const { complete, objectStore } = await transaction(store, "readwrite");
+  const db = await getDb();
+  const { complete, objectStore } = transaction(db, store, "readwrite");
   objectStore.add(data);
   await complete;
 }
@@ -133,7 +134,8 @@ async function add(store: ObjectStoreName, data: any) {
  * is complete. Use to update an entry that is already saved.
  */
 async function update(store: ObjectStoreName, data: any) {
-  const { complete, objectStore } = await transaction(store, "readwrite");
+  const db = await getDb();
+  const { complete, objectStore } = transaction(db, store, "readwrite");
   objectStore.put(data);
   await complete;
 }
@@ -142,7 +144,8 @@ async function update(store: ObjectStoreName, data: any) {
  * Remove entry with given id from the given datastore.
  */
 async function remove(store: ObjectStoreName, id: DBID) {
-  const { complete, objectStore } = await transaction(store, "readwrite");
+  const db = await getDb();
+  const { complete, objectStore } = transaction(db, store, "readwrite");
   objectStore.delete(id);
   await complete;
 }
@@ -151,7 +154,8 @@ async function remove(store: ObjectStoreName, id: DBID) {
  * Resolves to the stored data for the given id from the given datastore.
  */
 async function get(store: ObjectStoreName, id: DBID): Promise<object | null> {
-  const objectStore = (await transaction(store)).objectStore;
+  const db = await getDb();
+  const { objectStore } = transaction(db, store);
   const request = objectStore.get(id);
   return (
     (await new Promise((res, rej) => {
@@ -214,10 +218,11 @@ const objStore = {
  */
 export function getAll(store: Schema.EntityName): Promise<DBID[]> {
   return new Promise(async (res, rej) => {
-    const objectStore = (await transaction(store)).objectStore;
+    const db = await getDb();
+    const { objectStore } = transaction(db, store);
     const request = objectStore.getAllKeys();
     request.onerror = rej;
-    request.onsuccess = function (evt) {
+    request.onsuccess = function (evt: Event) {
       if (DEBUG_DELAY) {
         // @ts-ignore
         setTimeout(() => res(evt.target.result), DEBUG_DELAY);

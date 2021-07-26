@@ -9,6 +9,7 @@
   import DBEditor from "./routes/dev/DBEditor.svelte";
   import DevTools from "./routes/dev/DevTools.svelte";
   import Home from "./routes/Home.svelte";
+  import Import from "./routes/Import.svelte";
   import NewAsyncProject from "./routes/NewAsyncProject.svelte";
   import NewProjectType from "./routes/NewProjectType.svelte";
   import NewRealtimeProject from "./routes/NewRealtimeProject.svelte";
@@ -33,7 +34,7 @@
     "/new/async": RedirectAddPath,
     "/new/": NewProjectType,
     "/new": RedirectAddPath,
-    "/reflect/": ReflectionQuestions, //Reflection Qs
+
     "/projects/": AllProjects, // Projects
     "/projects": RedirectAddPath, // Projects
     "/projects/:id/": Project, // Project detail
@@ -42,6 +43,11 @@
     "/projects/:id/track/*": ProjectTracking, // Project tracking
     "/projects/:id/track": RedirectAddPath,
 
+    "/reflect/": ReflectionQuestions, //Reflection Qs
+    "/reflect": RedirectAddPath,
+
+    "/import/": Import,
+    "/import": RedirectAddPath,
 
     "/about/": NotFound, // About design awareness
     "/about/appdo": AppDo, // What does this app do?
