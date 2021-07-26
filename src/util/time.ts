@@ -17,7 +17,7 @@ export function shortDuration(total: number) {
 }
 
 export function expressiveDurationM(mins: number) {
-  let { minutes, hours } = splitDuration(mins * 60 * 1000);
+  let { seconds, minutes, hours } = splitDuration(mins * 60 * 1000);
   if (hours) {
     let str = hours + "h";
     if (minutes) {
@@ -25,6 +25,9 @@ export function expressiveDurationM(mins: number) {
     }
     return str;
   } else {
+    if (minutes < 1) {
+      return seconds + "s";
+    }
     return minutes + "m";
   }
 }
