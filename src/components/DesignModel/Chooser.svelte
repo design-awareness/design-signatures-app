@@ -30,7 +30,7 @@
 
 <RichLabel {label}>
   {#if createNew}
-    <Button inlabel on:click={createNew} icon={add}>Create new</Button>
+    <Button inlabel on:click={createNew} icon={add}>New Model</Button>
   {/if}
 </RichLabel>
 {#await allDesignModelsPromise}
