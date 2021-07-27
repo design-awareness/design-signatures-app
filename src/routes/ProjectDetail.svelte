@@ -20,7 +20,7 @@
   import compareIcon from "@iconify-icons/ic/baseline-compare-arrows";
   import archiveIcon from "@iconify-icons/ic/baseline-archive";
   import unarchiveIcon from "@iconify-icons/ic/baseline-unarchive";
-  import exportIcon from "@iconify-icons/ic/baseline-share";
+  // import exportIcon from "@iconify-icons/ic/baseline-share";
   import deleteIcon from "@iconify-icons/ic/baseline-delete";
   import Modal from "../components/Modal.svelte";
   import InputField from "../components/InputField.svelte";
@@ -60,11 +60,11 @@
   const menuDescriptor = (): PopupMenuDescriptor => [
     { label: "Edit", icon: editIcon, action: () => (editProjectOpen = true) },
     { label: "Compare", icon: compareIcon, action: () => (otherOpen = true) },
-    {
-      label: "Export",
-      icon: exportIcon,
-      action: () => push(`/projects/${params.id}/export`),
-    },
+    // {
+    //   label: "Export",
+    //   icon: exportIcon,
+    //   action: () => push(`/projects/${params.id}/export`),
+    // },
     { separator: true },
     {
       label: project.active ? "Archive" : "Unarchive",

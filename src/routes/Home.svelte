@@ -14,6 +14,11 @@
   <PageHeader />
 
   <ContentFrame>
+    <Header>New version available</Header>
+    <p>
+      <Link href="/">Install now -&gt;</Link>
+    </p>
+
     <Header>Recent projects</Header>
 
     <HorizontalScrollArea>
