@@ -46,8 +46,8 @@
     return activites[i].color[$colorScheme === "light" ? 0 : 1];
   }
 
-  let [grid] = makeCanvasAction(() => {
-    function draw(ctx: CanvasRenderingContext2D, w: number, h: number) {
+  let [grid] = makeCanvasAction({
+    draw(ctx: CanvasRenderingContext2D, w: number, h: number) {
       let dw = (w - PADDING_PX * 2) / ENTRIES_TO_SHOW;
       let dh = (h - PADDING_PX * 2) / activityCount;
       let maxRad = Math.min(dw, dh) / 2;
@@ -64,11 +64,8 @@
           }
         });
       });
-    }
-    return {
-      draw,
-      clear: true,
-    };
+    },
+    clear: true,
   });
 </script>
 
