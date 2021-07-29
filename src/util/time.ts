@@ -24,11 +24,10 @@ export function expressiveDurationM(mins: number) {
       str += " " + pad(minutes) + "m";
     }
     return str;
-  } else {
-    if (minutes < 1) {
-      return seconds + "s";
-    }
+  } else if (minutes) {
     return minutes + "m";
+  } else {
+    return seconds + "s";
   }
 }
 
