@@ -29,8 +29,8 @@ export interface CanvasDescriptor {
    * Whether to clear the canvas (i.e., set all pixels to transparent)
    * before every call to draw.
    * Otherwise, drawing will occur on top of existing canvas content.
-   * Also, if true, the canvas's transform will be reset before draw()
-   * is called. Otherwise, it will not be changed between calls.
+   * The canvas's transform will be reset before draw() is called
+   * regardless of this setting.
    * @default false
    */
   clear?: boolean;
@@ -53,6 +53,7 @@ export function makeCanvasAction(
 ): [CanvasAction, CanvasDrawInvoker] {
   let canvas: HTMLCanvasElement;
   let ctx: CanvasRenderingContext2D;
+  let dpr = window.devicePixelRatio ?? 1;
   let width = 0;
   let height = 0;
   let ready = false;
@@ -70,8 +71,10 @@ export function makeCanvasAction(
     if (animate) {
       cancelAnimationFrame(animationHandle);
     }
+
+    ctx.resetTransform();
+    ctx.scale(dpr, dpr);
     if (clear) {
-      ctx.resetTransform();
       ctx.clearRect(0, 0, width, height);
     }
 
@@ -87,8 +90,8 @@ export function makeCanvasAction(
       let entry = entries[0];
       width = entry.contentRect.width;
       height = entry.contentRect.height;
-      canvas.width = width;
-      canvas.height = height;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
       cancelAnimationFrame(animationHandle);
       animationHandle = requestAnimationFrame(draw);
     }
@@ -101,18 +104,19 @@ export function makeCanvasAction(
         "Canvas action can only be used on a <canvas> element."
       );
     }
-    observer.observe(node);
     width = node.clientWidth;
     height = node.clientHeight;
-    node.width = width;
-    node.height = height;
+    node.width = width * dpr;
+    node.height = height * dpr;
+    observer.observe(node);
 
     canvas = node;
-    let ctx_ = node.getContext("2d");
-    if (!ctx_)
+    let ctxOrNull = node.getContext("2d");
+    if (!ctxOrNull)
       throw new Error("Browser does not support Canvas rendering context");
-    ctx = ctx_;
+    ctx = ctxOrNull;
 
+    ctx.scale(dpr, dpr);
     init?.(ctx, width, height);
 
     ready = true;
