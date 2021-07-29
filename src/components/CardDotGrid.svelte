@@ -46,9 +46,8 @@
     return activites[i].color[$colorScheme === "light" ? 0 : 1];
   }
 
-  let [grid] = makeCanvasAction(() => {
-    function draw(ctx: CanvasRenderingContext2D, w: number, h: number) {
-      console.log("draw!");
+  let [grid] = makeCanvasAction({
+    draw(ctx: CanvasRenderingContext2D, w: number, h: number) {
       let dw = (w - PADDING_PX * 2) / ENTRIES_TO_SHOW;
       let dh = (h - PADDING_PX * 2) / activityCount;
       let maxRad = Math.min(dw, dh) / 2;
@@ -56,7 +55,6 @@
         let x = PADDING_PX + (0.5 + i) * dw;
         entry.data.forEach(({ value }, j) => {
           if (value) {
-            console.log("drawing", i, j);
             let y = PADDING_PX + (0.5 + j) * dh;
             let rad = Math.sqrt(value / maxValue) * maxRad;
             ctx.beginPath();
@@ -66,11 +64,8 @@
           }
         });
       });
-    }
-    return {
-      draw,
-      clear: true,
-    };
+    },
+    clear: true,
   });
 </script>
 
