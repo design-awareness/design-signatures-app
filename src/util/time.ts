@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2021, Design Awareness Contributors.
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
 export function splitDuration(total: number) {
   let seconds = Math.floor(total / 1000);
   let minutes = Math.floor(seconds / 60);

@@ -1,3 +1,7 @@
+<!--
+  Copyright (c) 2021, Design Awareness Contributors.
+  SPDX-License-Identifier: BSD-3-Clause
+-->
 <script lang="ts">
   import type { AsyncProject } from "../data/schema";
   import { sumActivityTimes } from "../util/asyncEntry";

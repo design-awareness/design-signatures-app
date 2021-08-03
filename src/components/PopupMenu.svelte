@@ -1,3 +1,7 @@
+<!--
+  Copyright (c) 2021, Design Awareness Contributors.
+  SPDX-License-Identifier: BSD-3-Clause
+-->
 <script lang="ts" context="module">
   import caretDownIcon from "@iconify-icons/ic/baseline-keyboard-arrow-down";
   import caretUpIcon from "@iconify-icons/ic/baseline-keyboard-arrow-up";

@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2021, Design Awareness Contributors.
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
 // upgrade database structure as needed
 
 const CONFIG_STORE = "_Config";

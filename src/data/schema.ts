@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2021, Design Awareness Contributors.
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
 export const DB_VERSION = 4;
 export const WELL_KNOWN_ENTITY_PREFIX = "well-known:";
 
