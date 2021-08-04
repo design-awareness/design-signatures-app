@@ -9,6 +9,7 @@
   import ContentFrame from "../components/layout/ContentFrame.svelte";
   import RichLabel from "../components/RichLabel.svelte";
   import SegmentedSelector from "../components/SegmentedSelector.svelte";
+  import CONFIG from "../data/config";
   import type { AsyncEntry, AsyncProject, DesignModel } from "../data/schema";
   import { fromDate, MONTH_NAME } from "../util/date";
 
@@ -50,10 +51,17 @@
     total = roundD2(values.reduce((a, b) => a + b, 0));
   }
 
+  let suppressBeforeUnload = false;
+  (async function () {
+    suppressBeforeUnload = await CONFIG.getDevSuppressBeforeUnload();
+  })();
+
   function beforeUnload(evt: BeforeUnloadEvent) {
-    evt.preventDefault();
-    evt.returnValue = "Changes may not be saved.";
-    return "Changes may not be saved.";
+    if (!suppressBeforeUnload) {
+      evt.preventDefault();
+      evt.returnValue = "Changes may not be saved.";
+      return "Changes may not be saved.";
+    }
   }
 
   const update = (i: number) => () => {
