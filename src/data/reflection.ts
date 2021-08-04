@@ -5,64 +5,53 @@ interface ReflectionCategory {
 
 export const reflectionQuestions: ReflectionCategory[] = [
   {
-    name: "Atman’s design expertise",
+    name: "Design process research questions",
     questions: [
-      "Did you distribute design activities across time?",
-      "Did you transition thoughtfully across activities?",
-      "Did you gather lots of information at multiple points in the process?",
-      "Did you cover a wide range of types of information for many aspects of the problem?",
-      "Did you ask lots of questions that move the process forward?",
-      "Did you consider a wide variety of objects in your design?",
-      "Did you stay aware of where you are in the design process?",
-      "Did you consider what your design signature will be this time?",
+      "Did you engage in all the design activities in your chosen design model in your process?",
+      "Did you iterate across the design activities in your model as much as you think you should have?",
+      "Did you understand the design problem well enough before jumping into generating solutions?",
+      "Did you understand the context of the problem you are solving?",
+      "Did you gather information at many points in the process? Did you cover a wide range of information types?",
+      "Did you move between understanding the problem and developing a solution?",
+      "Did you ask lots of questions to help move the design process forward?  Did some of the questions increase ambiguity (divergent) and some decrease ambiguity (convergent)?",
+      "Can you identify areas where you diverged vs converged across your process?",
+      "Did you consider a wide variety of design solutions in your process?",
+      "Did you stay aware of where you are in the design process while you were designing?",
+      "Did you consider what your design signature would look like before you started to design?  While you were designing?",
     ],
   },
   {
-    name: "Time spent on different activities",
+    name: "How time was spent",
     questions: [
-      "Which design phase(s) did you wish you had more time in?",
-      "How satisfied are you with the time you spent on research?",
-      "What made you spend a certain amount of time on a particular phase?",
-      "What could have made this step more efficient for you?",
-      "Did you feel rushed through any phases?",
+      "What made you spend a certain amount of time on a particular activity?",
+      "Which design activity(s) did you wish you had spent more time in?",
+      "How satisfied are you with the amount of time you spent on problem scoping/research focused activities?",
+      "Did you feel rushed through any phases/ design activities?",
+      "What could have made a particular step in your process more efficient for you?",
     ],
   },
   {
-    name: "Challenges",
+    name: "Empathy, stakeholders and sustainability",
     questions: [
-      "What is one challenge you faced during this step, if any?",
-      "Which design phase did you experience the most difficulties?",
+      "Did you think about all the stakeholders in the problem you are solving (not just the users)?",
+      "Were you able to empathize with each group of stakeholders?",
+      "Did you incorporate principles of sustainability in your design? ",
+      "What impact will your design have on the environment? ",
     ],
   },
   {
-    name: "Specific design phases",
+    name: "Accessibility, diversity, equity and inclusion",
     questions: [
-      "What kind of design requirements did you narrow down on for this project?",
-      "Did you need to go back to gather more research late in the project?",
-      "How was a deliverable impacted by circumstances outside the scope of your project?",
-      "Which design phase required the most personal attention from you?",
+      "How did you incorporate accessibility and inclusiveness into your design process?",
+      "Are there ways to connect your design process to an opportunity to contribute to diversity, equity and inclusion?",
     ],
   },
   {
-    name: "Broader insights",
+    name: "General questions",
     questions: [
-      "Which section do you think was most representative of your real timeline? Why?",
+      "Which design activity did you experience the most challenges in?",
+      "How was your process impacted by circumstances outside of your control?",
       "Is there any place where you wish you had had more background knowledge to augment what you accomplished (i.e., something you could learn more about in the future)?",
-      "What have you done so far? or anything that you think could be done?",
-    ],
-  },
-  {
-    name: "Equity and inclusiveness",
-    questions: [
-      "How did you incorporate accessibility and inclusiveness within your design process?",
-      "If you think about a goal of contributing to equity through design, is there a way to connect your design process to an opportunity to contribute to equity?",
-    ],
-  },
-  {
-    name: "Impact on the globe",
-    questions: [
-      "How might your designs impact the globe and everyone on it?",
-      "What impact do your designs have on the environment",
     ],
   },
 ];
