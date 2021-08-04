@@ -45,6 +45,9 @@
     "type": "git",
     "url": "git+https://github.com/design-awareness/design-awareness-app.git"
   },
+  "contributors": [
+    "Jordan Yoon-Buck <jordan@yoonbuck.com> (https://github.com/yoonbuck)"
+  ],
   "bugs": {
     "url": "https://github.com/design-awareness/design-awareness-app/issues"
   },
