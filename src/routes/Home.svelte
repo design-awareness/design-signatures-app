@@ -59,18 +59,6 @@
 
     <Header>About Design Awareness</Header>
     <p>
-<<<<<<< HEAD
-      <Link href="/about/app">What’s the Point?</Link>
-    </p>
-    <p>
-      <Link href="/about/project">About this Project</Link>
-    </p>
-    <p>
-      <Link href="/about/design-models">Design Models</Link>
-    </p>
-    <p>
-      <Link href="/about/research">Explore Design Process Research</Link>
-=======
       <Link href="/about/tutorials"> Tutorials ›</Link>
     </p>
     <p>
@@ -84,7 +72,6 @@
     </p>
     <p>
       <Link href="/about/project">About this project ›</Link>
->>>>>>> 0b67155 (intial Set up about pages and routes)
     </p>
   </ContentFrame>
 </main>

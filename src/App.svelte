@@ -2,13 +2,6 @@
   import Router from "svelte-spa-router/Router.svelte";
   import { createPresets } from "./data/designModelPresets";
   import { awaitObjectUpgradeIfNeeded } from "./data/upgradeObjects";
-<<<<<<< HEAD
-  import AboutApp from "./routes/about/AboutApp.svelte";
-  import AboutProject from "./routes/about/AboutProject.svelte";
-  import DesignModels from "./routes/about/DesignModels.svelte";
-  import Research from "./routes/about/Research.svelte";
-=======
->>>>>>> 0b67155 (intial Set up about pages and routes)
   import AllProjects from "./routes/AllProjects.svelte";
   import ComponentLibrary from "./routes/dev/ComponentLibrary.svelte";
   import DBEditor from "./routes/dev/DBEditor.svelte";
