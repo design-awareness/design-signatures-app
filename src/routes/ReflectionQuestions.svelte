@@ -66,7 +66,6 @@
     padding-inline-start: $collapse-padding-vertical;
   }
   li{
-    list-style-type: decimal;
     padding-top: $collapse-padding-vertical;
   }
 </style>
