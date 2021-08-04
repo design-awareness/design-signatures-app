@@ -3,7 +3,9 @@
   SPDX-License-Identifier: BSD-3-Clause
 -->
 <script lang="ts">
+  import totalAlertIcon from "@iconify-icons/ic/baseline-percentage";
   import ActivityEntrySlat from "../components/ActivityEntrySlat.svelte";
+  import Alert from "../components/Alert.svelte";
   import BottomActionBar from "../components/BottomActionBar.svelte";
   import InputField from "../components/InputField.svelte";
   import ContentFrame from "../components/layout/ContentFrame.svelte";
@@ -19,6 +21,8 @@
   export let save: () => Promise<void>;
   export let designModel: DesignModel;
 
+  const TOTAL_PERCENT_FUDGE_ALLOW = 1;
+
   if (!label) {
     let date = fromDate(entry.period);
     label = `${MONTH_NAME[date.month]} ${date.day}, ${date.year}`;
@@ -31,6 +35,9 @@
   let entryMode = project.getMeta("entryUnit", "raw");
   let lastEntryMode: EntryMode = "raw";
   let total = 0;
+  let totalPercentage = 0;
+  let totalPercentageOK = true;
+
   calculateTotal();
   $: if (lastEntryMode !== entryMode) {
     lastEntryMode = entryMode;
@@ -38,6 +45,7 @@
     project.save();
     if (entryMode === "percent") {
       values = values.map((value) => value && roundD2((value * 100) / total));
+      calculateTotalPercentage();
     } else {
       values = values.map((value) => value && roundD2((value * total) / 100));
       calculateTotal();
@@ -49,6 +57,11 @@
   }
   function calculateTotal() {
     total = roundD2(values.reduce((a, b) => a + b, 0));
+  }
+  function calculateTotalPercentage() {
+    totalPercentage = values.reduce((a, b) => a + b, 0);
+    totalPercentageOK =
+      !total || Math.abs(totalPercentage - 100) < TOTAL_PERCENT_FUDGE_ALLOW;
   }
 
   let suppressBeforeUnload = false;
@@ -68,7 +81,11 @@
     if (i >= 0) {
       values[i] = Math.max(values[i], 0);
     }
-    calculateTotal();
+    if (entryMode === "raw") {
+      calculateTotal();
+    } else {
+      calculateTotalPercentage();
+    }
     entry.data = values.map((value, i) => ({
       value:
         entryMode === "raw"
@@ -97,15 +114,6 @@
     />
   </RichLabel>
 
-  {#each designModel.activities as activity, i}
-    <ActivityEntrySlat
-      {activity}
-      bind:value={values[i]}
-      bind:note={notes[i]}
-      {entryMode}
-      on:blur={update(i)}
-    />
-  {/each}
   <ActivityEntrySlat
     activity={designModel.activities[0]}
     bind:value={total}
@@ -115,6 +123,25 @@
     isTotalRow
     isTotalDisabled={entryMode === "raw"}
   />
+  {#each designModel.activities as activity, i}
+    <ActivityEntrySlat
+      {activity}
+      bind:value={values[i]}
+      bind:note={notes[i]}
+      {entryMode}
+      on:blur={update(i)}
+    />
+  {/each}
+
+  {#if entryMode === "percent" && total && !totalPercentageOK}
+    <div class="alert-area">
+      <Alert type="note" icon={totalAlertIcon}>
+        Activity percentages should add up to 100%. (Current total: {Math.round(
+          totalPercentage
+        )}%)
+      </Alert>
+    </div>
+  {/if}
 
   <div class="note">
     <InputField
@@ -127,7 +154,11 @@
     />
   </div>
 </ContentFrame>
-<BottomActionBar label="Save" on:click={save} />
+<BottomActionBar
+  label="Save"
+  on:click={save}
+  disabled={entryMode === "percent" && !totalPercentageOK}
+/>
 
 <style lang="scss">
   @import "src/styles/tokens";
@@ -147,5 +178,8 @@
   }
   .spacer {
     height: 1rem + rem(map-get($type-section-header, height));
+  }
+  .alert-area {
+    margin: $block-vertical-spacing 0;
   }
 </style>
