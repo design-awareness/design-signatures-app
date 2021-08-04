@@ -59,10 +59,16 @@
 
     <Header>About Design Awareness</Header>
     <p>
-      <Link href="/about/appdo">What does this app do? ›</Link>
+      <Link href="/about/app">What’s the Point?</Link>
     </p>
     <p>
-      <Link href="/about/atmans">Atman's Model ›</Link>
+      <Link href="/about/project">About this Project</Link>
+    </p>
+    <p>
+      <Link href="/about/design-models">Design Models</Link>
+    </p>
+    <p>
+      <Link href="/about/research">Explore Design Process Research</Link>
     </p>
     <!-- <p>
       <Link href="/">Design Awareness App Tutorials</Link>

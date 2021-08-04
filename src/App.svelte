@@ -2,8 +2,10 @@
   import Router from "svelte-spa-router/Router.svelte";
   import { createPresets } from "./data/designModelPresets";
   import { awaitObjectUpgradeIfNeeded } from "./data/upgradeObjects";
-  import AppDo from "./routes/about/AppDo.svelte";
-  import Atmans from "./routes/about/Atmans.svelte";
+  import AboutApp from "./routes/about/AboutApp.svelte";
+  import AboutProject from "./routes/about/AboutProject.svelte";
+  import DesignModels from "./routes/about/DesignModels.svelte";
+  import Research from "./routes/about/Research.svelte";
   import AllProjects from "./routes/AllProjects.svelte";
   import ComponentLibrary from "./routes/dev/ComponentLibrary.svelte";
   import DBEditor from "./routes/dev/DBEditor.svelte";
@@ -49,9 +51,11 @@
     "/import/": Import,
     "/import": RedirectAddPath,
 
-    "/about/": NotFound, // About design awareness
-    "/about/appdo": AppDo, // What does this app do?
-    "/about/atmans": Atmans,
+    "/about/": NotFound,
+    "/about/app": AboutApp,
+    "/about/project": AboutProject,
+    "/about/design-models": DesignModels,
+    "/about/research": Research,
 
     "/settings/": Settings, // Settings
     "/settings": RedirectAddPath, // Settings
