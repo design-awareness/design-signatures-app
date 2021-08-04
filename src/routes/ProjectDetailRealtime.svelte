@@ -142,6 +142,12 @@
     justify-content: space-between;
   }
 
+  .reflect-button {
+    margin-top: $block-vertical-spacing;
+    display: flex;
+    justify-content: flex-end;
+  }
+
   .note-meta {
     white-space: nowrap;
     padding-right: 0.5rem;
