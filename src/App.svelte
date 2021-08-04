@@ -2,12 +2,14 @@
   import Router from "svelte-spa-router/Router.svelte";
   import { createPresets } from "./data/designModelPresets";
   import { awaitObjectUpgradeIfNeeded } from "./data/upgradeObjects";
+  import AboutProject from "./routes/about/AboutProject.svelte";
   import AllProjects from "./routes/AllProjects.svelte";
   import ComponentLibrary from "./routes/dev/ComponentLibrary.svelte";
   import DBEditor from "./routes/dev/DBEditor.svelte";
   import DevTools from "./routes/dev/DevTools.svelte";
   import Home from "./routes/Home.svelte";
   import Import from "./routes/Import.svelte";
+  import Models from "./routes/about/Models.svelte";
   import NewAsyncProject from "./routes/NewAsyncProject.svelte";
   import NewProjectType from "./routes/NewProjectType.svelte";
   import NewRealtimeProject from "./routes/NewRealtimeProject.svelte";
@@ -20,6 +22,7 @@
   import Research from "./routes/about/Research.svelte";
   import Settings from "./routes/Settings.svelte";
   import ThePoint from "./routes/about/ThePoint.svelte";
+  import Tutorials from "./routes/about/Tutorials.svelte";
   import Update from "./routes/Update.svelte";
 
   awaitObjectUpgradeIfNeeded();
@@ -50,11 +53,11 @@
     "/import": RedirectAddPath,
 
     "/about/": NotFound, // About design awareness
-    //"/about/tutorials": Tutorials, // Tutorials
+    "/about/tutorials": Tutorials, // Tutorials
     "/about/thepoint": ThePoint, // Whats the point?
     "/about/research": Research, // Explore design process research
-    //"/about/models": Models, //Design Models
-    //"/about/project": Project, //About this Project (+ team bio)
+    "/about/models": Models, //Design Models
+    "/about/project": AboutProject, //About this Project (+ team bio)
 
     "/settings/": Settings, // Settings
     "/settings": RedirectAddPath, // Settings
