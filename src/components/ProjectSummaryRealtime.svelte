@@ -46,7 +46,7 @@
 </script>
 
 <ProjectSummary
-  designModel={project.designModel}
+  {project}
   chartData={activityTotals}
   count={project.sessions.length}
   countLabel="Total sessions"

@@ -48,7 +48,7 @@
 </script>
 
 <ProjectSummary
-  designModel={project.designModel}
+  {project}
   chartData={activityTotals}
   count={project.entries.length}
   countLabel="Total entries"

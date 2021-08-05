@@ -67,6 +67,7 @@
 <main class="device-frame page">
   {#if showEntry && activeEntry}
     <AsyncEntryEditor
+      {project}
       entry={activeEntry}
       label={entryLabel}
       save={saveEntry}
