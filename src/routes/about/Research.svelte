@@ -39,40 +39,60 @@
     <BackButton href="/" />
     <Header>Explore design process research</Header>
     <p>
-      Atman's research suggests that the quality of people's designs are
-      correlated to their design processes. During a study, participants were
-      tasked with design activities and asked to give verbal reports about what
-      they were doing during their process. Codes were then assigned to define
-      what a user was doing at a given instant.
+      This app was informed by research on design processes.  Process is
+      important because research has shown that a good design process leads to
+      a good design product. Here we present key findings from some of that
+      research to motivate you to question and reflect on your own design process.
+    </p>
+    <h3>Design Expertise</h3>
+    <p>
+      Cindy Atman, one of the authors of this app, has conducted research on
+      design expertise for several decades. This research shows that expert
+      designers use different processes than novice designers. In one large
+      study, engineering designers with various levels of expertise designed
+      a playground where they talked aloud during their design process.
+      Researchers then analyzed these processes and assessed the quality of
+      their final design products.  .
     </p>
     <p>
-      Codes were recorded in timely intervals and​ converted into timelines and
-      classified based on their quality. Findings show that individuals with
-      expertise & high-quality designs have processes that are more complex,
-      consider a broader set of information, spend more time problem solving and
-      are more likely to demonstrate a cascade pattern (bottom right of figure
-      2) in their design activities [1].
+      As part of the analysis, researchers categorized the activities that the
+      designers engaged in and visualized those activities as timelines. These
+      timelines, or  “design signatures”, are representations of the design
+      activities the designers engaged with over time. The patterns of design
+      activities over time were used to identify key attributes of a high
+      quality design process.
     </p>
-    <figure>
-      <img src="images/timeline.png" alt="notfound" />
-      <figcaption>
-        [1] Atman, C.J., Adams, R.S., Cardella, M.E., Turns, J., Mosborg, S. and
-        Saleem, J. (2007), Engineering Design Processes: A Comparison of
-        Students and Expert Practitioners. Journal of Engineering Education, 96:
-        359-379. doi:10.1002/j.2168-9830.2007.tb00945.x
-      </figcaption>
-    </figure>
+
+    <img src="images/timeline.png" alt="notfound" />
 
     <p>
-      Below are three types of timelines produced by college freshmen. The first
-      timeline represents a low quality design and it can be seen that not much
-      time was spent on any of the activity codes. The second timeline represnts
-      a medium quality design, it can be seen that most of the time is spent on
-      modelling, and not many transitions take place to the other design
-      activities. The last one is a high quality timeline, and it can be seen
-      that the designer made a lot of transition between all the design
-      activities and demonstrates a cascade shaped pattern.
+      Below are design signatures from first-year and graduating senior students.
     </p>
+    <ul>
+      <li>
+        [Freshman A] This visualization represents a design signature of a
+        first-year designer who created a low quality design. One key pattern
+        seen here is that not much time was spent on any of the activities.
+      </li>
+      <li>
+        [Freshman B] This visualization represents a design signature of a
+        first-year designer who created a medium quality design. One key pattern
+        seen here is that most of the time was spent in the modeling activity
+        without considering other design activities.
+      </li>
+      <li>
+        [Senior C] This visualization represents a design signature of a
+        graduating senior designer who created a high quality design.The
+        designer spent a significant amount of time scoping the problem at
+        the beginning of the process, gathered information throughout the
+        process, made many iterations throughout, and demonstrated an overall
+        cascade shaped pattern.
+      </li>
+    </ul>
+
+    <h4>Attributes of high quality design</h4>
+
+
     <figure>
       <img src="images/threetimeline.png" alt="not  found" />
       <figcaption>
