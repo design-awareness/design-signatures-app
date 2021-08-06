@@ -13,11 +13,11 @@
   import ProjectMenu from "../components/ProjectMenu.svelte";
   import ProjectNotes from "../components/ProjectNotes.svelte";
   import ProjectSummaryRealtime from "../components/ProjectSummaryRealtime.svelte";
-  import RichTimeline from "../components/RichTimeline.svelte";
   import Header from "../components/type/Header.svelte";
   import { checkNeedsRepair, repair } from "../data/repairRealtimeSession";
   import type { RealtimeProject } from "../data/schema";
   import { shortDuration } from "../util/time";
+  import timeline from "../util/timeline";
 
   export let project: RealtimeProject;
 
@@ -66,7 +66,7 @@
 
     <PageSeparator />
 
-    <RichTimeline {project} scalable />
+    <canvas use:timeline={{ project }} />
 
     {#if project.sessions.length !== 0}
       <div class="reflect-button">
