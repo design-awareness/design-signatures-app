@@ -5,7 +5,7 @@
 <script lang="ts">
   import type { RealtimeProject } from "../data/schema";
   import { MONTH_SHORT_NAME } from "../util/date";
-  import { expressiveDurationM } from "../util/time";
+  import { expressiveDuration } from "../util/time";
   import ProjectSummary from "./ProjectSummary.svelte";
 
   export let project: RealtimeProject;
@@ -57,4 +57,4 @@
   {firstLast}
   firstLastType="session"
 />
-<p>Total time logged: {expressiveDurationM(totalDuration / 60 / 1000)}</p>
+<p>Total time logged: {expressiveDuration(totalDuration)}</p>
