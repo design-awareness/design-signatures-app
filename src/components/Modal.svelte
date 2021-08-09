@@ -1,3 +1,7 @@
+<!--
+  Copyright (c) 2021, Design Awareness Contributors.
+  SPDX-License-Identifier: BSD-3-Clause
+-->
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
   import Button from "./Button.svelte";

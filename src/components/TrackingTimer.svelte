@@ -1,3 +1,7 @@
+<!--
+  Copyright (c) 2021, Design Awareness Contributors.
+  SPDX-License-Identifier: BSD-3-Clause
+-->
 <script lang="ts">
   import Icon from "@iconify/svelte/dist/Icon.svelte";
   import timeIcon from "@iconify-icons/ic/baseline-access-time";
@@ -34,7 +38,7 @@
     <div class="icon">
       <Icon icon={timeIcon} />
     </div>
-    {#if displayMode !== 'none'}
+    {#if displayMode !== "none"}
       <div class="text-stack">
         <div class="time">
           {time.hours}h
@@ -42,7 +46,7 @@
           {pad(time.seconds)}s
         </div>
         <div class="toggle">
-          <span>{displayMode === 'session' ? 'Session' : 'Project'} time</span>
+          <span>{displayMode === "session" ? "Session" : "Project"} time</span>
           <span class="toggle-icon"><Icon icon={caretDownIcon} /></span>
         </div>
       </div>

@@ -1,3 +1,7 @@
+<!--
+  Copyright (c) 2021, Design Awareness Contributors.
+  SPDX-License-Identifier: BSD-3-Clause
+-->
 <script lang="ts" context="module">
   export const BUILDER_SUFFIX = "model";
   export const BUILDER_MODAL_SUFFIX = "model!";

@@ -1,3 +1,7 @@
+<!--
+  Copyright (c) 2021, Design Awareness Contributors.
+  SPDX-License-Identifier: BSD-3-Clause
+-->
 <script lang="ts">
   // FIXME: I'd really like to be able to use a single component for text and
   // numeric inputs, but I'm not sure how to do this in a nice type-safe way.

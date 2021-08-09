@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2021, Design Awareness Contributors.
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
 import defer from "../util/defer";
 import { VERSION } from "./buildData";
 import * as Schema from "./schema";

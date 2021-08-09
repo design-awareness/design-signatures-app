@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2021, Design Awareness Contributors.
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
 export default [
   ["530D17", "FF9EA5"],
   ["AE1E60", "FFFFFF"],

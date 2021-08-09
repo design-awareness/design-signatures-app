@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2021, Design Awareness Contributors.
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
 import type { DesignModel } from "design-awareness-data-types";
 import type { DeepRequired } from "../types/utility";
 import { getDesignModel, newDesignModel } from "./database";

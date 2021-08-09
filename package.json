@@ -39,5 +39,17 @@
     "workbox-expiration": "^6.1.5",
     "workbox-routing": "^6.1.5",
     "workbox-strategies": "^6.1.5"
-  }
+  },
+  "license": "BSD-3-Clause",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/design-awareness/design-awareness-app.git"
+  },
+  "contributors": [
+    "Jordan Yoon-Buck <jordan@yoonbuck.com> (https://github.com/yoonbuck)"
+  ],
+  "bugs": {
+    "url": "https://github.com/design-awareness/design-awareness-app/issues"
+  },
+  "homepage": "https://github.com/design-awareness/design-awareness-app#readme"
 }

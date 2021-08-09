@@ -1,3 +1,7 @@
+<!--
+  Copyright (c) 2021, Design Awareness Contributors.
+  SPDX-License-Identifier: BSD-3-Clause
+-->
 <script lang="ts">
   import loadingIcon from "@iconify-icons/ic/baseline-hourglass-empty";
   import notFoundIcon from "@iconify-icons/ic/baseline-search-off";

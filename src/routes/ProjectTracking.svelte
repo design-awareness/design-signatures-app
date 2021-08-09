@@ -1,3 +1,7 @@
+<!--
+  Copyright (c) 2021, Design Awareness Contributors.
+  SPDX-License-Identifier: BSD-3-Clause
+-->
 <script lang="ts">
   import createIcon from "@iconify-icons/ic/baseline-create";
   import undoIcon from "@iconify-icons/ic/baseline-history";

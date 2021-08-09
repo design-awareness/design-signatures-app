@@ -1,3 +1,7 @@
+<!--
+  Copyright (c) 2021, Design Awareness Contributors.
+  SPDX-License-Identifier: BSD-3-Clause
+-->
 <script lang="ts">
   import type { AsyncEntry } from "../data/schema";
   import NoteCorner from "./NoteCorner.svelte";

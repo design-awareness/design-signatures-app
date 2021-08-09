@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2021, Design Awareness Contributors.
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
 // upgrade database objects as needed
 // this is done separately to avoid circular dependencies,
 // but that means we need to trigger this check in main instead :)

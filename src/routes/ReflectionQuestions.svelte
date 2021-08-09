@@ -1,3 +1,7 @@
+<!--
+  Copyright (c) 2021, Design Awareness Contributors.
+  SPDX-License-Identifier: BSD-3-Clause
+-->
 <script lang="ts">
   import BackButton from "../components/BackButton.svelte";
   import ContentFrame from "../components/layout/ContentFrame.svelte";
@@ -45,7 +49,7 @@
     box-shadow: $collapse-card-boxshadow;
   }
   .cat-name {
-    border-radius: .5rem .5rem 0 0;
+    border-radius: 0.5rem 0.5rem 0 0;
     border: $collapse-card-border-color;
     background-color: $collapse-card-background;
     margin-bottom: 0;
@@ -54,18 +58,18 @@
     font-weight: 600;
   }
   .questions {
-    border-radius: 0 0 .5rem .5rem;
+    border-radius: 0 0 0.5rem 0.5rem;
     border: $collapse-card-border-color;
     background-color: $collapse-card-background;
     padding: $collapse-padding-vertical;
     padding-top: $collapse-padding-horizontal;
     color: $collapse-secondary-text;
   }
-  ul{
+  ul {
     margin: 0;
     padding-inline-start: $collapse-padding-vertical;
   }
-  li{
+  li {
     padding-top: $collapse-padding-vertical;
   }
 </style>

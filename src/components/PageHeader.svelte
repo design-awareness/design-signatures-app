@@ -1,9 +1,22 @@
+<!--
+  Copyright (c) 2021, Design Awareness Contributors.
+  SPDX-License-Identifier: BSD-3-Clause
+-->
 <script lang="ts">
   import Icon from "@iconify/svelte/dist/Icon.svelte";
   import Logo from "../assets/Logo.svelte";
   import settingsIcon from "@iconify-icons/ic/baseline-settings";
   import Link from "./Link.svelte";
 </script>
+
+<header>
+  <Logo width="8rem" />
+  <div class="btn">
+    <Link href="/settings/">
+      <Icon icon={settingsIcon} />
+    </Link>
+  </div>
+</header>
 
 <style lang="scss">
   header {
@@ -38,12 +51,3 @@
     }
   }
 </style>
-
-<header>
-  <Logo width="8rem" />
-  <div class="btn">
-    <Link href="/settings/">
-      <Icon icon={settingsIcon} />
-    </Link>
-  </div>
-</header>
