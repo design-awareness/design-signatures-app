@@ -11,7 +11,14 @@
   import Link from "../components/Link.svelte";
   import Header from "../components/type/Header.svelte";
   import SectionHeader from "../components/type/SectionHeader.svelte";
-  import { BRANCH, BUILD_ENV, BUILD_TIME, VERSION } from "../data/buildData";
+  import {
+    BUILD_ENV,
+    BUILD_TIME,
+    GIT_HEAD,
+    GIT_REPO,
+    PULL_REQUEST,
+    VERSION,
+  } from "../data/buildData";
   import {
     getAll,
     getAsyncProject,
@@ -122,10 +129,22 @@
       <br /><strong>Last built:</strong>
       {new Date(BUILD_TIME).toLocaleString()}
       <br /><strong>Build environment:</strong>
-      {{ dev: "Development", stage: "Staging", prod: "Production" }[BUILD_ENV]}
-      {#if BUILD_ENV !== "prod" && BRANCH}
-        <br /><strong>Branch:</strong>
-        {BRANCH}
+      {{ dev: "Development", preview: "Deploy Preview", prod: "Production" }[
+        BUILD_ENV
+      ]}
+      {#if BUILD_ENV !== "prod"}
+        {#if GIT_HEAD}
+          <br /><strong>Branch:</strong>
+          {GIT_HEAD}
+        {/if}
+        {#if PULL_REQUEST}
+          <br /><strong>Pull request:</strong>
+          #{PULL_REQUEST}
+          <br />
+          <a href="{GIT_REPO}/pull/{PULL_REQUEST}" target="_blank">
+            Leave feedback on this preview version
+          </a>
+        {/if}
       {/if}
     </p>
     <p>
