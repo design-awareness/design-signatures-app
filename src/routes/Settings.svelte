@@ -110,9 +110,9 @@
       </Button>
     </p>
     <p>
-      <Button small on:click={resetWellKnownModels}
-        >Reset built-in design models</Button
-      >
+      <Button small on:click={resetWellKnownModels}>
+        Reset built-in design models
+      </Button>
     </p>
 
     {#if BUILD_ENV === "dev" || tapCount > 4}
@@ -126,9 +126,9 @@
     <p class="small">
       <strong>Version:</strong>
       <InvisibleButton on:click={() => tapCount++}>{VERSION}</InvisibleButton>
-      <br /><strong>Last built:</strong>
+      <br /><strong>Built:</strong>
       {new Date(BUILD_TIME).toLocaleString()}
-      <br /><strong>Build environment:</strong>
+      <br /><strong>Environment:</strong>
       {{ dev: "Development", preview: "Deploy Preview", prod: "Production" }[
         BUILD_ENV
       ]}
