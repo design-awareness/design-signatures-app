@@ -3,12 +3,22 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-import type { RealtimeProject, TimedNote } from "../data/schema";
+import type { DesignModel, RealtimeSession, TimedNote } from "../data/schema";
 import { colorScheme } from "./colorScheme";
 import { expressiveDuration } from "./time";
 
+interface RealtimeSessionLike {
+  data: RealtimeSession["data"];
+  duration: RealtimeSession["duration"];
+}
+
+interface RealtimeProjectLike {
+  designModel: DesignModel;
+  sessions: readonly RealtimeSessionLike[];
+}
+
 interface TimelineRendererDescriptor {
-  project: RealtimeProject;
+  project: RealtimeProjectLike;
 
   /**
    * display pixel scaling. Default is device pixel ratio.
