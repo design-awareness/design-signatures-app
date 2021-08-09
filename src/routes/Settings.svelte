@@ -115,7 +115,7 @@
       >
     </p>
 
-    {#if BUILD_ENV !== "prod" || tapCount > 4}
+    {#if BUILD_ENV === "dev" || tapCount > 4}
       <SectionHeader>Developer</SectionHeader>
       <p>
         <Link href="/dev/">Developer tools</Link>
