@@ -114,7 +114,7 @@ export const presetDesignModels = [
     },
   ],
   [
-    "edu.washington.hcde.atman@0.1",
+    "edu.washington.hcde.atman_extended@0.1",
     {
       name: "Atman model (extended)",
       description: {
