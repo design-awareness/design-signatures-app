@@ -362,7 +362,6 @@
             <Button small on:click={copyStack}>Copy to clipboard</Button>
           {/if}
         </div>
-        >
       {/if}
     {/if}
     {#if state === "reading"}
