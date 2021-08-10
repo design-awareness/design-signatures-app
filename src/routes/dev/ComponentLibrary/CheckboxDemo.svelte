@@ -1,3 +1,7 @@
+<!--
+  Copyright (c) 2021, Design Awareness Contributors.
+  SPDX-License-Identifier: BSD-3-Clause
+-->
 <script type="ts">
   import BackButton from "../../../components/BackButton.svelte";
   import Checkbox from "../../../components/Checkbox.svelte";

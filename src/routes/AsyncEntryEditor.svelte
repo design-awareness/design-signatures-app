@@ -1,3 +1,7 @@
+<!--
+  Copyright (c) 2021, Design Awareness Contributors.
+  SPDX-License-Identifier: BSD-3-Clause
+-->
 <script lang="ts">
   import ActivityEntrySlat from "../components/ActivityEntrySlat.svelte";
   import BottomActionBar from "../components/BottomActionBar.svelte";
@@ -5,9 +9,10 @@
   import ContentFrame from "../components/layout/ContentFrame.svelte";
   import RichLabel from "../components/RichLabel.svelte";
   import SegmentedSelector from "../components/SegmentedSelector.svelte";
-  import type { AsyncEntry, DesignModel } from "../data/schema";
+  import type { AsyncEntry, AsyncProject, DesignModel } from "../data/schema";
   import { fromDate, MONTH_NAME } from "../util/date";
 
+  export let project: AsyncProject;
   export let entry: AsyncEntry;
   export let label: string;
   export let save: () => Promise<void>;
@@ -22,12 +27,14 @@
   let notes = entry.data.map((data) => data.note);
 
   type EntryMode = "raw" | "percent";
-  let entryMode: EntryMode = "raw";
-  let lastEntryMode: EntryMode = entryMode;
+  let entryMode = project.getMeta("entryUnit", "raw");
+  let lastEntryMode: EntryMode = "raw";
   let total = 0;
   calculateTotal();
   $: if (lastEntryMode !== entryMode) {
     lastEntryMode = entryMode;
+    project.setMeta("entryUnit", entryMode);
+    project.save();
     if (entryMode === "percent") {
       values = values.map((value) => value && roundD2((value * 100) / total));
     } else {

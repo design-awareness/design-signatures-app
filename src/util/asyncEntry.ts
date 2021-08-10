@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2021, Design Awareness Contributors.
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
 import type { Weekday } from "design-awareness-data-types";
 import type { AsyncEntry, AsyncProject } from "../data/schema";
 import type { DateString } from "./date";

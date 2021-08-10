@@ -1,3 +1,7 @@
+<!--
+  Copyright (c) 2021, Design Awareness Contributors.
+  SPDX-License-Identifier: BSD-3-Clause
+-->
 <script lang="ts">
   import archiveIcon from "@iconify-icons/ic/baseline-archive";
   import deleteIcon from "@iconify-icons/ic/baseline-delete";

@@ -1,9 +1,15 @@
+/*
+ * Copyright (c) 2021, Design Awareness Contributors.
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
 import defer from "../util/defer";
 import { VERSION } from "./buildData";
 import * as Schema from "./schema";
 import { initializeConfiguration, upgradeDatabase } from "./upgradeDatabase";
 
 const DB_NAME = "design-awareness-local-store";
+const META_KEY = "@meta";
 const DEBUG_DELAY = 0;
 
 type DBID = string;
@@ -319,6 +325,7 @@ function createClientObject(
   const schema = Schema.Schema[store];
   const data: Record<string, any> = {};
   const obj = {};
+  let meta: Record<string, any> = {};
   const childResolvers = [];
 
   // client obj private properties
@@ -374,6 +381,9 @@ function createClientObject(
         }
       },
     });
+  }
+  if (typeof rawObj[META_KEY] === "object") {
+    meta = rawObj[META_KEY];
   }
 
   // add wrapper properties & methods
@@ -434,6 +444,7 @@ function createClientObject(
             }
           }
         }
+        dbObj[META_KEY] = meta;
 
         dirty = false;
 
@@ -493,6 +504,16 @@ function createClientObject(
           encoder: "design-awareness-app@" + VERSION,
         },
       });
+    },
+
+    getMeta(key: string, defaultValue: any) {
+      return meta[key] ?? defaultValue;
+    },
+    setMeta(key: string, value: any) {
+      if (meta[key] !== value) {
+        meta[key] = value;
+        dirty = true;
+      }
     },
   });
 

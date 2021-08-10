@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2021, Design Awareness Contributors.
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
 //@ts-ignore
 export const BUILD_TIME: number = BUILDVAR__BUILD_TIME;
 //@ts-ignore

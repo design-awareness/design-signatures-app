@@ -1,5 +1,9 @@
+<!--
+  Copyright (c) 2021, Design Awareness Contributors.
+  SPDX-License-Identifier: BSD-3-Clause
+-->
 <script lang="ts">
-  import type { DesignModel } from "../data/schema";
+  import type { AsyncProject, RealtimeProject } from "../data/schema";
   import { expressiveDurationM } from "../util/time";
   import type { Bar } from "./BarChart.svelte";
   import BarGraph from "./BarChart.svelte";
@@ -7,25 +11,27 @@
   import SegmentedSelector from "./SegmentedSelector.svelte";
   import Header from "./type/Header.svelte";
 
-  export let designModel: DesignModel;
+  export let project: AsyncProject | RealtimeProject;
   export let chartData: number[];
   export let count: number;
   export let countLabel: string;
   export let firstLast: [string, string];
   export let firstLastType: string;
 
-  let chartMode: "raw" | "percent" = "raw";
+  // cast isn't always correct, but this lets us use getMeta
+  let chartMode = (project as AsyncProject).getMeta("barViewUnit", "raw");
 
   let bars: Bar[];
   let total: number;
   $: {
+    (project as AsyncProject).setMeta("barViewUnit", chartMode);
     if (chartMode === "percent") {
       total = chartData.reduce((a, b) => a + b, 0);
     }
     bars = chartData.map((value, i) => ({
       value,
-      color: designModel.activities[i].color,
-      label: designModel.activities[i].code,
+      color: project.designModel.activities[i].color,
+      label: project.designModel.activities[i].code,
       valueStr:
         chartMode === "raw"
           ? expressiveDurationM(value)

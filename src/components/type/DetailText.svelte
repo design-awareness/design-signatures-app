@@ -1,3 +1,12 @@
+<!--
+  Copyright (c) 2021, Design Awareness Contributors.
+  SPDX-License-Identifier: BSD-3-Clause
+-->
+
+<p>
+  <slot />
+</p>
+
 <style lang="scss">
   @import "src/styles/type";
   @import "src/styles/tokens";
@@ -11,7 +20,3 @@
     }
   }
 </style>
-
-<p>
-  <slot />
-</p>

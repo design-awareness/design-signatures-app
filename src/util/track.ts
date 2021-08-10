@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2021, Design Awareness Contributors.
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
 import { newRealtimeSession } from "../data/database";
 import type { RealtimeProject, RealtimeSession } from "../data/schema";
 import { setInArray } from "./array";

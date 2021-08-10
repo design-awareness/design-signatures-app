@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2021, Design Awareness Contributors.
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
 export const DB_VERSION = 4;
 export const WELL_KNOWN_ENTITY_PREFIX = "well-known:";
 
@@ -12,7 +17,9 @@ import type {
 /**
  * Base methods available on database entity objects
  */
-export interface Entity extends DataType.Entity {
+export interface Entity<
+  MetadataType extends Record<string, any> = Record<string, any>
+> extends DataType.Entity {
   readonly id: string;
   readonly dirty: boolean;
   readonly saving: boolean;
@@ -21,7 +28,14 @@ export interface Entity extends DataType.Entity {
   remove(): Promise<void>;
   toSerializable(): object;
   serialize(): string;
+  getMeta<K extends keyof MetadataType>(
+    key: K,
+    defaultValue: MetadataType[K]
+  ): MetadataType[K];
+  setMeta<K extends keyof MetadataType>(key: K, value: MetadataType[K]): void;
 }
+
+type EmptyMeta = Record<never, never>;
 
 // [key, model name, array?]
 // [key, null, default]
@@ -65,7 +79,9 @@ type Prepare<I> = Omit<DeepReadonly<DeepRequired<I>>, "id">;
 
 ///// INTERFACE DEFINITIONS
 
-export interface AsyncEntry extends Entity, Prepare<DataType.AsyncEntry> {}
+export interface AsyncEntry
+  extends Entity<EmptyMeta>,
+    Prepare<DataType.AsyncEntry> {}
 
 const AsyncEntrySchema = makeSchema<AsyncEntry>({
   created: [null, currentDate],
@@ -75,8 +91,15 @@ const AsyncEntrySchema = makeSchema<AsyncEntry>({
   period: [null, currentDate],
 });
 
+interface ProjectMeta {
+  barViewUnit: "raw" | "percent";
+}
+interface AsyncProjectMeta extends ProjectMeta {
+  entryUnit: "raw" | "percent";
+}
+
 export interface AsyncProject
-  extends Entity,
+  extends Entity<AsyncProjectMeta>,
     SetPropertyTypes<
       Prepare<DataType.AsyncProject>,
       [
@@ -99,7 +122,9 @@ const AsyncProjectSchema = makeSchema<AsyncProject>({
   reportingPeriod: [null, "day"],
 });
 
-export interface DesignModel extends Entity, Prepare<DataType.DesignModel> {}
+export interface DesignModel
+  extends Entity<EmptyMeta>,
+    Prepare<DataType.DesignModel> {}
 
 const DesignModelSchema = makeSchema<DesignModel>({
   activities: [null, emptyArr],
@@ -108,15 +133,19 @@ const DesignModelSchema = makeSchema<DesignModel>({
   wellKnown: [null, false],
 });
 
-export interface ProjectNote extends Entity, Prepare<DataType.ProjectNote> {}
+export interface ProjectNote
+  extends Entity<EmptyMeta>,
+    Prepare<DataType.ProjectNote> {}
 
 const ProjectNoteSchema = makeSchema<ProjectNote>({
   content: [null, ""],
   created: [null, currentDate],
 });
 
+interface RealtimeProjectMeta extends ProjectMeta {}
+
 export interface RealtimeProject
-  extends Entity,
+  extends Entity<RealtimeProjectMeta>,
     SetPropertyTypes<
       Prepare<DataType.RealtimeProject>,
       [
@@ -138,7 +167,7 @@ const RealtimeProjectSchema = makeSchema<RealtimeProject>({
 });
 
 export interface RealtimeSession
-  extends Entity,
+  extends Entity<EmptyMeta>,
     SetPropertyTypes<
       Prepare<DataType.RealtimeSession>,
       [["notes", TimedNote[]]]
@@ -151,7 +180,9 @@ const RealtimeSessionSchema = makeSchema<RealtimeSession>({
   start: [null, currentDate],
 });
 
-export interface TimedNote extends Entity, Prepare<DataType.TimedNote> {}
+export interface TimedNote
+  extends Entity<EmptyMeta>,
+    Prepare<DataType.TimedNote> {}
 
 const TimedNoteSchema = makeSchema<TimedNote>({
   content: [null, ""],

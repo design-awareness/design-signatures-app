@@ -1,3 +1,14 @@
+<!--
+  Copyright (c) 2021, Design Awareness Contributors.
+  SPDX-License-Identifier: BSD-3-Clause
+-->
+
+<div class="outer">
+  <div class="inner">
+    <slot />
+  </div>
+</div>
+
 <style lang="scss">
   .outer {
     margin: 0 -1rem;
@@ -9,9 +20,3 @@
     width: max-content;
   }
 </style>
-
-<div class="outer">
-  <div class="inner">
-    <slot />
-  </div>
-</div>

@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2021, Design Awareness Contributors.
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
 import type { DesignModel } from "design-awareness-data-types";
 import type { DeepRequired } from "../types/utility";
 import { getDesignModel, newDesignModel } from "./database";
@@ -109,7 +114,7 @@ export const presetDesignModels = [
     },
   ],
   [
-    "edu.washington.hcde.atman@0.1",
+    "edu.washington.hcde.atman_extended@0.1",
     {
       name: "Atman model (extended)",
       description: {

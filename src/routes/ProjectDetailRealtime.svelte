@@ -1,3 +1,7 @@
+<!--
+  Copyright (c) 2021, Design Awareness Contributors.
+  SPDX-License-Identifier: BSD-3-Clause
+-->
 <script lang="ts">
   import { push } from "svelte-spa-router/Router.svelte";
   import reflectIcon from "../assets/reflectIcon";

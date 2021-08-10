@@ -1,3 +1,7 @@
+<!--
+  Copyright (c) 2021, Design Awareness Contributors.
+  SPDX-License-Identifier: BSD-3-Clause
+-->
 <script lang="ts">
   import addIcon from "@iconify-icons/ic/baseline-add";
   import { pop, push, querystring } from "svelte-spa-router";
