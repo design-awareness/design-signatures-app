@@ -1,3 +1,7 @@
+<!--
+  Copyright (c) 2021, Design Awareness Contributors.
+  SPDX-License-Identifier: BSD-3-Clause
+-->
 <script lang="ts" context="module">
   // FIXME: move this to a build-time variable?
   export const CDN_PREFIX = "https://cdn.design-awareness.com/app-assets/";
