@@ -5,7 +5,7 @@
 
 import type { DesignModel, RealtimeSession, TimedNote } from "../data/schema";
 import { colorScheme } from "./colorScheme";
-import { expressiveDuration } from "./time";
+import { timelineDuration } from "./time";
 
 interface RealtimeSessionLike {
   data: RealtimeSession["data"];
@@ -293,7 +293,7 @@ export default function timeline(
       ctx.textBaseline = "middle";
       ctx.textAlign = "left";
       while (t < totalDuration) {
-        ctx.fillText(expressiveDuration(t), toX(t), y);
+        ctx.fillText(timelineDuration(t), toX(t), y);
         t += timeStep;
       }
     }
