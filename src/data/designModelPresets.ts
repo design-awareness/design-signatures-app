@@ -108,7 +108,7 @@ export const presetDesignModels = [
           name: "Problem Definition",
           code: "PD",
           description:
-            "Define the problem (identify constraints, criteria, stakeholderes, etc.)",
+            "Define the problem (identify constraints, criteria, stakeholders, etc.)",
           color: ["AE1E60", "FFFFFF"],
         },
         {
