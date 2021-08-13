@@ -7,14 +7,10 @@ import type { DesignModel, RealtimeSession, TimedNote } from "../data/schema";
 import { colorScheme } from "./colorScheme";
 import { timelineDuration } from "./time";
 
-interface TimedNoteLike {
-  time: RealtimeSession["notes"][number]["time"];
-}
-
 interface RealtimeSessionLike {
   data: RealtimeSession["data"];
   duration: RealtimeSession["duration"];
-  notes: TimedNoteLike[];
+  notes: TimedNote[];
 }
 
 interface RealtimeProjectLike {
@@ -39,7 +35,7 @@ interface TimelineRendererDescriptor {
   /**
    * Callback for note user selection
    */
-  selectNote?: (note: TimedNoteLike) => void;
+  selectNote?: (note: TimedNote) => void;
 
   /**
    * Whether to show notes in a bottom gutter. Default: true
@@ -59,6 +55,8 @@ interface TimelineRendererDescriptor {
 }
 
 const TAU = 2 * Math.PI;
+
+const NOTE_TOUCH_THRESH = 16;
 
 const ROW_HEIGHT = 24;
 const BAR_HEIGHT = 20;
@@ -113,6 +111,12 @@ const DARK_THEME: TimelineColors = {
   timeLabel: "#bdbdbd", // text-secondary
 };
 
+interface NoteTouchTarget {
+  x: number;
+  y: number;
+  note: TimedNote;
+}
+
 export default function timeline(
   node: HTMLCanvasElement,
   {
@@ -138,6 +142,8 @@ export default function timeline(
   let { activities } = project.designModel;
   let rafHandle = -1;
   let numberOfActivities = activities.length;
+
+  let noteTouchTargets: NoteTouchTarget[] = [];
 
   // node size calculations
   let contentWidth = 0;
@@ -260,6 +266,7 @@ export default function timeline(
     if (showTime) noteY -= TIME_GUTTER_HEIGHT + SEPARATOR;
 
     // draw bars & note dots
+    noteTouchTargets = [];
     {
       for (let { data, priorDuration, duration, notes } of renderData) {
         let endX = toX(duration + priorDuration);
@@ -283,14 +290,17 @@ export default function timeline(
           y += ROW_HEIGHT;
         }
 
-        ctx.fillStyle = theme.noteColor;
-        for (let note of notes) {
-          let x = toX(note.time + priorDuration);
-          if (x < 0) continue;
-          if (x > contentWidth + noteSize) break;
-          ctx.beginPath();
-          ctx.arc(x, noteY, noteSize, 0, TAU);
-          ctx.fill();
+        if (showNotes) {
+          ctx.fillStyle = theme.noteColor;
+          for (let note of notes) {
+            let x = toX(note.time + priorDuration);
+            if (x < 0) continue;
+            if (x > contentWidth + noteSize) break;
+            ctx.beginPath();
+            ctx.arc(x, noteY, noteSize, 0, TAU);
+            ctx.fill();
+            noteTouchTargets.push({ x, y: noteY, note });
+          }
         }
 
         // the next session won't be visible - done drawing bars!
@@ -528,6 +538,31 @@ export default function timeline(
       scheduleDraw();
     }
   }
+  function onClick(e: MouseEvent) {
+    let pos = elementPosition(e);
+
+    if (noteTouchTargets.length) {
+      let noteY = noteTouchTargets[0].y;
+      // too far on y axis - no note click
+      if (Math.abs(noteY - pos.y) > NOTE_TOUCH_THRESH) return;
+
+      let closestTarget: NoteTouchTarget | undefined;
+      let closestDistance = 1e6;
+      for (let target of noteTouchTargets) {
+        let dist = Math.abs(target.x - pos.x);
+        if (dist < closestDistance) {
+          closestTarget = target;
+          closestDistance = dist;
+        } else {
+          break;
+        }
+      }
+      if (closestDistance <= NOTE_TOUCH_THRESH && closestTarget) {
+        selectNote?.(closestTarget.note);
+      }
+    }
+  }
+
   if (interactive) {
     node.addEventListener("touchstart", onTouchStart);
     node.addEventListener("touchend", onTouchStop);
@@ -537,6 +572,7 @@ export default function timeline(
     node.addEventListener("mousedown", onMouseDown);
     node.addEventListener("mouseup", onMouseUp);
     node.addEventListener("mousemove", onMouseMove);
+    node.addEventListener("click", onClick);
   }
 
   function update(newDescriptor: TimelineRendererDescriptor) {
