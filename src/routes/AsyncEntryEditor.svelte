@@ -3,12 +3,15 @@
   SPDX-License-Identifier: BSD-3-Clause
 -->
 <script lang="ts">
+  import totalAlertIcon from "@iconify-icons/ic/baseline-percentage";
   import ActivityEntrySlat from "../components/ActivityEntrySlat.svelte";
+  import Alert from "../components/Alert.svelte";
   import BottomActionBar from "../components/BottomActionBar.svelte";
   import InputField from "../components/InputField.svelte";
   import ContentFrame from "../components/layout/ContentFrame.svelte";
   import RichLabel from "../components/RichLabel.svelte";
   import SegmentedSelector from "../components/SegmentedSelector.svelte";
+  import CONFIG from "../data/config";
   import type { AsyncEntry, AsyncProject, DesignModel } from "../data/schema";
   import { fromDate, MONTH_NAME } from "../util/date";
 
@@ -17,6 +20,8 @@
   export let label: string;
   export let save: () => Promise<void>;
   export let designModel: DesignModel;
+
+  const TOTAL_PERCENT_FUDGE_ALLOW = 1;
 
   if (!label) {
     let date = fromDate(entry.period);
@@ -30,6 +35,9 @@
   let entryMode = project.getMeta("entryUnit", "raw");
   let lastEntryMode: EntryMode = "raw";
   let total = 0;
+  let totalPercentage = 0;
+  let totalPercentageOK = true;
+
   calculateTotal();
   $: if (lastEntryMode !== entryMode) {
     lastEntryMode = entryMode;
@@ -37,6 +45,7 @@
     project.save();
     if (entryMode === "percent") {
       values = values.map((value) => value && roundD2((value * 100) / total));
+      calculateTotalPercentage();
     } else {
       values = values.map((value) => value && roundD2((value * total) / 100));
       calculateTotal();
@@ -49,18 +58,34 @@
   function calculateTotal() {
     total = roundD2(values.reduce((a, b) => a + b, 0));
   }
+  function calculateTotalPercentage() {
+    totalPercentage = values.reduce((a, b) => a + b, 0);
+    totalPercentageOK =
+      !total || Math.abs(totalPercentage - 100) <= TOTAL_PERCENT_FUDGE_ALLOW;
+  }
+
+  let suppressBeforeUnload = false;
+  (async function () {
+    suppressBeforeUnload = await CONFIG.getDevSuppressBeforeUnload();
+  })();
 
   function beforeUnload(evt: BeforeUnloadEvent) {
-    evt.preventDefault();
-    evt.returnValue = "Changes may not be saved.";
-    return "Changes may not be saved.";
+    if (!suppressBeforeUnload) {
+      evt.preventDefault();
+      evt.returnValue = "Changes may not be saved.";
+      return "Changes may not be saved.";
+    }
   }
 
   const update = (i: number) => () => {
     if (i >= 0) {
       values[i] = Math.max(values[i], 0);
     }
-    calculateTotal();
+    if (entryMode === "raw") {
+      calculateTotal();
+    } else {
+      calculateTotalPercentage();
+    }
     entry.data = values.map((value, i) => ({
       value:
         entryMode === "raw"
@@ -72,6 +97,20 @@
   const updateNote = () => {
     entry.note = entry.note.trim();
   };
+
+  function checkAndSave() {
+    if (entryMode === "raw") {
+      calculateTotal();
+    } else {
+      calculateTotalPercentage();
+      if (total === 0 && totalPercentage !== 0) {
+        totalPercentageOK = false;
+        document.documentElement.scrollTo({ top: 0, behavior: "smooth" });
+        return;
+      }
+    }
+    save();
+  }
 </script>
 
 <svelte:window on:beforeunload={beforeUnload} />
@@ -89,15 +128,6 @@
     />
   </RichLabel>
 
-  {#each designModel.activities as activity, i}
-    <ActivityEntrySlat
-      {activity}
-      bind:value={values[i]}
-      bind:note={notes[i]}
-      {entryMode}
-      on:blur={update(i)}
-    />
-  {/each}
   <ActivityEntrySlat
     activity={designModel.activities[0]}
     bind:value={total}
@@ -107,6 +137,36 @@
     isTotalRow
     isTotalDisabled={entryMode === "raw"}
   />
+
+  {#if entryMode === "percent" && !totalPercentageOK && !total}
+    <div class="alert-area">
+      <Alert type="note" icon={totalAlertIcon}>
+        If you want to create an empty entry, <strong>
+          set all activity percentages to 0.
+        </strong>
+      </Alert>
+    </div>
+  {/if}
+
+  {#each designModel.activities as activity, i}
+    <ActivityEntrySlat
+      {activity}
+      bind:value={values[i]}
+      bind:note={notes[i]}
+      {entryMode}
+      on:blur={update(i)}
+    />
+  {/each}
+
+  {#if entryMode === "percent" && total && !totalPercentageOK}
+    <div class="alert-area">
+      <Alert type="note" icon={totalAlertIcon}>
+        Activity percentages should add up to 100%. (Current total: {Math.round(
+          totalPercentage
+        )}%)
+      </Alert>
+    </div>
+  {/if}
 
   <div class="note">
     <InputField
@@ -119,7 +179,11 @@
     />
   </div>
 </ContentFrame>
-<BottomActionBar label="Save" on:click={save} />
+<BottomActionBar
+  label="Save"
+  on:click={checkAndSave}
+  disabled={entryMode === "percent" && !totalPercentageOK}
+/>
 
 <style lang="scss">
   @import "src/styles/tokens";
@@ -135,9 +199,12 @@
     @include type-style($type-section-header);
     text-align: center;
     padding: 0.5rem;
-    z-index: 1;
+    z-index: 10;
   }
   .spacer {
     height: 1rem + rem(map-get($type-section-header, height));
+  }
+  .alert-area {
+    margin: $block-vertical-spacing 0;
   }
 </style>

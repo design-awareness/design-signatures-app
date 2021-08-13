@@ -18,6 +18,7 @@
   @import "src/styles/tokens";
   .bar {
     position: fixed;
+    z-index: 10;
     left: 0;
     bottom: 0;
     height: $action-bar-height;
