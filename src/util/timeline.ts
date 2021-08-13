@@ -184,6 +184,7 @@ export default function timeline(
   });
   let renderData = project.sessions.map((session, i) => ({
     data: session.data,
+    duration: session.duration,
     priorDuration: priorDurations[i],
   }));
   // remove initial 0 - leaves non-first session start times
@@ -209,6 +210,12 @@ export default function timeline(
       ACTIVITY_LABEL_AREA_WIDTH
     );
   }
+  function fromX(x: number) {
+    return (
+      (x + displayOffset - ACTIVITY_LABEL_AREA_WIDTH) /
+      (toPixelScalingFactor * displayScale)
+    );
+  }
 
   function draw() {
     // draw timeline
@@ -230,6 +237,8 @@ export default function timeline(
 
     // draw session markers
     {
+      // this probably isn't prohibitively expensive, so not over-optimizing
+      // for now!
       ctx.fillStyle = theme.sessionMarker;
       // let h = numberOfActivities * ROW_HEIGHT;
       for (let priorDuration of priorDurations) {
@@ -240,17 +249,30 @@ export default function timeline(
 
     // draw bars
     {
-      for (let { data, priorDuration } of renderData) {
+      for (let { data, priorDuration, duration } of renderData) {
+        let endX = toX(duration + priorDuration);
+
+        // this session isn't visible - skip and try next
+        if (endX < ACTIVITY_LABEL_AREA_WIDTH) continue;
+
         let y = TIMELINE_PAD_V + ROW_HEIGHT / 2 - BAR_HEIGHT / 2;
         for (let activity = 0; activity < numberOfActivities; activity++) {
           ctx.fillStyle = "#" + activities[activity].color[colorSchemeIdx];
           for (let [start, stop] of data[activity]) {
+            let x2 = toX(stop + priorDuration);
+            // this bar isn't visible - skip and try next
+            if (x2 < ACTIVITY_LABEL_AREA_WIDTH) continue;
             let x = toX(start + priorDuration);
-            let w = toX(stop + priorDuration) - x;
+            let w = x2 - x;
             ctx.fillRect(x, y, w, BAR_HEIGHT);
+            // this bar goes over the right edge - skip any future bars
+            if (x2 > contentWidth) break;
           }
           y += ROW_HEIGHT;
         }
+
+        // the next session won't be visible - done drawing bars!
+        if (endX > contentWidth) break;
       }
     }
 
@@ -286,13 +308,18 @@ export default function timeline(
         }
       }
 
-      let t = timeStep;
+      // use 0 instead of ACTIVITY_LABEL_AREA_WIDTH to allow for times
+      // to peek out from before the left edge of the timeline
+      let minT = fromX(0);
+      let maxT = fromX(contentWidth);
+      // get first timeStep to draw (minimum 1 timestep)
+      let t = timeStep * Math.max(1, Math.ceil(minT / timeStep));
       let y = contentHeight - TIME_GUTTER_HEIGHT / 2;
       ctx.font = TIME_LABEL_FONT;
       ctx.fillStyle = theme.timeLabel;
       ctx.textBaseline = "middle";
       ctx.textAlign = "left";
-      while (t < totalDuration) {
+      while (t < maxT) {
         ctx.fillText(timelineDuration(t), toX(t), y);
         t += timeStep;
       }
@@ -361,7 +388,6 @@ export default function timeline(
   function onTouchStart(e: TouchEvent) {
     // don't even attempt to handle more than two touches
     if (e.targetTouches.length > 2) return;
-    // console.log(e);
 
     if (e.changedTouches.length === 1 && e.targetTouches.length === 1) {
       // this is a single finger down as part of a pan
@@ -433,7 +459,6 @@ export default function timeline(
       scheduleDraw();
       e.preventDefault();
     }
-    // console.log(e);
   }
   function onWheel(_e: Event) {
     let e = _e as WheelEvent;
