@@ -52,6 +52,9 @@ export type SetPropertyType<I, Prop extends keyof I, To> = {
   [K in keyof I]: K extends Prop ? To : I[K];
 };
 
+/** Get a promise result type */
+export type ThenType<T> = T extends Promise<infer U> ? U : T;
+
 /**
  * Changes multple property types on an interface.
  * @param I interface to change a property type on
@@ -78,14 +81,16 @@ export type SetPropertyType<I, Prop extends keyof I, To> = {
  *   c: boolean;
  * }
  */
-export type SetPropertyTypes<I, PropDefs extends [keyof I, any][]> =
-  PropDefs extends [[infer Prop, infer NewType], ...infer Rest]
-    ? Prop extends keyof I
-      ? Rest extends [keyof I, any][]
-        ? SetPropertyTypes<SetPropertyType<I, Prop, NewType>, Rest>
-        : never
+export type SetPropertyTypes<
+  I,
+  PropDefs extends [keyof I, any][]
+> = PropDefs extends [[infer Prop, infer NewType], ...infer Rest]
+  ? Prop extends keyof I
+    ? Rest extends [keyof I, any][]
+      ? SetPropertyTypes<SetPropertyType<I, Prop, NewType>, Rest>
       : never
-    : I;
+    : never
+  : I;
 
 /**
  * Test for presence of a property
