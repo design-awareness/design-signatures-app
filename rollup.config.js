@@ -12,7 +12,7 @@ import css from "rollup-plugin-css-only";
 
 const production = !process.env.ROLLUP_WATCH;
 
-const ENV = !production ? "dev" : process.env.ENV_STAGING ? "stage" : "prod";
+const ENV = !production ? "dev" : process.env.PULL_REQUEST ? "preview" : "prod";
 
 function serve() {
   let server;
@@ -51,7 +51,7 @@ export default [
     plugins: [
       svelte({
         preprocess: preprocess({
-          moduleResolution: ts.ModuleKind.Node,
+          moduleResolution: ts.ModuleKind.ESNext,
         }),
 
         compilerOptions: {
@@ -75,10 +75,13 @@ export default [
         dedupe: ["svelte"],
       }),
       replace({
-        BUILDVAR__BUILD_TIME: Date.now(),
+        BUILDVAR__BUILD_TIME: JSON.stringify(Date.now()),
         BUILDVAR__VERSION: JSON.stringify(process.env.npm_package_version),
         BUILDVAR__BUILD_ENV: JSON.stringify(ENV),
         BUILDVAR__BRANCH: JSON.stringify(process.env.BRANCH),
+        BUILDVAR__PULL_REQUEST: JSON.stringify(process.env.REVIEW_ID),
+        BUILDVAR__GIT_HEAD: JSON.stringify(process.env.HEAD),
+        BUILDVAR__GIT_REPO: JSON.stringify(process.env.REPOSITORY_URL),
         preventAssignment: true,
       }),
       commonjs(),
@@ -93,7 +96,7 @@ export default [
 
       // Watch the `public` directory and refresh the
       // browser on changes when not in production
-      !production && livereload("build"),
+      !production && livereload({ watch: "build" }),
 
       // If we're building for production (npm run build
       // instead of npm run dev), minify

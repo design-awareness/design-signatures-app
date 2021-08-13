@@ -10,7 +10,7 @@ interface ReflectionCategory {
 
 export const reflectionQuestions: ReflectionCategory[] = [
   {
-    name: "Design process research questions",
+    name: "Expert design practices",
     questions: [
       "Did you engage in all the design activities in your chosen design model in your process?",
       "Did you iterate across the design activities in your model as much as you think you should have?",
@@ -26,12 +26,12 @@ export const reflectionQuestions: ReflectionCategory[] = [
     ],
   },
   {
-    name: "How time was spent",
+    name: "Time usage",
     questions: [
       "What made you spend a certain amount of time on a particular activity?",
       "Which design activity(s) did you wish you had spent more time in?",
       "How satisfied are you with the amount of time you spent on problem scoping/research focused activities?",
-      "Did you feel rushed through any phases/ design activities?",
+      "Did you feel rushed through any phases/design activities?",
       "What could have made a particular step in your process more efficient for you?",
     ],
   },
@@ -40,7 +40,7 @@ export const reflectionQuestions: ReflectionCategory[] = [
     questions: [
       "Did you think about all the stakeholders in the problem you are solving (not just the users)?",
       "Were you able to empathize with each group of stakeholders?",
-      "Did you incorporate principles of sustainability in your design? ",
+      "Did you incorporate principles of sustainability in your design?",
       "What impact will your design have on the environment? ",
     ],
   },
