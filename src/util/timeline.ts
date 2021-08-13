@@ -134,8 +134,19 @@ export default function timeline(
 
   // node size calculations
   let contentWidth = 0;
-  let contentHeight = getHeight();
-  node.style.height = contentHeight + "px";
+  let contentHeight = 0;
+  function updateHeight() {
+    let height = numberOfActivities * ROW_HEIGHT + 2 * TIMELINE_PAD_V;
+    if (showNotes) {
+      height += SEPARATOR + NOTE_GUTTER_HEIGHT;
+    }
+    if (showTime) {
+      height += SEPARATOR + TIME_GUTTER_HEIGHT;
+    }
+    contentHeight = height;
+    node.style.height = height + "px";
+  }
+  updateHeight();
 
   let toPixelScalingFactor = 0;
   let displayScale = 1;
@@ -178,16 +189,6 @@ export default function timeline(
   // remove initial 0 - leaves non-first session start times
   priorDurations.shift();
 
-  function getHeight() {
-    let height = numberOfActivities * ROW_HEIGHT + 2 * TIMELINE_PAD_V;
-    if (showNotes) {
-      height += SEPARATOR + NOTE_GUTTER_HEIGHT;
-    }
-    if (showTime) {
-      height += SEPARATOR + TIME_GUTTER_HEIGHT;
-    }
-    return height;
-  }
   function updateSize(width: number | undefined) {
     if (width === undefined) {
       node.style.width = "100%";
@@ -496,6 +497,9 @@ export default function timeline(
   function update(newDescriptor: TimelineRendererDescriptor) {
     dpi = newDescriptor.dpi ?? window.devicePixelRatio ?? 1;
     width = newDescriptor.width;
+    showNotes = newDescriptor.showNotes ?? showNotes;
+    showTime = newDescriptor.showTime ?? showTime;
+    updateHeight();
     updateSize(width);
     scheduleDraw();
   }
