@@ -7,9 +7,14 @@ import type { DesignModel, RealtimeSession, TimedNote } from "../data/schema";
 import { colorScheme } from "./colorScheme";
 import { timelineDuration } from "./time";
 
+interface TimedNoteLike {
+  time: RealtimeSession["notes"][number]["time"];
+}
+
 interface RealtimeSessionLike {
   data: RealtimeSession["data"];
   duration: RealtimeSession["duration"];
+  notes: TimedNoteLike[];
 }
 
 interface RealtimeProjectLike {
@@ -34,7 +39,7 @@ interface TimelineRendererDescriptor {
   /**
    * Callback for note user selection
    */
-  selectNote?: (note: TimedNote) => void;
+  selectNote?: (note: TimedNoteLike) => void;
 
   /**
    * Whether to show notes in a bottom gutter. Default: true
@@ -52,6 +57,8 @@ interface TimelineRendererDescriptor {
    */
   width?: number;
 }
+
+const TAU = 2 * Math.PI;
 
 const ROW_HEIGHT = 24;
 const BAR_HEIGHT = 20;
@@ -186,6 +193,7 @@ export default function timeline(
     data: session.data,
     duration: session.duration,
     priorDuration: priorDurations[i],
+    notes: session.notes,
   }));
   // remove initial 0 - leaves non-first session start times
   priorDurations.shift();
@@ -247,9 +255,13 @@ export default function timeline(
       }
     }
 
-    // draw bars
+    let noteY = contentHeight - NOTE_GUTTER_HEIGHT / 2;
+    let noteSize = NOTE_GUTTER_HEIGHT / 2 - 1;
+    if (showTime) noteY -= TIME_GUTTER_HEIGHT + SEPARATOR;
+
+    // draw bars & note dots
     {
-      for (let { data, priorDuration, duration } of renderData) {
+      for (let { data, priorDuration, duration, notes } of renderData) {
         let endX = toX(duration + priorDuration);
 
         // this session isn't visible - skip and try next
@@ -266,9 +278,19 @@ export default function timeline(
             let w = x2 - x;
             ctx.fillRect(x, y, w, BAR_HEIGHT);
             // this bar goes over the right edge - skip any future bars
-            if (x2 > contentWidth) break;
+            if (x2 > contentWidth + noteSize) break;
           }
           y += ROW_HEIGHT;
+        }
+
+        ctx.fillStyle = theme.noteColor;
+        for (let note of notes) {
+          let x = toX(note.time + priorDuration);
+          if (x < 0) continue;
+          if (x > contentWidth + noteSize) break;
+          ctx.beginPath();
+          ctx.arc(x, noteY, noteSize, 0, TAU);
+          ctx.fill();
         }
 
         // the next session won't be visible - done drawing bars!
@@ -287,8 +309,6 @@ export default function timeline(
         ctx.fillRect(ACTIVITY_LABEL_AREA_WIDTH, y, w, SEPARATOR);
       }
     }
-
-    // TODO: draw note indicators
 
     // draw time labels
     if (showTime) {
