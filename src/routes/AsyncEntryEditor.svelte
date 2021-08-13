@@ -21,8 +21,6 @@
   export let save: () => Promise<void>;
   export let designModel: DesignModel;
 
-  let alertScrollAnchor: HTMLDivElement;
-
   const TOTAL_PERCENT_FUDGE_ALLOW = 1;
 
   if (!label) {
@@ -107,7 +105,7 @@
       calculateTotalPercentage();
       if (total === 0 && totalPercentage !== 0) {
         totalPercentageOK = false;
-        alertScrollAnchor?.scrollIntoView?.();
+        document.documentElement.scrollTo({ top: 0, behavior: "smooth" });
         return;
       }
     }
@@ -130,7 +128,6 @@
     />
   </RichLabel>
 
-  <div bind:this={alertScrollAnchor} role="presentation" />
   <ActivityEntrySlat
     activity={designModel.activities[0]}
     bind:value={total}
@@ -144,7 +141,9 @@
   {#if entryMode === "percent" && !totalPercentageOK && !total}
     <div class="alert-area">
       <Alert type="note" icon={totalAlertIcon}>
-        If you want to create an empty entry, set all activity percentages to 0.
+        If you want to create an empty entry, <strong>
+          set all activity percentages to 0.
+        </strong>
       </Alert>
     </div>
   {/if}
@@ -200,7 +199,7 @@
     @include type-style($type-section-header);
     text-align: center;
     padding: 0.5rem;
-    z-index: 1;
+    z-index: 10;
   }
   .spacer {
     height: 1rem + rem(map-get($type-section-header, height));
