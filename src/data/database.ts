@@ -476,6 +476,7 @@ function createClientObject(
 
     toSerializable() {
       const rawObj: Record<string, any> = {};
+      rawObj.id = id;
       for (let [name, isEntityType, repeated] of schema) {
         if (isEntityType) {
           if (repeated) {
@@ -489,21 +490,24 @@ function createClientObject(
           rawObj[name] = data[name];
         }
       }
-      rawObj.id = id;
       return rawObj;
     },
 
-    serialize(): string {
+    serialize(pretty = false): string {
       const entryData = this.toSerializable();
-      return JSON.stringify({
-        $format: "design-awareness",
-        version: "1.0.0",
-        type: store,
-        data: entryData,
-        meta: {
-          encoder: "design-awareness-app@" + VERSION,
+      return JSON.stringify(
+        {
+          $format: "design-awareness",
+          version: "1.0.0",
+          type: store,
+          data: entryData,
+          meta: {
+            encoder: "design-awareness-app@" + VERSION,
+          },
         },
-      });
+        null,
+        pretty ? 2 : undefined
+      );
     },
 
     getMeta(key: string, defaultValue: any) {
