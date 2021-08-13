@@ -21,6 +21,8 @@
   export let save: () => Promise<void>;
   export let designModel: DesignModel;
 
+  let alertScrollAnchor: HTMLDivElement;
+
   const TOTAL_PERCENT_FUDGE_ALLOW = 1;
 
   if (!label) {
@@ -61,7 +63,7 @@
   function calculateTotalPercentage() {
     totalPercentage = values.reduce((a, b) => a + b, 0);
     totalPercentageOK =
-      !total || Math.abs(totalPercentage - 100) < TOTAL_PERCENT_FUDGE_ALLOW;
+      !total || Math.abs(totalPercentage - 100) <= TOTAL_PERCENT_FUDGE_ALLOW;
   }
 
   let suppressBeforeUnload = false;
@@ -97,6 +99,20 @@
   const updateNote = () => {
     entry.note = entry.note.trim();
   };
+
+  function checkAndSave() {
+    if (entryMode === "raw") {
+      calculateTotal();
+    } else {
+      calculateTotalPercentage();
+      if (total === 0 && totalPercentage !== 0) {
+        totalPercentageOK = false;
+        alertScrollAnchor?.scrollIntoView?.();
+        return;
+      }
+    }
+    save();
+  }
 </script>
 
 <svelte:window on:beforeunload={beforeUnload} />
@@ -114,6 +130,7 @@
     />
   </RichLabel>
 
+  <div bind:this={alertScrollAnchor} role="presentation" />
   <ActivityEntrySlat
     activity={designModel.activities[0]}
     bind:value={total}
@@ -123,6 +140,15 @@
     isTotalRow
     isTotalDisabled={entryMode === "raw"}
   />
+
+  {#if entryMode === "percent" && !totalPercentageOK && !total}
+    <div class="alert-area">
+      <Alert type="note" icon={totalAlertIcon}>
+        If you want to create an empty entry, set all activity percentages to 0.
+      </Alert>
+    </div>
+  {/if}
+
   {#each designModel.activities as activity, i}
     <ActivityEntrySlat
       {activity}
@@ -156,7 +182,7 @@
 </ContentFrame>
 <BottomActionBar
   label="Save"
-  on:click={save}
+  on:click={checkAndSave}
   disabled={entryMode === "percent" && !totalPercentageOK}
 />
 
