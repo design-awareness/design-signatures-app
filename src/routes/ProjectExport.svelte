@@ -7,57 +7,62 @@
   import notFoundIcon from "@iconify-icons/ic/baseline-search-off";
   import BackButton from "../components/BackButton.svelte";
   import BottomActionBar from "../components/BottomActionBar.svelte";
+  import Checkbox from "../components/Checkbox.svelte";
   import ContentFrame from "../components/layout/ContentFrame.svelte";
+  import HorizontalScrollArea from "../components/layout/HorizontalScrollArea.svelte";
   import Link from "../components/Link.svelte";
-  import RichTimeline from "../components/RichTimeline.svelte";
+  import RichLabel from "../components/RichLabel.svelte";
+  import SegmentedSelector from "../components/SegmentedSelector.svelte";
   import SelectField from "../components/SelectField.svelte";
   import SplashScreen from "../components/SplashScreen.svelte";
   import Header from "../components/type/Header.svelte";
-  import SectionHeader from "../components/type/SectionHeader.svelte";
-  import { getProjectOrFail, getRealtimeProject } from "../data/database";
+  import { getProjectOrFail } from "../data/database";
   import type { AsyncProject, RealtimeProject } from "../data/schema";
-  import download from "../util/download";
+  import type { ThenType } from "../types/utility";
+  import { download, downloadBlob } from "../util/download";
+  import timeline from "../util/timeline";
 
   export let params: { id: string };
 
   let projectPromise = getProjectOrFail(params.id);
 
   let project: RealtimeProject | AsyncProject;
-  projectPromise.then(([_, p]) => (project = p));
+  let projectData: ThenType<typeof projectPromise> | undefined;
+  projectPromise.then((res) => {
+    projectData = res;
+    project = res[1];
+  });
 
-  let exportType = "data";
+  let exportType: "image" | "data" = "image";
+  let imageSize: number = 500;
+  let imageScale: number = Math.round(window.devicePixelRatio) ?? 1;
+  let showNotes = false;
+  let showTime = true;
 
-  // FIXME: add support for exporting project visualizations
+  let canvasElement: HTMLCanvasElement | undefined;
 
-  // let imageSize = 500;
-
-  // let timelineRef: HTMLElement;
-  // function setTimeline(ref: HTMLElement) {
-  //   timelineRef = ref;
-  // }
+  // FIXME: add support for exporting async project visualizations
 
   async function doExport() {
-    /*if (exportType === "image") {
-      download(
-        "export.svg",
-        "image/svg+xml",
-        timelineRef
-          .querySelector(".timeline-scrollable svg")
-          ?.outerHTML?.replace(
-            "</svg>",
-            "<" +
-              "style>svg{background-color:white;}.grid-line{fill:#bdbdbd;}text{font:500 0.8rem sans-serif;}</style></svg>"
-          )
-          .toString() as string
-      );
-    } else if (exportType === "data") {*/
     if (!project) await projectPromise;
-    download(
-      `${safeName(project.name)}.json`,
-      "application/json",
-      project.serialize()
-    );
-    //}
+    if (exportType === "data") {
+      download(
+        `${safeName(project.name)}.json`,
+        "application/json",
+        project.serialize()
+      );
+    } else if (projectData?.[0] === "RealtimeProject") {
+      if (canvasElement) {
+        let blob = await getImage(canvasElement);
+        if (!blob) return;
+        downloadBlob(`${safeName(project.name)}.png`, blob);
+      }
+    } else if (projectData?.[0] === "AsyncProject") {
+    }
+  }
+
+  function getImage(canvas: HTMLCanvasElement) {
+    return new Promise<Blob | null>((res) => canvas.toBlob(res));
   }
 
   function safeName(name: string) {
@@ -67,47 +72,88 @@
 
 {#await projectPromise}
   <SplashScreen icon={loadingIcon} label="Loading project…" delay={100} />
-{:then [_, project]}
+{:then projectInfo}
   <main class="device-frame page">
     <ContentFrame>
       <BackButton href="/" />
-      {#await projectPromise}
-        <p>loading…</p>
-      {:then _}
-        <Header>Export {project.name}</Header>
-        <SelectField
-          label="Type"
-          bind:value={exportType}
-          options={[
-            // ["image", "Timeline image (SVG)"],
-            ["data", "Project data (JSON)"],
-          ]}
-        />
-        <!-- {#if exportType === "image"}
-        <SelectField
-          label="Size"
-          bind:value={imageSize}
-          options={[
-            [200, "Super short"],
-            [350, "Short"],
-            [500, "Normal"],
-            [750, "Long"],
-            [1000, "Super long"],
-          ]}
-        />
-        <SectionHeader>Preview</SectionHeader>
-        <div use:setTimeline>
-          <RichTimeline {project} width={imageSize} fixedCodes={false} />
-        </div> -->
-        <!-- {:else if exportType === "data"} -->
+      <Header>Export {project.name}</Header>
+
+      <SegmentedSelector
+        bind:value={exportType}
+        label="Type"
+        fullWidth
+        options={[
+          ["image", "Visualization (PNG)"],
+          ["data", "Project data (JSON)"],
+        ]}
+      />
+
+      {#if exportType === "image"}
+        {#if projectInfo[0] === "RealtimeProject"}
+          <SelectField
+            bind:value={imageSize}
+            label="Width"
+            fullWidth
+            options={[
+              [200, "Super short"],
+              [350, "Short"],
+              [500, "Normal"],
+              [750, "Long"],
+              [1000, "Super long"],
+            ]}
+          />
+
+          <SegmentedSelector
+            bind:value={imageScale}
+            label="Scale"
+            fullWidth
+            options={[
+              [1, "1x"],
+              [2, "2x"],
+              [3, "3x"],
+            ]}
+          />
+
+          <RichLabel label="Features" />
+          <Checkbox bind:checked={showNotes} label="Show notes" />
+          <Checkbox bind:checked={showTime} label="Show timestamps" />
+
+          <RichLabel label="Preview" />
+
+          <HorizontalScrollArea>
+            <canvas
+              bind:this={canvasElement}
+              use:timeline={{
+                project: projectInfo[1],
+                dpi: imageScale,
+                interactive: false,
+                width: imageSize,
+                showNotes,
+                showTime,
+              }}
+            />
+          </HorizontalScrollArea>
+        {:else}
+          <p>
+            Visualization exporting for Asynchronous projects is coming soon!
+          </p>
+        {/if}
+      {:else if exportType === "data"}
         <p>
           <a href="https://data.design-awareness.com/" target="_blank"
             >Learn more about the design awareness data export format</a
           >
         </p>
-        <!-- {/if} -->
-        <BottomActionBar label="Export" on:click={doExport} />
-      {/await}
+
+        <RichLabel label="Preview" />
+
+        <HorizontalScrollArea>
+          <pre>
+            {project.serialize(true)}
+          </pre>
+        </HorizontalScrollArea>
+      {/if}
+      <BottomActionBar label="Export" on:click={doExport} />
     </ContentFrame>
   </main>
 {:catch}
@@ -120,4 +166,10 @@
 <style lang="scss">
   @import "src/styles/tokens";
   @import "src/styles/type";
+
+  pre {
+    background: $alt-background-color;
+    @include type-style($type-caption);
+    padding: 0.75rem;
+  }
 </style>
