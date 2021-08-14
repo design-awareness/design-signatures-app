@@ -456,7 +456,7 @@ export default function timeline(
       displayOffset += offsetX;
       clampOffset();
       scheduleDraw();
-      e.preventDefault();
+      if (e.cancelable) e.preventDefault();
     }
 
     if (e.targetTouches.length === 2) {
@@ -487,7 +487,7 @@ export default function timeline(
       clampOffset();
 
       scheduleDraw();
-      e.preventDefault();
+      if (e.cancelable) e.preventDefault();
     }
   }
   function onWheel(_e: Event) {
