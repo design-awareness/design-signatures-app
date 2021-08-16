@@ -58,7 +58,7 @@
 
     "/about/": NotFound, // About design awareness
     "/about/tutorials": Tutorials, // Tutorials
-    "/about/thepoint": ThePoint, // Whats the point?
+    "/about/the-point": ThePoint, // Whats the point?
     "/about/research": Research, // Explore design process research
     "/about/models": Models, //Design Models
     "/about/project": AboutProject, //About this Project (+ team bio)

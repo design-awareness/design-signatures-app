@@ -63,10 +63,10 @@
 
     <Header>About Design Awareness</Header>
     <p>
-      <Link href="/about/tutorials"> Tutorials ›</Link>
+      <Link href="/about/tutorials">Tutorials ›</Link>
     </p>
     <p>
-      <Link href="/about/thepoint">What's the point? ›</Link>
+      <Link href="/about/the-point">What's the point? ›</Link>
     </p>
     <p>
       <Link href="/about/research">Explore design process research ›</Link>
