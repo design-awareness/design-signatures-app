@@ -112,4 +112,9 @@
       box-shadow: 0 0 0 2px rgb(34, 154, 235);
     }
   }
+
+  :global(a) {
+    color: $text-actionable-color;
+    text-decoration: none;
+  }
 </style>

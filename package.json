@@ -9,6 +9,7 @@
   },
   "devDependencies": {
     "@iconify-icons/ic": "^1.1.6",
+    "@iconify-icons/mdi": "^1.1.18",
     "@iconify/svelte": "^1.0.4",
     "@rollup/plugin-commonjs": "^19.0.0",
     "@rollup/plugin-node-resolve": "^13.0.0",
