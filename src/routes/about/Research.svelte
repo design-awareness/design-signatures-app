@@ -3,11 +3,12 @@
   SPDX-License-Identifier: BSD-3-Clause
 -->
 <script lang="ts">
-  import ContentFrame from "../../components/layout/ContentFrame.svelte";
   import BackButton from "../../components/BackButton.svelte";
-  import Header from "../../components/type/Header.svelte";
-  import Figure from "..//../components/Figure.svelte";
+  import ContentFrame from "../../components/layout/ContentFrame.svelte";
   import PageSeparator from "../../components/PageSeparator.svelte";
+  import Header from "../../components/type/Header.svelte";
+  import SectionHeader from "../../components/type/SectionHeader.svelte";
+  import Figure from "..//../components/Figure.svelte";
 </script>
 
 <main class="device-frame page">
@@ -21,7 +22,8 @@
       research to motivate you to question and reflect on your own design
       process.
     </p>
-    <h3>Design Expertise</h3>
+
+    <Header>Design Expertise</Header>
     <p>
       Cindy Atman, one of the authors of this app, has conducted research on
       design expertise for several decades. This research shows that expert
@@ -29,7 +31,7 @@
       study, engineering designers with various levels of expertise designed a
       playground where they talked aloud during their design process.
       Researchers then analyzed these processes and assessed the quality of
-      their final design products. .
+      their final design products.
     </p>
     <p>
       As part of the analysis, researchers categorized the activities that the
@@ -83,7 +85,7 @@
       </li>
     </ul>
 
-    <h4>Attributes of high quality design</h4>
+    <SectionHeader>Attributes of high quality design processes</SectionHeader>
     <p>
       Using the higher quality process as a canvas, each of these expert design
       behaviors can be seen. In this app, you can examine your design signatures
@@ -125,7 +127,7 @@
 
     <p class="citation">
       Atman, C. J. (2019). Design timelines: Concrete and sticky representations
-      of design process expertise. Design Studies, 65, 125-151.
+      of design process expertise. Design Studies, 65, 125–151.
     </p>
 
     <p class="citation">
@@ -137,7 +139,7 @@
 
     <PageSeparator />
 
-    <h3>Co-evolution of problem and solution</h3>
+    <Header>Co-evolution of problem and solution</Header>
 
     <p>
       Design activities can fall under either the “problem space'' or the
@@ -145,7 +147,7 @@
       enable designers to understand both the broad and specific attributes of
       the problem they are solving. Work in the solution space includes any
       activities that designers engage in that contribute to creating solutions
-      for the problem. To illustrate, if you are designing a coffee mug - the
+      for the problem. To illustrate, if you are designing a coffee mug—the
       problem space might include thinking about success criteria (easy to drink
       from, easy to clean). The solution space might include brainstorming
       different mug shapes or materials to use.
@@ -171,38 +173,38 @@
     </p>
 
     <p class="citation">
-      Dorst, K., 2019. Co-evolution and emergence in design. Design Studies, 65,
-      pp.60-77
+      Dorst, K. (2019). Co-evolution and emergence in design. Design Studies,
+      65, p. 60–77.
     </p>
 
     <p class="citation">
-      K. Dorst and N. Cross, “Creativity in the design process: Co-evolution of
-      problem–solution,” Design Studies, vol. 22, no. 5, pp. 425–437, 2001.
+      K. Dorst and N. Cross (2001). “Creativity in the design process:
+      Co-evolution of problem–solution,” Design Studies, vol. 22, no. 5, p.
+      425–437.
     </p>
 
     <PageSeparator />
 
-    <h3>Diverging/Converging activities</h3>
+    <Header>Diverging/Converging activities</Header>
     <p>
       Design activities can be either divergent or convergent, and both move the
       project forward. Divergent activities help to make the problem or solution
       space bigger, exploring broad possibilities and increasing ambiguity.
       Convergent activities help decrease ambiguity, and move towards decisions
-      and concrete outcomes. To illustrate,if you are designing a poster you
-      might brainstorm lots of ideas for the content - this would be divergent.
-      Then you might decide on 3 concepts to prototype - this would be
-      convergent.
+      and concrete outcomes. To illustrate, if you are designing a poster you
+      might brainstorm lots of ideas for the content—this would be divergent.
+      Then you might decide on 3 concepts to prototype—this would be convergent.
     </p>
     <p>
-      While a design process could have many phases divergent/convergent
+      While a design process could have many phases of divergent/convergent
       activities, a popular model with two phases is called the “Double Diamond”
       model created by the British Design Council. This model traverses two
       diverge/converge phases, one in the problem space (discover, define) and
       one in the solution space (develop, deliver).
     </p>
     <p class="citation">
-      Banathy, Bela H.. Designing Social Systems in a Changing World. Germany,
-      Springer US, 2013, p. 75.
+      Banathy, Bela H. (2013). Designing Social Systems in a Changing World.
+      Germany, Springer US, p. 75.
     </p>
     <p class="citation">
       Eris, O. (2004). Effective inquiry for innovative engineering design (Vol.
@@ -212,7 +214,7 @@
       Scalone, G., Atman, C. J., Mejia, K., Twigg-Smith, H., Shroyer, K., &
       Joya, A. (2020). Dealing with Ambiguity: Leveraging Different Types of
       Expertise to Guide Design Questioning. International Journal of
-      Engineering Education, 36(2), 773-795.
+      Engineering Education, 36(2), p. 773–795.
     </p>
   </ContentFrame>
 </main>
