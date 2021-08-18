@@ -5,6 +5,7 @@
 <script lang="ts">
   import type { DesignModel } from "../../data/schema";
   import ActivityToken from "../ActivityToken.svelte";
+  import ActivityList from "./ActivityList.svelte";
 
   export let designModel: DesignModel | null = null;
   export let selected = false;
@@ -19,12 +20,7 @@
       <h4>{designModel.name}</h4>
     </div>
     <div class="body">
-      {#each designModel.activities as { name, code, color }}
-        <div class="activity">
-          <div class="token"><ActivityToken mini {color} {code} /></div>
-          <p>{name}</p>
-        </div>
-      {/each}
+      <ActivityList activities={designModel.activities} />
     </div>
   {/if}
 </div>
@@ -42,19 +38,6 @@
 
   .card {
     padding: 0;
-  }
-  .activity {
-    padding: 0;
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-    p {
-      @include type-style($type-caption);
-    }
-  }
-  .token {
-    display: flex;
-    padding-left: 0;
   }
   .header {
     background-color: $design-model-header-background;
