@@ -224,7 +224,7 @@ export const presetDesignModels = [
   [
     "general.problem_solution@1",
     {
-      name: "Problem-Solution",
+      name: "Problem/Solution",
       description: {
         description:
           "This model divides design activities into two categories: problem space and solution space.",
