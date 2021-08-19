@@ -2,19 +2,9 @@
   Copyright (c) 2021, Design Awareness Contributors.
   SPDX-License-Identifier: BSD-3-Clause
 -->
-<script lang="ts">
+<script lang="ts" context="module">
   import { push, replace } from "svelte-spa-router/Router.svelte";
   import { goUpSafe } from "../util/history";
-
-  export let href: string;
-  export let up = false;
-  export let enforce = false;
-  export let horizontal = false;
-
-  function click(evt: MouseEvent) {
-    evt.preventDefault();
-    navigate({ href, up, enforce, horizontal });
-  }
 
   function navigate({
     href,
@@ -46,6 +36,18 @@
 
   export function goDown(href: string) {
     navigate({ href });
+  }
+</script>
+
+<script lang="ts">
+  export let href: string;
+  export let up = false;
+  export let enforce = false;
+  export let horizontal = false;
+
+  function click(evt: MouseEvent) {
+    evt.preventDefault();
+    navigate({ href, up, enforce, horizontal });
   }
 </script>
 
