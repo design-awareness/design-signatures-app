@@ -269,7 +269,7 @@
     const project = await thenProject;
     const note = newTimedNote();
     note.content = noteText;
-    note.time = projectTime + pastSessionTime;
+    note.time = pastSessionTime;
     tracker.session.notes = [...tracker.session.notes, note];
     await project.save();
     await closeModal();

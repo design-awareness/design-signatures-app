@@ -27,7 +27,7 @@ export interface Entity<
   save(): Promise<void>;
   remove(): Promise<void>;
   toSerializable(): object;
-  serialize(): string;
+  serialize(pretty?: boolean): string;
   getMeta<K extends keyof MetadataType>(
     key: K,
     defaultValue: MetadataType[K]

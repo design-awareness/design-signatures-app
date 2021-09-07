@@ -21,8 +21,20 @@ export function shortDuration(total: number) {
   }
 }
 
-export function expressiveDurationM(mins: number) {
-  let { seconds, minutes, hours } = splitDuration(mins * 60 * 1000);
+export function timelineDuration(t: number) {
+  let { seconds, minutes, hours } = splitDuration(t);
+  if (hours && seconds) {
+    return hours + ":" + pad(minutes) + ":" + pad(seconds);
+  }
+  let str = "";
+  if (hours) str += hours + "h ";
+  if (minutes) str += minutes + "m ";
+  if (seconds) str += seconds + "s";
+  return str;
+}
+
+export function expressiveDuration(t: number) {
+  let { seconds, minutes, hours } = splitDuration(t);
   if (hours) {
     let str = hours + "h";
     if (minutes) {
@@ -34,6 +46,10 @@ export function expressiveDurationM(mins: number) {
   } else {
     return seconds + "s";
   }
+}
+
+export function expressiveDurationM(mins: number) {
+  return expressiveDuration(mins * 60 * 1000);
 }
 
 export function pad(n: number) {

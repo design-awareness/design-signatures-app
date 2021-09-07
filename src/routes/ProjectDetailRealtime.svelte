@@ -3,6 +3,8 @@
   SPDX-License-Identifier: BSD-3-Clause
 -->
 <script lang="ts">
+  import closeIcon from "@iconify-icons/ic/baseline-close";
+  import { tick } from "svelte";
   import { push } from "svelte-spa-router/Router.svelte";
   import reflectIcon from "../assets/reflectIcon";
   import BackButton from "../components/BackButton.svelte";
@@ -13,13 +15,16 @@
   import ProjectMenu from "../components/ProjectMenu.svelte";
   import ProjectNotes from "../components/ProjectNotes.svelte";
   import ProjectSummaryRealtime from "../components/ProjectSummaryRealtime.svelte";
-  import RichTimeline from "../components/RichTimeline.svelte";
   import Header from "../components/type/Header.svelte";
   import { checkNeedsRepair, repair } from "../data/repairRealtimeSession";
-  import type { RealtimeProject } from "../data/schema";
+  import type { RealtimeProject, TimedNote } from "../data/schema";
+  import { delay } from "../util/delay";
   import { shortDuration } from "../util/time";
+  import timeline from "../util/timeline";
 
   export let project: RealtimeProject;
+
+  let timelinePinned = false;
 
   // it's possible that the last session could have been corrupted
   // due to, for example, the user closing the app with tracking in
@@ -53,33 +58,88 @@
   }
 
   let showProjectTimestamps = true;
+
+  let timelineHeightEl: HTMLDivElement | undefined;
+  let timelineHeight = 1;
+  async function pinTimeline() {
+    timelinePinned = true;
+    await tick();
+    timelineHeight = timelineHeightEl?.getBoundingClientRect?.()?.height ?? 0;
+  }
+  function unpinTimeline() {
+    timelinePinned = false;
+  }
+
+  let noteElementLookup = new Map<TimedNote, HTMLDivElement>();
+  function setNote(el: HTMLDivElement, note: TimedNote) {
+    noteElementLookup.set(note, el);
+  }
+
+  async function showNote(note: TimedNote) {
+    let element = noteElementLookup.get(note);
+    if (element) {
+      await tick();
+      let scrollTarget = element.offsetTop - timelineHeight;
+      document.documentElement.scrollTo({
+        top: scrollTarget,
+        behavior: "smooth",
+      });
+      element.classList.remove("selected");
+      await delay(100);
+      element.classList.add("selected");
+    }
+  }
 </script>
 
 <main class="device-frame page">
   <ContentFrame>
-    <div class="top-bar">
-      <BackButton href="/" />
-      <ProjectMenu bind:project />
-    </div>
-    <Header>{project.name}</Header>
-    <p class="description">{project.description}</p>
-
-    <PageSeparator />
-
-    <RichTimeline {project} scalable />
-
-    {#if project.sessions.length !== 0}
-      <div class="reflect-button">
-        <Button
-          on:click={async () => await push("/reflect/")}
-          icon={reflectIcon}
-        >
-          Reflect
-        </Button>
+    {#if timelinePinned}
+      <div
+        class="timeline-spacer"
+        role="presentation"
+        style="height: {timelineHeight}px"
+      />
+    {:else}
+      <div class="top-bar">
+        <BackButton href="/" />
+        <ProjectMenu bind:project />
       </div>
+      <Header>{project.name}</Header>
+      <p class="description">{project.description}</p>
+
+      <PageSeparator />
     {/if}
 
-    <PageSeparator />
+    <div
+      class="timeline-area"
+      class:pinned={timelinePinned}
+      bind:this={timelineHeightEl}
+    >
+      {#if timelinePinned}
+        <Button small icon={closeIcon} on:click={unpinTimeline}>
+          Unpin timeline
+        </Button>
+      {/if}
+      <canvas
+        use:timeline={{ project, selectNote: showNote }}
+        on:click={pinTimeline}
+      />
+    </div>
+
+    {#if !timelinePinned}
+      {#if project.sessions.length !== 0}
+        <div class="reflect-button">
+          <Button
+            on:click={async () => await push("/reflect/")}
+            icon={reflectIcon}
+          >
+            Reflect
+          </Button>
+        </div>
+      {/if}
+
+      <PageSeparator />
+    {/if}
 
     <ProjectSummaryRealtime {project} />
 
@@ -91,25 +151,27 @@
 
       {#each project.sessions as session, i}
         {#each session.notes as note}
-          <div
-            class="note-meta"
-            on:click={() => (showProjectTimestamps = !showProjectTimestamps)}
-          >
-            {#if showProjectTimestamps}
-              {shortDuration(getPreviousSessionTotal(i) + note.time)}
-            {:else}
-              {note.created.toLocaleDateString(undefined, {
-                day: "numeric",
-                month: "numeric",
-                year: "2-digit",
-              })}
-              {note.created.toLocaleString(undefined, {
-                hour: "numeric",
-                minute: "2-digit",
-              })}
-            {/if}
+          <div class="session-note" use:setNote={note} class:selected={false}>
+            <div
+              class="note-meta"
+              on:click={() => (showProjectTimestamps = !showProjectTimestamps)}
+            >
+              {#if showProjectTimestamps}
+                {shortDuration(getPreviousSessionTotal(i) + note.time)}
+              {:else}
+                {note.created.toLocaleDateString(undefined, {
+                  day: "numeric",
+                  month: "numeric",
+                  year: "2-digit",
+                })}
+                {note.created.toLocaleString(undefined, {
+                  hour: "numeric",
+                  minute: "2-digit",
+                })}
+              {/if}
+            </div>
+            <div class="content">{note.content}</div>
           </div>
-          <div class="content">{note.content}</div>
         {/each}
       {/each}
     {/if}
@@ -154,5 +216,37 @@
   }
   .content {
     margin-bottom: 1rem;
+  }
+
+  .timeline-area.pinned {
+    position: fixed;
+    top: 0;
+    left: 0px;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 1rem;
+    background-color: $alt-background-color;
+    border-bottom: 1px solid $text-ghost-color;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    z-index: 50;
+  }
+
+  .session-note.selected {
+    animation: 2s highlight-note ease;
+  }
+
+  @keyframes highlight-note {
+    0% {
+      background-color: $accent-note-color;
+    }
+    50% {
+      background-color: $accent-note-color;
+    }
+    100% {
+      background-color: transparent;
+    }
   }
 </style>

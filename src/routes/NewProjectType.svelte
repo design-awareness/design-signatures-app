@@ -7,6 +7,7 @@
   import BackButton from "../components/BackButton.svelte";
   import BottomActionBar from "../components/BottomActionBar.svelte";
   import ContentFrame from "../components/layout/ContentFrame.svelte";
+  import Link from "../components/Link.svelte";
   import SegmentedComponentSelector from "../components/SegmentedComponentSelector.svelte";
   import TrackingModeOption from "../components/TrackingModeOption.svelte";
   import Header from "../components/type/Header.svelte";
@@ -31,14 +32,23 @@
       ]}
       bind:value={option}
     />
+    <p>
+      <Link href="/import/" horizontal>Import a project from a file</Link>
+    </p>
     <BottomActionBar label="Next" disabled={!option} on:click={go} />
   </ContentFrame>
 </main>
 
 <style lang="scss">
   @import "src/styles/tokens";
+  @import "src/styles/type";
   .page {
     background-color: $background-color;
     min-height: 100%;
+  }
+
+  p {
+    text-align: center;
+    @include type-style($type-detail);
   }
 </style>
