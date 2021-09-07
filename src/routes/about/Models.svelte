@@ -9,6 +9,7 @@
   import BackButton from "../../components/BackButton.svelte";
   import ActivityList from "../../components/DesignModel/ActivityList.svelte";
   import ContentFrame from "../../components/layout/ContentFrame.svelte";
+  import Link from "../../components/Link.svelte";
   import Header from "../../components/type/Header.svelte";
   import { presetDesignModels } from "../../data/designModelPresets";
 </script>
@@ -62,6 +63,12 @@
       by Hugh Dubberly presents an inspirational collection of over 100 descriptions
       of design and development processes, from architecture, industrial design,
       mechanical engineering, quality management, and software development.
+    </p>
+
+    <p>
+      You can also learn more about the research behind these models on the
+      <Link href="/about/research">Design Process Research</Link>
+      page.
     </p>
   </ContentFrame>
 </main>
