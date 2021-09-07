@@ -26,9 +26,6 @@
       {#each presetDesignModels as [_, { name, description, activities }]}
         {#if description}
           <AccordionItem label={name}>
-            {#each description.description.split("\n\n") as paragraph}
-              <p>{paragraph}</p>
-            {/each}
             {#each Array.isArray(description.imageURL) ? description.imageURL : [description.imageURL] as url}
               <img src={url} alt="Visualization of {name}" />
             {/each}
@@ -42,10 +39,14 @@
               <ActivityList {activities} small={false} />
             </div>
 
+            {#each description.description.split("\n\n") as paragraph}
+              <p>{paragraph}</p>
+            {/each}
+
             {#if description.moreInfoURL}
-              <a class="more-info" href={description.moreInfoURL}
-                >Learn more about this model</a
-              >
+              <a class="more-info" href={description.moreInfoURL}>
+                Learn more about this model
+              </a>
             {/if}
           </AccordionItem>
         {/if}
