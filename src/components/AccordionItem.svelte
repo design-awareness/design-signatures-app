@@ -72,6 +72,10 @@
     }
   }
 
+  .header {
+    color: $text-primary-color;
+  }
+
   .card-body {
     padding: $collapse-padding-vertical $collapse-padding-horizontal;
     > :global(:first-child) {
