@@ -13,7 +13,9 @@
 </script>
 
 <div class="card">
-  <img src="{CDN_PREFIX}{profile.photo}" alt="Photo of {profile.name}" />
+  <div class="image-holder">
+    <img src="{CDN_PREFIX}{profile.photo}" alt="Photo of {profile.name}" />
+  </div>
   <div class="body">
     <h4>{profile.name}</h4>
     <p class="pronouns">{profile.pronouns}</p>
@@ -42,6 +44,22 @@
   }
   .body {
     padding: 0.5rem;
+  }
+  .image-holder {
+    // 1:1 aspect ratio hack!
+    width: 100%;
+    height: 0;
+    box-sizing: content-box;
+    padding: 100% 0 0 0;
+
+    position: relative;
+    img {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+    }
   }
   h4,
   p {
