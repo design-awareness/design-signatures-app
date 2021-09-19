@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Design Awareness Contributors.
+ * Copyright (c) 2021, Design Signatures Contributors.
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
