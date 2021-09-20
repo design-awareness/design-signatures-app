@@ -145,6 +145,26 @@ const profiles: TeamMemberProfile[] = [
       },
     ],
   },
+  {
+    name: "M. Nicole Washington",
+    pronouns: "she/her",
+    title: "UX Designer",
+    photo: "bio/nicole.jpg",
+    links: [
+      {
+        ...WEBSITE,
+        url: "https://www.mnicolew.com/",
+      },
+      {
+        ...INSTAGRAM,
+        url: "https://www.instagram.com/mirandanicole_w/",
+      },
+      {
+        ...LINKEDIN,
+        url: "https://www.linkedin.com/in/m-nicole-w/",
+      },
+    ],
+  },
 ];
 
 export default profiles;
