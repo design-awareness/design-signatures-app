@@ -3,14 +3,16 @@
   SPDX-License-Identifier: BSD-3-Clause
 -->
 <script lang="ts">
-  import ContentFrame from "../../components/layout/ContentFrame.svelte";
-  import BackButton from "../../components/BackButton.svelte";
-  import Header from "../../components/type/Header.svelte";
-  import Figure from "../../components/Figure.svelte";
-  import SectionHeader from "../../components/type/SectionHeader.svelte";
-  import Link from "../../components/Link.svelte";
   import Icon from "@iconify/svelte/dist/Icon.svelte";
   import reflectIcon from "../../assets/reflectIcon";
+  import BackButton from "../../components/BackButton.svelte";
+  import Figure from "../../components/Figure.svelte";
+  import ContentFrame from "../../components/layout/ContentFrame.svelte";
+  import Link from "../../components/Link.svelte";
+  import Header from "../../components/type/Header.svelte";
+  import SectionHeader from "../../components/type/SectionHeader.svelte";
+  import timeline from "../../util/timeline";
+  import { signatureA, signatureB } from "./exampleProjects";
 </script>
 
 <main class="device-frame page">
@@ -50,6 +52,33 @@
     </p>
 
     <SectionHeader>Example “Realtime” timelines</SectionHeader>
+
+    <p>
+      {#await signatureA() then signature}
+        <canvas
+          use:timeline={{
+            project: signature,
+            showNotes: false,
+            showTime: false,
+          }}
+        />
+      {/await}
+      Signature A - Ideal project envelope pattern
+    </p>
+
+    <p>
+      {#await signatureB() then signature}
+        <canvas
+          use:timeline={{
+            project: signature,
+            showNotes: false,
+            showTime: false,
+          }}
+        />
+      {/await}
+      Signature B - Ideal project envelope pattern with variation and emphasis on
+      modeling
+    </p>
 
     <SectionHeader>Example “Asynchronous” bubble timelines</SectionHeader>
 
