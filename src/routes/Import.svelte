@@ -1,5 +1,5 @@
 <!--
-  Copyright (c) 2021, Design Signatures Contributors.
+  Copyright (c) 2021, Design Awareness Contributors.
   SPDX-License-Identifier: BSD-3-Clause
 -->
 <script lang="ts">
@@ -72,7 +72,7 @@
     }
     if (!typeIsRecord(data)) {
       return bail(
-        "Data is not in the Design Signatures format.",
+        "Data is not in the Design Awareness format.",
         "Expected top level object, but got " +
           (Array.isArray(data) ? "array" : typeof data) +
           " instead."
@@ -80,13 +80,13 @@
     }
     if (data.$format !== "design-awareness") {
       return bail(
-        "Data is not in the Design Signatures format.",
+        "Data is not in the Design Awareness format.",
         "Missing top level $format key."
       );
     }
     if (data.version !== "1.0.0") {
       return bail(
-        "Data is not in the Design Signatures format.",
+        "Data is not in the Design Awareness format.",
         "Missing or invalid file version (" + (data.version || "missing") + ")"
       );
     }

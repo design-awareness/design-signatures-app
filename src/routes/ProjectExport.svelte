@@ -1,5 +1,5 @@
 <!--
-  Copyright (c) 2021, Design Signatures Contributors.
+  Copyright (c) 2021, Design Awareness Contributors.
   SPDX-License-Identifier: BSD-3-Clause
 -->
 <script lang="ts">
@@ -141,7 +141,7 @@
       {:else if exportType === "data"}
         <p>
           <a href="https://data.design-awareness.com/" target="_blank"
-            >Learn more about the Design Signatures data export format</a
+            >Learn more about the design awareness data export format</a
           >
         </p>
 
