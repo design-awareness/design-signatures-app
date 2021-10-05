@@ -12,7 +12,11 @@ import css from "rollup-plugin-css-only";
 
 const production = !process.env.ROLLUP_WATCH;
 
-const ENV = !production ? "dev" : process.env.PULL_REQUEST ? "preview" : "prod";
+const ENV = !production
+  ? "dev"
+  : process.env.PULL_REQUEST === "true"
+  ? "preview"
+  : "prod";
 
 function serve() {
   let server;
