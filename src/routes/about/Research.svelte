@@ -227,17 +227,6 @@
     min-height: 100%;
   }
 
-  // img {
-  //   list-style-type: none;
-  //   padding: 1rem 0;
-  //   display: flex;
-  //   width: 100%;
-  //   flex-wrap: wrap;
-  //   align-items: flex-start;
-  //   justify-items: flex-start;
-  //   justify-content: space-around;
-  // }
-
   .citation {
     @include type-style($type-caption);
     color: $text-secondary-color;
