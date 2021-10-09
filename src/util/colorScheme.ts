@@ -4,6 +4,7 @@
  */
 
 import { readable } from "svelte/store";
+import { hasOwnProperty } from "../types/utility";
 
 type ColorScheme = "light" | "dark";
 
@@ -25,3 +26,16 @@ export const colorScheme = readable<ColorScheme>(
     };
   }
 );
+
+export type Schemable<T> = T | { light: T; dark: T };
+
+export function fromSchemable<T>(
+  schemable: Schemable<T>,
+  theme: ColorScheme
+): T {
+  if (hasOwnProperty(schemable, "light") && hasOwnProperty(schemable, "dark")) {
+    return schemable[theme];
+  } else {
+    return schemable;
+  }
+}
