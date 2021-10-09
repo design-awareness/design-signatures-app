@@ -3,7 +3,7 @@
   SPDX-License-Identifier: BSD-3-Clause
 -->
 <script lang="ts">
-  import totalAlertIcon from "@iconify-icons/ic/baseline-percentage";
+  import totalAlertIcon from "@iconify/icons-ic/baseline-percentage";
   import ActivityEntrySlat from "../components/ActivityEntrySlat.svelte";
   import Alert from "../components/Alert.svelte";
   import BottomActionBar from "../components/BottomActionBar.svelte";

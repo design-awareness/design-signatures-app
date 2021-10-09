@@ -3,9 +3,9 @@
   SPDX-License-Identifier: BSD-3-Clause
 -->
 <script type="ts">
-  import down from "@iconify-icons/ic/baseline-arrow-drop-down";
-  import deleteIcon from "@iconify-icons/ic/baseline-delete";
-  import dragIcon from "@iconify-icons/ic/baseline-drag-indicator";
+  import down from "@iconify/icons-ic/baseline-arrow-drop-down";
+  import deleteIcon from "@iconify/icons-ic/baseline-delete";
+  import dragIcon from "@iconify/icons-ic/baseline-drag-indicator";
   import Icon from "@iconify/svelte/dist/Icon.svelte";
   import type { DesignModel } from "../../data/schema";
   import abbreviateActivityName from "../../util/activityCode";

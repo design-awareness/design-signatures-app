@@ -3,12 +3,12 @@
   SPDX-License-Identifier: BSD-3-Clause
 -->
 <script lang="ts">
-  import createIcon from "@iconify-icons/ic/baseline-create";
-  import undoIcon from "@iconify-icons/ic/baseline-history";
-  import pauseIcon from "@iconify-icons/ic/baseline-pause";
-  import playIcon from "@iconify-icons/ic/baseline-play-arrow";
-  import settingsIcon from "@iconify-icons/ic/baseline-settings";
-  import stopIcon from "@iconify-icons/ic/baseline-stop";
+  import createIcon from "@iconify/icons-ic/baseline-create";
+  import undoIcon from "@iconify/icons-ic/baseline-history";
+  import pauseIcon from "@iconify/icons-ic/baseline-pause";
+  import playIcon from "@iconify/icons-ic/baseline-play-arrow";
+  import settingsIcon from "@iconify/icons-ic/baseline-settings";
+  import stopIcon from "@iconify/icons-ic/baseline-stop";
   import { onDestroy } from "svelte";
   import { pop, push, replace } from "svelte-spa-router/Router.svelte";
   import ActivitySlat from "../components/ActivitySlat.svelte";

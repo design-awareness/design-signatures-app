@@ -3,10 +3,10 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-import githubIcon from "@iconify-icons/mdi/github";
-import instagramIcon from "@iconify-icons/mdi/instagram";
-import linkedinIcon from "@iconify-icons/mdi/linkedin";
-import websiteIcon from "@iconify-icons/mdi/web";
+import githubIcon from "@iconify/icons-mdi/github";
+import instagramIcon from "@iconify/icons-mdi/instagram";
+import linkedinIcon from "@iconify/icons-mdi/linkedin";
+import websiteIcon from "@iconify/icons-mdi/web";
 import type { IconifyIcon } from "../../types/IconifyIcon";
 
 export interface TeamMemberProfile {

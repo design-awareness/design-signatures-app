@@ -7,13 +7,13 @@
 </script>
 
 <script lang="ts">
-  import addIcon from "@iconify-icons/ic/baseline-add";
-  import leftChevron from "@iconify-icons/ic/baseline-chevron-left";
-  import rightChevron from "@iconify-icons/ic/baseline-chevron-right";
-  import clearIcon from "@iconify-icons/ic/baseline-clear";
-  import deleteIcon from "@iconify-icons/ic/baseline-delete";
-  import editIcon from "@iconify-icons/ic/baseline-edit";
-  import infoIcon from "@iconify-icons/ic/baseline-info";
+  import addIcon from "@iconify/icons-ic/baseline-add";
+  import leftChevron from "@iconify/icons-ic/baseline-chevron-left";
+  import rightChevron from "@iconify/icons-ic/baseline-chevron-right";
+  import clearIcon from "@iconify/icons-ic/baseline-clear";
+  import deleteIcon from "@iconify/icons-ic/baseline-delete";
+  import editIcon from "@iconify/icons-ic/baseline-edit";
+  import infoIcon from "@iconify/icons-ic/baseline-info";
   import Icon from "@iconify/svelte/dist/Icon.svelte";
   import { tick } from "svelte";
   import { pop, push, querystring } from "svelte-spa-router";

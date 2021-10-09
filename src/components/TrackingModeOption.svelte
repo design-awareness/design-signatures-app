@@ -3,9 +3,9 @@
   SPDX-License-Identifier: BSD-3-Clause
 -->
 <script lang="ts">
-  import realtimeIcon from "@iconify-icons/ic/baseline-access-time";
-  import asyncIcon from "@iconify-icons/ic/baseline-list";
-  import helpIcon from "@iconify-icons/ic/baseline-help-outline";
+  import realtimeIcon from "@iconify/icons-ic/baseline-access-time";
+  import asyncIcon from "@iconify/icons-ic/baseline-list";
+  import helpIcon from "@iconify/icons-ic/baseline-help-outline";
   import Icon from "@iconify/svelte/dist/Icon.svelte";
 
   export let type: "realtime" | "async";

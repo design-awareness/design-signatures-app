@@ -5,7 +5,7 @@
 <script lang="ts">
   import Icon from "@iconify/svelte/dist/Icon.svelte";
   import Logo from "../assets/Logo.svelte";
-  import settingsIcon from "@iconify-icons/ic/baseline-settings";
+  import settingsIcon from "@iconify/icons-ic/baseline-settings";
   import Link from "./Link.svelte";
 </script>
 

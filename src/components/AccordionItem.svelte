@@ -3,8 +3,8 @@
   SPDX-License-Identifier: BSD-3-Clause
 -->
 <script lang="ts">
-  import caretDownIcon from "@iconify-icons/ic/baseline-keyboard-arrow-down";
-  import caretUpIcon from "@iconify-icons/ic/baseline-keyboard-arrow-up";
+  import caretDownIcon from "@iconify/icons-ic/baseline-keyboard-arrow-down";
+  import caretUpIcon from "@iconify/icons-ic/baseline-keyboard-arrow-up";
   import Icon from "@iconify/svelte/dist/Icon.svelte";
   import { getContext } from "svelte";
   import { AccordionItem } from "svelte-collapsible";

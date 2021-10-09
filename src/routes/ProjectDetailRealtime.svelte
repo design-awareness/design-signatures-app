@@ -3,7 +3,7 @@
   SPDX-License-Identifier: BSD-3-Clause
 -->
 <script lang="ts">
-  import closeIcon from "@iconify-icons/ic/baseline-close";
+  import closeIcon from "@iconify/icons-ic/baseline-close";
   import { tick } from "svelte";
   import { push } from "svelte-spa-router/Router.svelte";
   import reflectIcon from "../assets/reflectIcon";

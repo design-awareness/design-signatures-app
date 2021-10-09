@@ -8,11 +8,11 @@
   import PopupMenu from "../../../components/PopupMenu.svelte";
   import Header from "../../../components/type/Header.svelte";
 
-  import editIcon from "@iconify-icons/ic/baseline-edit";
-  import compareIcon from "@iconify-icons/ic/baseline-compare-arrows";
-  import completeIcon from "@iconify-icons/ic/baseline-check";
-  import exportIcon from "@iconify-icons/ic/baseline-share";
-  import deleteIcon from "@iconify-icons/ic/baseline-delete";
+  import editIcon from "@iconify/icons-ic/baseline-edit";
+  import compareIcon from "@iconify/icons-ic/baseline-compare-arrows";
+  import completeIcon from "@iconify/icons-ic/baseline-check";
+  import exportIcon from "@iconify/icons-ic/baseline-share";
+  import deleteIcon from "@iconify/icons-ic/baseline-delete";
 </script>
 
 <ContentFrame>

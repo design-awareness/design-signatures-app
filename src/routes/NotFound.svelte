@@ -3,7 +3,7 @@
   SPDX-License-Identifier: BSD-3-Clause
 -->
 <script lang="ts">
-  import notFoundIcon from "@iconify-icons/ic/baseline-broken-image";
+  import notFoundIcon from "@iconify/icons-ic/baseline-broken-image";
   import Link from "../components/Link.svelte";
   import SplashScreen from "../components/SplashScreen.svelte";
 </script>

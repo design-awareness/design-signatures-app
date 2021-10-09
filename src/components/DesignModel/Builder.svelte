@@ -8,7 +8,7 @@
 </script>
 
 <script lang="ts">
-  import add from "@iconify-icons/ic/baseline-add";
+  import add from "@iconify/icons-ic/baseline-add";
   import type { DesignModel } from "../../data/schema";
   import BottomActionBar from "../BottomActionBar.svelte";
   import InputField from "../InputField.svelte";
