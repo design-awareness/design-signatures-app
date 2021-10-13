@@ -53,7 +53,7 @@
     "/import/": Import,
     "/import": RedirectAddPath,
 
-    "/about/": NotFound, // About design awareness
+    "/about/": NotFound, // About Design Signatures
     "/about/appdo": AppDo, // What does this app do?
     "/about/atmans": Atmans,
 

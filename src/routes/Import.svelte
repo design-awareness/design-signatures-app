@@ -72,7 +72,7 @@
     }
     if (!typeIsRecord(data)) {
       return bail(
-        "Data is not in the Design Awareness format.",
+        "Data is not in the Design Signatures format.",
         "Expected top level object, but got " +
           (Array.isArray(data) ? "array" : typeof data) +
           " instead."
@@ -80,13 +80,13 @@
     }
     if (data.$format !== "design-awareness") {
       return bail(
-        "Data is not in the Design Awareness format.",
+        "Data is not in the Design Signatures format.",
         "Missing top level $format key."
       );
     }
     if (data.version !== "1.0.0") {
       return bail(
-        "Data is not in the Design Awareness format.",
+        "Data is not in the Design Signatures format.",
         "Missing or invalid file version (" + (data.version || "missing") + ")"
       );
     }

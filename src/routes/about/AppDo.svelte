@@ -13,7 +13,7 @@
     <BackButton href="/" />
     <Header>What Does This App Do?</Header>
     <p>
-      The design awareness app helps designers monitor their own design
+      The Design Signatures app helps designers monitor their own design
       processes with a goal of modifying their process when they think they are
       going astray. We allow you to caputure and reflect on your design process.
     </p>
