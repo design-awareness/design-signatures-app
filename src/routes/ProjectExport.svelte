@@ -141,7 +141,7 @@
       {:else if exportType === "data"}
         <p>
           <a href="https://data.design-awareness.com/" target="_blank"
-            >Learn more about the design awareness data export format</a
+            >Learn more about the Design Signatures data export format</a
           >
         </p>
 

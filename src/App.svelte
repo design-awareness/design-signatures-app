@@ -56,11 +56,11 @@
     "/import/": Import,
     "/import": RedirectAddPath,
 
-    "/about/": NotFound, // About design awareness
+    "/about/": NotFound,
     "/about/tutorials": Tutorials, // Tutorials
     "/about/the-point": ThePoint, // Whats the point?
     "/about/research": Research, // Explore design process research
-    "/about/models": Models, //Design Models
+    "/about/models": Models, // Design Models
     "/about/project": AboutProject, //About this Project (+ team bio)
 
     "/settings/": Settings, // Settings

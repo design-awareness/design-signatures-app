@@ -177,6 +177,12 @@
     justify-content: space-between;
   }
 
+  .reflect-button {
+    margin-top: $block-vertical-spacing;
+    display: flex;
+    justify-content: flex-end;
+  }
+
   .contextual-notes {
     margin-top: $block-vertical-spacing;
   }
