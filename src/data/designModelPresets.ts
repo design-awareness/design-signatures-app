@@ -19,7 +19,7 @@ export const presetDesignModels = [
         imageURL:
           "https://cdn.design-awareness.com/app-assets/models/gen-design-extended.svg",
         citation:
-          "Cynthia J. Atman, Design timelines: Concrete and sticky representations of design process expertise, Design Studies, Volume 65, 2019, Pages 125-151, ISSN 0142-694X, https://doi.org/10.1016/j.destud.2019.10.004.",
+          "Cynthia J. Atman, 2019. Design timelines: Concrete and sticky representations of design process expertise. Design Studies, vol. 65, p. 125–151.",
         moreInfoURL:
           "https://www.sciencedirect.com/science/article/pii/S0142694X19300602",
       },
@@ -99,7 +99,7 @@ export const presetDesignModels = [
         imageURL:
           "https://cdn.design-awareness.com/app-assets/models/gen-design-abbrev.svg",
         citation:
-          "Cynthia J. Atman, Design timelines: Concrete and sticky representations of design process expertise, Design Studies, Volume 65, 2019, Pages 125-151, ISSN 0142-694X, https://doi.org/10.1016/j.destud.2019.10.004.",
+          "Cynthia J. Atman, 2019. Design timelines: Concrete and sticky representations of design process expertise. Design Studies, vol. 65, p. 125–151.",
         moreInfoURL:
           "https://www.sciencedirect.com/science/article/pii/S0142694X19300602",
       },
@@ -224,14 +224,14 @@ export const presetDesignModels = [
   [
     "general.problem_solution@1",
     {
-      name: "Problem-Solution",
+      name: "Problem/Solution",
       description: {
         description:
           "This model divides design activities into two categories: problem space and solution space.",
         imageURL:
           "https://cdn.design-awareness.com/app-assets/models/prob-sol.svg",
         citation:
-          "Dorst, K., 2019. Co-evolution and emergence in design. Design Studies, 65, pp.60-77.\n\nK. Dorst and N. Cross, “Creativity in the design process: Co-evolution of problem–solution,” Design Studies, vol. 22, no. 5, pp. 425–437, 2001.",
+          "Dorst, K., 2019. Co-evolution and emergence in design. Design Studies, vol. 65, p. 60–77.\n\nK. Dorst and N. Cross, 2001. “Creativity in the design process: Co-evolution of problem–solution,” Design Studies, vol. 22, no. 5, p. 425–437.",
       },
       activities: [
         {

@@ -7,7 +7,7 @@
   import ActivityToggle from "./ActivityToggle.svelte";
   import InvisibleButton from "./InvisibleButton.svelte";
 
-  import infoIcon from "@iconify-icons/ic/baseline-info";
+  import infoIcon from "@iconify/icons-ic/baseline-info";
   import type SessionTracker from "../util/track";
 
   export let activityName: string;

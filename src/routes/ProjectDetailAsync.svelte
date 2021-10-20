@@ -3,7 +3,7 @@
   SPDX-License-Identifier: BSD-3-Clause
 -->
 <script lang="ts">
-  import bellIcon from "@iconify-icons/ic/baseline-notifications-none";
+  import bellIcon from "@iconify/icons-ic/baseline-notifications-none";
   import { pop, push, querystring } from "svelte-spa-router";
   import reflectIcon from "../assets/reflectIcon";
   import ActivityToken from "../components/ActivityToken.svelte";

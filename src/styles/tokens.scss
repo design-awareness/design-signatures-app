@@ -175,11 +175,8 @@ $timeline-background-color: getvar(timeline-background);
 $timeline-gridline-color: getvar(timeline-gridline);
 
 // COLLAPSABLE CARDS
-$collapse-card-background: getvar(collapse-card-background);
-$collapse-card-border-color: getvar(input-border);
-$collapse-card-boxshadow: 0px 24px 38px rgba(black, 0.14),
-  0px 11px 15px rgba(black, 0.2);
-$collapse-padding-vertical: 1rem;
-$collapse-padding-horizontal: 0.5rem;
-$collapse-category-color: getvar(text-actionable);
-$collapse-secondary-text: $text-secondary-color;
+$collapse-card-shadow: 0px 2px 4px rgba(black, 0.2),
+  0 4px 16px -8px rgba(black, 0.1);
+$collapse-card-radius: 4px;
+$collapse-padding-vertical: 0.75rem;
+$collapse-padding-horizontal: 1rem;

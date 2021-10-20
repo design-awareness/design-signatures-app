@@ -4,8 +4,8 @@
 -->
 <script lang="ts">
   import Icon from "@iconify/svelte/dist/Icon.svelte";
-  import timeIcon from "@iconify-icons/ic/baseline-access-time";
-  import caretDownIcon from "@iconify-icons/ic/baseline-keyboard-arrow-down";
+  import timeIcon from "@iconify/icons-ic/baseline-access-time";
+  import caretDownIcon from "@iconify/icons-ic/baseline-keyboard-arrow-down";
   import InvisibleButton from "./InvisibleButton.svelte";
   import { pad, splitDuration } from "../util/time";
 

@@ -3,8 +3,8 @@
   SPDX-License-Identifier: BSD-3-Clause
 -->
 <script lang="ts">
-  import loadingIcon from "@iconify-icons/ic/baseline-hourglass-empty";
-  import notFoundIcon from "@iconify-icons/ic/baseline-search-off";
+  import loadingIcon from "@iconify/icons-ic/baseline-hourglass-empty";
+  import notFoundIcon from "@iconify/icons-ic/baseline-search-off";
   import BackButton from "../components/BackButton.svelte";
   import BottomActionBar from "../components/BottomActionBar.svelte";
   import Checkbox from "../components/Checkbox.svelte";

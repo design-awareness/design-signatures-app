@@ -4,7 +4,7 @@
 -->
 <script lang="ts">
   import Link from "./Link.svelte";
-  import arrow from "@iconify-icons/ic/baseline-arrow-back";
+  import arrow from "@iconify/icons-ic/baseline-arrow-back";
   import Icon from "@iconify/svelte/dist/Icon.svelte";
   export let href: string = "/";
   export let button: null | (() => void) = null;
