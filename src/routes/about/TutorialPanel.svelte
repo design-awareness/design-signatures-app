@@ -27,15 +27,17 @@
   export let tutorial: Tutorial;
   // ensure tutorial doesn't get updated
   const data = tutorial;
+
+  let visibleItem = 0;
 </script>
 
-<Carousel>
-  {#each data as [media, label]}
+<Carousel bind:visibleItem>
+  {#each data as [media, label], i}
     <CarouselItem>
       <div class="pane">
         <div class="media">
           <div class="device-outline">
-            <TutorialMedia {media} />
+            <TutorialMedia {media} isVisible={visibleItem === i} />
           </div>
         </div>
         <p>{label}</p>
