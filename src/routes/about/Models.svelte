@@ -30,11 +30,6 @@
             {#each Array.isArray(description.imageURL) ? description.imageURL : [description.imageURL] as url}
               <img src={url} alt="Visualization of {name}" />
             {/each}
-            {#if description.citation}
-              {#each description.citation.split("\n\n") as citation}
-                <p class="citation">{citation}</p>
-              {/each}
-            {/if}
 
             <div class="activities">
               <ActivityList {activities} small={false} />
@@ -43,6 +38,12 @@
             {#each description.description.split("\n\n") as paragraph}
               <p>{paragraph}</p>
             {/each}
+
+            {#if description.citation}
+              {#each description.citation.split("\n\n") as citation}
+                <p class="citation">{citation}</p>
+              {/each}
+            {/if}
 
             {#if description.moreInfoURL}
               <a class="more-info" href={description.moreInfoURL}>
