@@ -173,3 +173,24 @@ export const signatureB = async () => ({
     },
   ],
 });
+
+export const signatureC = async () => ({
+  designModel: await getDesignModel("well-known:general.problem_solution@1"),
+  entries: [
+    {
+      data: [
+        { value: 180, note: "" },
+        { value: 240, note: "" },
+      ],
+
+      period: "2021-10-24T00:00:00.000Z",
+    },
+    {
+      data: [
+        { value: 300, note: "" },
+        { value: 120, note: "" },
+      ],
+      period: "2021-10-25T00:00:00.000Z",
+    },
+  ],
+});
