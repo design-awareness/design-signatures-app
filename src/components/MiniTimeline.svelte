@@ -14,7 +14,7 @@
   import InvisibleButton from "./InvisibleButton.svelte";
 
   export let session: RealtimeSession;
-  export let designModel: DesignModel;
+  export let colors: readonly DesignModel["activities"][number]["color"][];
   export let shouldUpdate: boolean;
   export let timelineMode: "timeline" | "bundle" | "none";
   export let currentTime: number;
@@ -32,8 +32,6 @@
 
   let duration: number;
   let timeline: readonly [[number, number], number[]][] = [];
-  let colors: readonly (readonly [string, string])[] =
-    designModel.activities.map((activity) => activity.color);
 
   let activityDurations: {
     duration: number;

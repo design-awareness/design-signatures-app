@@ -318,7 +318,7 @@
             shouldUpdate={hasProject && !params.wild}
             session={tracker.session}
             currentTime={subsessionTime + pastSessionTime}
-            designModel={project.designModel}
+            colors={project.designModel.activities.map(({ color }) => color)}
           />
         {/if}
 
