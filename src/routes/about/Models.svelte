@@ -50,6 +50,11 @@
                 Learn more about this model
               </a>
             {/if}
+            <p class="card-smaller">
+              You can {#if description.moreInfoURL}also {/if}learn more about
+              the research behind these models on the
+              <Link href="/about/research">Design Process Research</Link> page.
+            </p>
           </AccordionItem>
         {/if}
       {/each}
@@ -64,12 +69,6 @@
       by Hugh Dubberly presents an inspirational collection of over 100 descriptions
       of design and development processes, from architecture, industrial design,
       mechanical engineering, quality management, and software development.
-    </p>
-
-    <p>
-      You can also learn more about the research behind these models on the
-      <Link href="/about/research">Design Process Research</Link>
-      page.
     </p>
   </ContentFrame>
 </main>
@@ -100,5 +99,10 @@
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
+  }
+
+  .card-smaller {
+    @include type-style($type-detail);
+    color: $text-secondary-color;
   }
 </style>
