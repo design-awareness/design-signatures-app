@@ -85,6 +85,9 @@
   .more-info {
     display: block;
     margin: 1rem auto;
+  }
+
+  img {
     max-width: min(24rem, 100%);
   }
 
