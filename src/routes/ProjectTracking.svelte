@@ -187,7 +187,7 @@
         const i = selectedActivity.index;
         let { code, color, description, name } = selectedActivityTemp;
         let newActivity = {
-          code,
+          code: code.toUpperCase(),
           color,
           description,
           name,

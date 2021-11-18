@@ -758,7 +758,7 @@ export async function importDesignModel(
       let existingActivities = model.activities;
       model.activities = data.activities.map(
         ({ code, color, description, name }, i) => ({
-          code,
+          code: code.toUpperCase(),
           color,
           description: description ?? existingActivities[i]?.description ?? "",
           name,
