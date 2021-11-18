@@ -14,6 +14,7 @@
   import {
     BUILD_ENV,
     BUILD_TIME,
+    FEEDBACK_LINK,
     GIT_HEAD,
     GIT_REPO,
     PULL_REQUEST,
@@ -95,6 +96,11 @@
   <ContentFrame>
     <BackButton href="/" />
     <Header>Settings</Header>
+
+    {#if FEEDBACK_LINK}
+      <SectionHeader>Feedback</SectionHeader>
+      <a href={FEEDBACK_LINK} target="_blank">Send feedback about this app</a>
+    {/if}
 
     <SectionHeader>Import</SectionHeader>
     <p>
