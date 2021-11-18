@@ -17,3 +17,5 @@ export const PULL_REQUEST: string | undefined = BUILDVAR__PULL_REQUEST;
 export const GIT_HEAD: string | undefined = BUILDVAR__GIT_HEAD;
 //@ts-ignore
 export const GIT_REPO: string = BUILDVAR__GIT_REPO;
+//@ts-ignore
+export const FEEDBACK_LINK: string | null = BUILDVAR__FEEDBACK_LINK;
