@@ -100,6 +100,12 @@
     {#if FEEDBACK_LINK}
       <SectionHeader>Feedback</SectionHeader>
       <a href={FEEDBACK_LINK} target="_blank">Send feedback about this app</a>
+      {#if PULL_REQUEST && BUILD_ENV === "preview"}
+        <p class="small">
+          Note: this is a deploy preview. Consider leaving feedback on the pull
+          request instead using the link below.
+        </p>
+      {/if}
     {/if}
 
     <SectionHeader>Import</SectionHeader>
