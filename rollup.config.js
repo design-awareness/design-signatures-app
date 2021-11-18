@@ -75,6 +75,12 @@ export default [
         BUILDVAR__VERSION: JSON.stringify(process.env.npm_package_version),
         BUILDVAR__BUILD_ENV: JSON.stringify(ENV),
         BUILDVAR__BRANCH: JSON.stringify(process.env.BRANCH),
+        BUILDVAR__NEW_APP_INSTALL_URL: JSON.stringify(
+          process.env.NEW_APP_INSTALL_URL || "https://app.design-awareness.com/"
+        ),
+        BUILDVAR__NEW_APP_NAME: JSON.stringify(
+          process.env.NEW_APP_NAME || "Design Signatures"
+        ),
         preventAssignment: true,
       }),
       commonjs(),
