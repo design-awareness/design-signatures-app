@@ -67,6 +67,8 @@ $focus-ring-color: #229aeb;
       accent-info: #4f9ba7,
       focus-ring: $focus-ring-color,
       dim: rgba($neutral-90, 0.1),
+      splash-background: #607ce0,
+      splash-foreground: $neutral-00,
     )
   );
 }
@@ -111,6 +113,8 @@ $focus-ring-color: #229aeb;
       accent-info: #30aec2,
       focus-ring: $focus-ring-color,
       dim: rgba($neutral-00, 0.1),
+      splash-background: #607ce0,
+      splash-foreground: $neutral-00,
     )
   );
 }
