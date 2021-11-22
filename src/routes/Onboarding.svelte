@@ -16,6 +16,7 @@
   import Logo from "../assets/Logo.svelte";
   import Button from "../components/Button.svelte";
   import CarouselControls from "../components/CarouselControls.svelte";
+  import { CDN_PREFIX } from "../components/Figure.svelte";
   import Header from "../components/type/Header.svelte";
   import { delay } from "../util/delay";
 
@@ -50,6 +51,23 @@
           to help you visualize that process. Use it as a tool to
           <strong>reflect</strong> on and improve your design processes.
         </p>
+        <div class="illustration-pane">
+          <h2>Document</h2>
+          <img
+            src="{CDN_PREFIX}onboarding/document.svg"
+            alt="Document illustration"
+          />
+          <h2>Visualize</h2>
+          <img
+            src="{CDN_PREFIX}onboarding/visualize.svg"
+            alt="Visualize illustration"
+          />
+          <h2>Reflect</h2>
+          <img
+            src="{CDN_PREFIX}onboarding/reflect.svg"
+            alt="Reflect illustration"
+          />
+        </div>
       </div>
     </CarouselItem>
     <CarouselItem>
@@ -106,6 +124,9 @@
 <style lang="scss">
   @import "src/styles/tokens";
   @import "src/styles/type";
+  .page {
+    background-color: $alt-background-color;
+  }
 
   .overlay {
     z-index: 100;
@@ -145,6 +166,7 @@
     min-height: 100vh;
     padding: $content-frame-pad;
     padding-top: 2.5rem + $content-frame-pad;
+    padding-bottom: 4rem + $content-frame-pad;
   }
   .controls {
     position: fixed;
@@ -170,6 +192,26 @@
     @include type-style($type-body);
     strong {
       font-weight: 600;
+    }
+  }
+  .illustration-pane {
+    background: $alt-background-color;
+    border-radius: 2rem;
+    display: grid;
+    grid-auto-flow: row;
+    grid-template: repeat(3, 1fr) / repeat(2, auto);
+    align-items: center;
+    gap: 1rem 2rem;
+    padding: 1rem 3rem;
+    width: fit-content;
+    margin: 0 auto;
+    h2 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      text-align: right;
+    }
+    img {
+      height: 7rem;
     }
   }
 </style>
