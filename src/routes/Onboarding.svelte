@@ -153,6 +153,18 @@
     width: 100%;
     box-sizing: border-box;
     padding: $content-frame-pad;
+    padding-top: 2 * $content-frame-pad;
+    background: linear-gradient(
+      to bottom,
+      rgba(96, 124, 224, 0) 0%,
+      rgba(96, 124, 224, 0.85) 66%,
+      #607ce0 100%
+    );
+
+    --carousel-controls--indicator-inactive: white;
+    --carousel-controls--indicator-active: #2d2b6f;
+    --carousel-controls--button-inactive: transparent;
+    --carousel-controls--button-active: white;
   }
   p {
     @include type-style($type-body);

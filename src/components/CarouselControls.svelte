@@ -22,7 +22,11 @@
 </script>
 
 <div class="controls">
-  <button on:click={previous} disabled={!previousAvailable}>
+  <button
+    on:click={previous}
+    disabled={!previousAvailable}
+    aria-label="previous"
+  >
     <Icon icon={arrowLeft} />
   </button>
   <div class="indicators" aria-label="On screen {position + 1} of {count}">
@@ -34,7 +38,7 @@
       />
     {/each}
   </div>
-  <button on:click={next} disabled={!nextAvailable}>
+  <button on:click={next} disabled={!nextAvailable} aria-label="next">
     <Icon icon={arrowRight} />
   </button>
 </div>
@@ -54,10 +58,11 @@
     background: none;
     display: flex;
     border-radius: 100%;
-    color: $text-primary-color;
+    color: var(--carousel-controls--button-active, $text-primary-color);
+    transition: color 200ms ease;
     font-size: 2rem;
     &:disabled {
-      color: $text-ghost-color;
+      color: var(--carousel-controls--button-inactive, $text-ghost-color);
     }
   }
   .indicators {
@@ -68,9 +73,16 @@
     width: 0.5rem;
     height: 0.5rem;
     border-radius: 100%;
-    background-color: $text-ghost-color;
+    transition: background-color 200ms ease;
+    background-color: var(
+      --carousel-controls--indicator-inactive,
+      $text-ghost-color
+    );
     &.active {
-      background-color: $text-actionable-color;
+      background-color: var(
+        --carousel-controls--indicator-active,
+        $text-actionable-color
+      );
     }
   }
 </style>
