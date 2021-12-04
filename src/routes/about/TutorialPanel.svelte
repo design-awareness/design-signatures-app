@@ -3,11 +3,11 @@
   SPDX-License-Identifier: BSD-3-Clause
 -->
 <script lang="ts" context="module">
-  import type { TypedMedia } from "./TutorialMedia.svelte";
+  import type { TypedMediaDef } from "../../components/TypedMedia.svelte";
 
-  export type Tutorial = [TypedMedia, string][];
+  export type Tutorial = [TypedMediaDef, string][];
 
-  export const tutorialPlaceholderMedia: TypedMedia = {
+  export const tutorialPlaceholderMedia: TypedMediaDef = {
     type: "image",
     url: {
       light:
@@ -21,7 +21,7 @@
   import { Carousel, CarouselItem } from "svelte-snappy-carousel";
   import CarouselControls from "../../components/CarouselControls.svelte";
   import DeviceOutline from "../../components/DeviceOutline.svelte";
-  import TutorialMedia from "./TutorialMedia.svelte";
+  import TypedMedia from "../../components/TypedMedia.svelte";
 
   export let tutorial: Tutorial;
   // ensure tutorial doesn't get updated
@@ -34,7 +34,7 @@
       <div class="pane">
         <div class="media">
           <DeviceOutline>
-            <TutorialMedia {media} />
+            <TypedMedia {media} />
           </DeviceOutline>
         </div>
         <p>{label}</p>
