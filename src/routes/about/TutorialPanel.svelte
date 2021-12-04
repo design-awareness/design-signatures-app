@@ -20,6 +20,7 @@
 <script lang="ts">
   import { Carousel, CarouselItem } from "svelte-snappy-carousel";
   import CarouselControls from "../../components/CarouselControls.svelte";
+  import DeviceOutline from "../../components/DeviceOutline.svelte";
   import TutorialMedia from "./TutorialMedia.svelte";
 
   export let tutorial: Tutorial;
@@ -32,9 +33,9 @@
     <CarouselItem>
       <div class="pane">
         <div class="media">
-          <div class="device-outline">
+          <DeviceOutline>
             <TutorialMedia {media} />
-          </div>
+          </DeviceOutline>
         </div>
         <p>{label}</p>
       </div>
@@ -68,13 +69,6 @@
   .media {
     padding: 0 2rem;
     width: fit-content;
-    .device-outline {
-      border: 8px solid black;
-      border-radius: 24px;
-      overflow: hidden;
-      width: fit-content;
-      display: flex;
-    }
     :global(img),
     :global(video) {
       max-width: 100%;
