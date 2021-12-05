@@ -10,15 +10,16 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { Carousel, CarouselItem } from "svelte-snappy-carousel";
-
   import { fade } from "svelte/transition";
-
   import Logo from "../assets/Logo.svelte";
   import Button from "../components/Button.svelte";
   import CarouselControls from "../components/CarouselControls.svelte";
-  import { CDN_PREFIX } from "../components/Figure.svelte";
+  import DeviceOutline from "../components/DeviceOutline.svelte";
+  import Figure, { CDN_PREFIX } from "../components/Figure.svelte";
   import Header from "../components/type/Header.svelte";
+  import TypedMedia from "../components/TypedMedia.svelte";
   import { delay } from "../util/delay";
+  import { tutorialPlaceholderMedia } from "./about/TutorialPanel.svelte";
 
   let showOverlay = true;
 
@@ -73,25 +74,70 @@
     <CarouselItem>
       <div class="slide">
         <Header>Break down your process with design models</Header>
-        <p />
+        <p>
+          <strong>Design models</strong> are collections of design activities that
+          let you describe a design process.
+        </p>
+        <Figure path="models/hcde.svg" alt="Design models illustration">
+          UW HCDE's design model
+        </Figure>
+        <p>
+          Choose from several <strong>design models</strong> to document your design
+          process.
+        </p>
+        <div class="media">
+          <DeviceOutline>
+            <TypedMedia media={tutorialPlaceholderMedia} />
+          </DeviceOutline>
+        </div>
       </div>
     </CarouselItem>
     <CarouselItem>
       <div class="slide">
         <Header>Choose a pace that works for you</Header>
-        <p />
+        <p>
+          Document your process in <strong>real-time</strong> or
+          <strong>asynchronously</strong>.
+        </p>
+        <p class="device-caption">Documenting in real-time</p>
+        <div class="media">
+          <DeviceOutline>
+            <TypedMedia media={tutorialPlaceholderMedia} />
+          </DeviceOutline>
+        </div>
       </div>
     </CarouselItem>
     <CarouselItem>
       <div class="slide">
         <Header>See your process represented visually</Header>
-        <p />
+        <p>
+          We’ll create visualizations based on your design data to help you view
+          and reflect on your design process.
+        </p>
+        <p class="device-caption">Design timeline visualization</p>
+        <div class="media">
+          <DeviceOutline>
+            <TypedMedia media={tutorialPlaceholderMedia} />
+          </DeviceOutline>
+        </div>
       </div>
     </CarouselItem>
     <CarouselItem>
       <div class="slide">
         <Header>Become a better designer!</Header>
-        <p />
+        <p>
+          Use your design signature to help you better understand and improve
+          your design habits.
+        </p>
+
+        <img
+          class="reflect-illustration"
+          src="{CDN_PREFIX}onboarding/reflect.svg"
+          alt="Reflect illustration"
+        />
+        <div class="cta-button">
+          <Button>Let’s go!</Button>
+        </div>
       </div>
     </CarouselItem>
     <div
@@ -163,7 +209,8 @@
   }
   .slide {
     box-sizing: border-box;
-    min-height: 100vh;
+    height: 100vh;
+    overflow: auto;
     padding: $content-frame-pad;
     padding-top: 2.5rem + $content-frame-pad;
     padding-bottom: 4rem + $content-frame-pad;
@@ -213,5 +260,34 @@
     img {
       height: 7rem;
     }
+  }
+
+  .media {
+    padding: 0 2rem;
+    margin: 1rem auto;
+    width: fit-content;
+    max-width: 16rem;
+    :global(img),
+    :global(video) {
+      max-width: 100%;
+    }
+  }
+
+  .device-caption {
+    @include type-style($type-caption);
+    color: $text-secondary-color;
+    font-style: italic;
+    text-align: center;
+  }
+
+  .reflect-illustration {
+    display: block;
+    margin: 3rem auto;
+    max-width: 15rem;
+  }
+
+  .cta-button {
+    display: flex;
+    justify-content: center;
   }
 </style>
