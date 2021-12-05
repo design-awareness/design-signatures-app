@@ -10,8 +10,12 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { Carousel, CarouselItem } from "svelte-snappy-carousel";
+  import { spring } from "svelte/motion";
   import { fade } from "svelte/transition";
   import Logo from "../assets/Logo.svelte";
+  import OnboardingSwoosh, {
+    swooshWidth,
+  } from "../assets/OnboardingSwoosh.svelte";
   import Button from "../components/Button.svelte";
   import CarouselControls from "../components/CarouselControls.svelte";
   import DeviceOutline from "../components/DeviceOutline.svelte";
@@ -27,6 +31,22 @@
     await delay(SPLASH_OVERLAY_DELAY_TIME);
     showOverlay = false;
   });
+
+  let swooshPos = spring(0, {
+    stiffness: 0.03,
+    damping: 0.95,
+  });
+  const updatePosition = (position: number) => {
+    const totalWidth = swooshWidth - window.innerWidth;
+    swooshPos.set(totalWidth * position);
+  };
+  const updatePosEffect = (_: HTMLElement, pos: number) => {
+    updatePosition(pos);
+    return {
+      update: (pos: number) => updatePosition(pos),
+      destroy: () => {},
+    };
+  };
 </script>
 
 <main class="device-frame page">
@@ -142,7 +162,7 @@
     </CarouselItem>
     <div
       class="controls"
-      slot="outer-controls"
+      slot="inner-controls"
       let:next
       let:previous
       let:nextAvailable
@@ -164,6 +184,16 @@
         {position}
       />
     </div>
+    <div
+      class="swoosh"
+      slot="outer-controls"
+      style="transform: translateX(-{$swooshPos}px);"
+      let:position
+      let:count
+      use:updatePosEffect={position / count}
+    >
+      <OnboardingSwoosh />
+    </div>
   </Carousel>
 </main>
 
@@ -172,6 +202,9 @@
   @import "src/styles/type";
   .page {
     background-color: $alt-background-color;
+    > :global(.carousel-container) {
+      z-index: 1;
+    }
   }
 
   .overlay {
@@ -289,5 +322,13 @@
   .cta-button {
     display: flex;
     justify-content: center;
+  }
+
+  .swoosh {
+    position: fixed;
+    bottom: -40px;
+    left: 0;
+    width: 100%;
+    z-index: 0;
   }
 </style>
