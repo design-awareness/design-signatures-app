@@ -41,16 +41,27 @@
   $: if (videoElement && wasVisible !== isVisible) {
     wasVisible = isVisible;
     if (isVisible) {
-      videoElement.play();
+      attemptPlay();
     } else {
       videoElement.pause();
     }
   }
   onMount(() => {
     if (videoElement && isVisible) {
-      videoElement.play();
+      attemptPlay();
     }
   });
+
+  function attemptPlay() {
+    if (videoElement) {
+      let promise = videoElement.play();
+      promise &&
+        promise.catch((e) => {
+          videoElement.addEventListener("click", attemptPlay, { once: true });
+          console.error("failed to autoplay video:", e);
+        });
+    }
+  }
 </script>
 
 {#if derivedMedia.type === "image"}
@@ -63,6 +74,16 @@
     src={fromSchemable(derivedMedia.url, $colorScheme)}
     loop
     muted
-    controls={false}
+    preload="metadata"
+    playsinline
   />
 {/if}
+
+<style lang="scss">
+  video {
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+    border-radius: 16px; // 24 - 8, from deviceoutline
+    overflow: hidden;
+  }
+</style>
