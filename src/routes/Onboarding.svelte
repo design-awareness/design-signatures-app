@@ -20,8 +20,10 @@
   import CarouselControls from "../components/CarouselControls.svelte";
   import DeviceOutline from "../components/DeviceOutline.svelte";
   import Figure, { CDN_PREFIX } from "../components/Figure.svelte";
+  import { goUp } from "../components/Link.svelte";
   import Header from "../components/type/Header.svelte";
   import TypedMedia from "../components/TypedMedia.svelte";
+  import CONFIG from "../data/config";
   import { delay } from "../util/delay";
   import { tutorialPlaceholderMedia } from "./about/TutorialPanel.svelte";
 
@@ -47,6 +49,11 @@
       destroy: () => {},
     };
   };
+
+  function exitOnboarding() {
+    CONFIG.setHasSeenOnboarding(true);
+    goUp("/");
+  }
 </script>
 
 <main class="device-frame page">
@@ -156,7 +163,7 @@
           alt="Reflect illustration"
         />
         <div class="cta-button">
-          <Button>Let’s go!</Button>
+          <Button on:click={exitOnboarding}>Let’s go!</Button>
         </div>
       </div>
     </CarouselItem>
@@ -172,7 +179,7 @@
     >
       {#if position !== count - 1}
         <div class="skip-button" transition:fade={{ duration: 150 }}>
-          <Button small on:click={() => console.log("skip")}>Skip</Button>
+          <Button small on:click={exitOnboarding}>Skip</Button>
         </div>
       {/if}
       <CarouselControls

@@ -44,6 +44,20 @@ const CONFIG = {
   setDevSuppressBeforeUnload(v: boolean) {
     return setConfig("dev__suppress_before_unload", v);
   },
+
+  getHasSeenOnboarding(): Promise<boolean> {
+    return getConfig<boolean>("has_seen_onboarding", false);
+  },
+  setHasSeenOnboarding(v: boolean) {
+    return setConfig("has_seen_onboarding", v);
+  },
+
+  getDevAlwaysShowOnboarding(): Promise<boolean> {
+    return getConfig<boolean>("dev__always_show_onboarding", false);
+  },
+  setDevAlwaysShowOnboarding(v: boolean) {
+    return setConfig("dev__always_show_onboarding", v);
+  },
 };
 
 export default CONFIG;
