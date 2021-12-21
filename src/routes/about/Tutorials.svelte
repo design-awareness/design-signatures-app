@@ -49,10 +49,7 @@
               "Start tracking and toggle the activities switches as you engage in them",
             ],
             [
-              {
-                type: "video",
-                url: "https://cdn.design-awareness.com/app-assets/tutorials/realtime/4.mp4",
-              },
+              tutorialPlaceholderMedia,
               "When you're finished, stop tracking and see your design process represented as a timeline",
             ],
           ]}
@@ -95,7 +92,11 @@
                 type: "video",
                 url: "https://cdn.design-awareness.com/app-assets/tutorials/async/4.mp4",
               },
-              "Save your entry and see your design process represented as a bubble timeline",
+              "Enter the time spent on each activity",
+            ],
+            [
+              tutorialPlaceholderMedia,
+              "See your design process represented as a bubble timeline",
             ],
           ]}
         />
