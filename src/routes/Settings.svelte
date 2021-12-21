@@ -28,6 +28,7 @@
   } from "../data/database";
   import type { DesignModel } from "../data/schema";
   import { WELL_KNOWN_ENTITY_PREFIX } from "../data/schema";
+  import { openOnboarding } from "../util/onboard";
 
   async function resetWellKnownModels() {
     if (confirm("Are you sure? Built-in design models will be recreated.")) {
@@ -133,6 +134,11 @@
         <Link href="/dev/">Developer tools</Link>
       </p>
     {/if}
+
+    <SectionHeader>Onboarding</SectionHeader>
+    <p>
+      <Button small on:click={openOnboarding}>Replay onboarding</Button>
+    </p>
 
     <SectionHeader>About app</SectionHeader>
     <p class="small">
