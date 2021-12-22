@@ -44,6 +44,21 @@ const CONFIG = {
   setDevSuppressBeforeUnload(v: boolean) {
     return setConfig("dev__suppress_before_unload", v);
   },
+
+  getTextScalingFactor(): Promise<number> {
+    return getConfig<number>("text_scaling_factor", 0);
+  },
+  setTextScalingFactor(v: number) {
+    return setConfig("text_scaling_factor", v);
+  },
+
+  getEnablePinchToZoom(): Promise<boolean> {
+    return getConfig<boolean>("enable_pinch_to_zoom", false);
+  },
+  setEnablePinchToZoom(v: boolean) {
+    console.log("writing", v);
+    return setConfig("enable_pinch_to_zoom", v);
+  },
 };
 
 export default CONFIG;

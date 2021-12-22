@@ -6,6 +6,8 @@
   import { replace } from "svelte-spa-router/Router.svelte";
   import BackButton from "../components/BackButton.svelte";
   import Button from "../components/Button.svelte";
+  import ButtonGroup from "../components/ButtonGroup.svelte";
+  import Checkbox from "../components/Checkbox.svelte";
   import InvisibleButton from "../components/InvisibleButton.svelte";
   import ContentFrame from "../components/layout/ContentFrame.svelte";
   import Link from "../components/Link.svelte";
@@ -28,6 +30,7 @@
   } from "../data/database";
   import type { DesignModel } from "../data/schema";
   import { WELL_KNOWN_ENTITY_PREFIX } from "../data/schema";
+  import { pinchToZoomEnabled, textScalingFactor } from "../util/scaling";
 
   async function resetWellKnownModels() {
     if (confirm("Are you sure? Built-in design models will be recreated.")) {
@@ -126,6 +129,44 @@
         Reset built-in design models
       </Button>
     </p>
+
+    <SectionHeader>Accessibility</SectionHeader>
+    <p>
+      <Checkbox
+        bind:checked={$pinchToZoomEnabled}
+        label="Pinch to zoom"
+        helptext="Depending on your device and browser settings, this option might be ignored. You may need to restart the app for changes to take effect."
+      />
+    </p>
+
+    <div>
+      <p>
+        Font scaling: {$textScalingFactor === 0
+          ? "default"
+          : $textScalingFactor > 0
+          ? `+${$textScalingFactor}`
+          : $textScalingFactor}
+      </p>
+      <ButtonGroup fill>
+        <Button
+          inlabel
+          disabled={$textScalingFactor === -5}
+          on:click={() => $textScalingFactor--}
+        >
+          Smaller
+        </Button>
+        <Button inlabel on:click={() => ($textScalingFactor = 0)}
+          >Default</Button
+        >
+        <Button
+          inlabel
+          disabled={$textScalingFactor === 5}
+          on:click={() => $textScalingFactor++}
+        >
+          Larger
+        </Button>
+      </ButtonGroup>
+    </div>
 
     {#if BUILD_ENV === "dev" || tapCount > 4}
       <SectionHeader>Developer</SectionHeader>
