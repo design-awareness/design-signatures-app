@@ -613,6 +613,14 @@ export function newTimedNote() {
   return newEntity("TimedNote")[0] as Schema.TimedNote;
 }
 
+export function deleteDB(): Promise<Event> {
+  return new Promise((res, rej) => {
+    const req = indexedDB.deleteDatabase(DB_NAME);
+    req.onsuccess = res;
+    req.onerror = rej;
+  });
+}
+
 /**
  * Returns a unique* 24 character alphanumeric id.
  * The first 16 characters are random, and the last 8
