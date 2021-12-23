@@ -9,9 +9,7 @@
   // FIXME: can we get typings for this?
   import { Accordion } from "svelte-collapsible";
   import AccordionItem from "../../components/AccordionItem.svelte";
-  import TutorialPanel, {
-    tutorialPlaceholderMedia,
-  } from "./TutorialPanel.svelte";
+  import TutorialPanel from "./TutorialPanel.svelte";
 </script>
 
 <main class="device-frame page">
@@ -28,19 +26,31 @@
         <TutorialPanel
           tutorial={[
             [
-              tutorialPlaceholderMedia,
+              {
+                type: "image",
+                url: "https://cdn.design-awareness.com/app-assets/tutorials/realtime/1.png",
+              },
               "Create a new project and select realtime tracking",
             ],
             [
-              tutorialPlaceholderMedia,
+              {
+                type: "image",
+                url: "https://cdn.design-awareness.com/app-assets/tutorials/realtime/2.png",
+              },
               "Enter project details and select a design model",
             ],
             [
-              tutorialPlaceholderMedia,
+              {
+                type: "video",
+                url: "https://cdn.design-awareness.com/app-assets/tutorials/realtime/3.mp4",
+              },
               "Start tracking and toggle the activities switches as you engage in them",
             ],
             [
-              tutorialPlaceholderMedia,
+              {
+                type: "image",
+                url: "https://cdn.design-awareness.com/app-assets/tutorials/realtime/4.png",
+              },
               "When you're finished, stop tracking and see your design process represented as a timeline",
             ],
           ]}
@@ -58,20 +68,39 @@
         <TutorialPanel
           tutorial={[
             [
-              tutorialPlaceholderMedia,
+              {
+                type: "image",
+                url: "https://cdn.design-awareness.com/app-assets/tutorials/async/1.png",
+              },
               "Create a new project and select asynchronous tracking",
             ],
             [
-              tutorialPlaceholderMedia,
+              {
+                type: "image",
+                url: "https://cdn.design-awareness.com/app-assets/tutorials/async/2.png",
+              },
               "Enter project details, select a design model, and choose your logging frequency",
             ],
             [
-              tutorialPlaceholderMedia,
+              {
+                type: "image",
+                url: "https://cdn.design-awareness.com/app-assets/tutorials/async/3.png",
+              },
               "Select a day or week to enter your time spent for each design activity",
             ],
             [
-              tutorialPlaceholderMedia,
-              "Save your entry and see your design process represented as a bubble timeline",
+              {
+                type: "video",
+                url: "https://cdn.design-awareness.com/app-assets/tutorials/async/4.mp4",
+              },
+              "Enter the time spent on each activity",
+            ],
+            [
+              {
+                type: "image",
+                url: "https://cdn.design-awareness.com/app-assets/tutorials/async/5.png",
+              },
+              "See your design process represented as a bubble timeline",
             ],
           ]}
         />
@@ -80,18 +109,33 @@
         <TutorialPanel
           tutorial={[
             [
-              tutorialPlaceholderMedia,
+              {
+                type: "image",
+                url: "https://cdn.design-awareness.com/app-assets/tutorials/design-model/1.png",
+              },
               "While creating a new project, select ‘New model’",
             ],
             [
-              tutorialPlaceholderMedia,
+              {
+                type: "image",
+                url: "https://cdn.design-awareness.com/app-assets/tutorials/design-model/2.png",
+              },
               "Start a new model from scratch or choose an existing model to build from",
             ],
             [
-              tutorialPlaceholderMedia,
+              {
+                type: "image",
+                url: "https://cdn.design-awareness.com/app-assets/tutorials/design-model/3.png",
+              },
               "Choose a title for your model and enter names and colors for each activity of your model",
             ],
-            [tutorialPlaceholderMedia, "Save and use!"],
+            [
+              {
+                type: "image",
+                url: "https://cdn.design-awareness.com/app-assets/tutorials/design-model/4.png",
+              },
+              "Save and use!",
+            ],
           ]}
         />
       </AccordionItem>
