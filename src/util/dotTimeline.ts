@@ -4,7 +4,7 @@
  */
 
 import type { AsyncActivityData } from "design-awareness-data-types";
-import type { DesignModel, RealtimeSession, TimedNote } from "../data/schema";
+import type { DesignModel } from "../data/schema";
 import { colorScheme } from "./colorScheme";
 
 // TODO: update this to be like an async entry
@@ -33,15 +33,14 @@ interface TimelineRendererDescriptor {
   showNotes?: boolean;
 
   /**
-   * Whether to show time in a bottom gutter. Default: true
+   * Whether to show dates along the top of the timeline. Default: true
    */
-  showTime?: boolean;
+  showDates?: boolean;
 
   /**
-   * If undefined, fill container. Otherwise, given in pixels.
-   * Can be updated after initialization.
+   * Whether to hide days that have no data. Default: false
    */
-  width?: number;
+  hideEmptyDays?: boolean;
 }
 
 const TAU = 2 * Math.PI;
@@ -94,8 +93,8 @@ export default function timeline(
     project,
     dpi = window.devicePixelRatio ?? 1,
     showNotes = true,
-    showTime = true,
-    width,
+    showDates = true,
+    hideEmptyDays = false,
   }: TimelineRendererDescriptor
 ) {
   if (!(node instanceof HTMLCanvasElement)) {
@@ -115,8 +114,8 @@ export default function timeline(
   // node size calculations
   let contentWidth = 0;
   let contentHeight = 0;
-  // TODO: figure out how to calculate the height
-  function updateHeight() {
+  function updateSize() {
+    // TODO: figure out how to calculate the height
     let height = numberOfActivities * ROW_HEIGHT + 2 * TIMELINE_PAD_V;
     // if (showNotes) {
     //   height += SEPARATOR + NOTE_GUTTER_HEIGHT;
@@ -124,10 +123,19 @@ export default function timeline(
     // if (showTime) {
     //   height += SEPARATOR + TIME_GUTTER_HEIGHT;
     // }
+
+    // TODO: calculate the width
+    let width = 600;
+
     contentHeight = height;
     node.style.height = height + "px";
+    node.height = contentHeight * dpi;
+
+    contentWidth = width;
+    node.style.width = width + "px";
+    node.width = contentWidth * dpi;
   }
-  updateHeight();
+  updateSize();
 
   let colorSchemeIdx = 0;
   let theme: TimelineColors = LIGHT_THEME;
@@ -136,27 +144,6 @@ export default function timeline(
     theme = value === "light" ? LIGHT_THEME : DARK_THEME;
     scheduleDraw();
   });
-  let observer = new ResizeObserver((entries: ResizeObserverEntry[]) => {
-    if (entries.length && width === undefined) {
-      updateSize(undefined);
-      scheduleDraw();
-    }
-  });
-  observer.observe(node);
-
-  updateSize(width);
-
-  function updateSize(width: number | undefined) {
-    if (width === undefined) {
-      node.style.width = "100%";
-      contentWidth = node.clientWidth;
-    } else {
-      node.style.width = width + "px";
-      contentWidth = width;
-    }
-    node.width = contentWidth * dpi;
-    node.height = contentHeight * dpi;
-  }
 
   function draw() {
     // draw timeline
@@ -166,36 +153,15 @@ export default function timeline(
     ctx.fillRect(0, 0, contentWidth, contentHeight);
 
     // TODO: Drawing goes here!
-    project.entries[0].data;
+
+    // example - drawing a red dot in the middle :)
     let rad = 20;
     ctx.beginPath();
-    ctx.arc(150, 150, rad, 0, TAU);
+    ctx.arc(contentWidth / 2, contentHeight / 2, rad, 0, TAU);
     ctx.fillStyle = "#" + "ff0000";
     ctx.fill();
-
-    // draw rails
-    {
-      ctx.fillStyle = theme.rail;
-      let y = TIMELINE_PAD_V + ROW_HEIGHT / 2 - RAIL_HEIGHT / 2;
-      let w = contentWidth - ACTIVITY_LABEL_AREA_WIDTH;
-      for (let i = 0; i < numberOfActivities; i++) {
-        ctx.fillRect(ACTIVITY_LABEL_AREA_WIDTH, y, w, RAIL_HEIGHT);
-        y += ROW_HEIGHT;
-      }
-    }
-
-    // draw separators
-    if (showNotes || showTime) {
-      let y = numberOfActivities * ROW_HEIGHT + 2 * TIMELINE_PAD_V;
-      let w = contentWidth - ACTIVITY_LABEL_AREA_WIDTH;
-      ctx.fillStyle = theme.separator;
-      ctx.fillRect(ACTIVITY_LABEL_AREA_WIDTH, y, w, SEPARATOR);
-      if (showNotes && showTime) {
-        y += SEPARATOR + NOTE_GUTTER_HEIGHT;
-        ctx.fillRect(ACTIVITY_LABEL_AREA_WIDTH, y, w, SEPARATOR);
-      }
-    }
   }
+
   function scheduleDraw() {
     if (rafHandle !== -1) {
       cancelAnimationFrame(rafHandle);
@@ -205,11 +171,10 @@ export default function timeline(
 
   function update(newDescriptor: TimelineRendererDescriptor) {
     dpi = newDescriptor.dpi ?? window.devicePixelRatio ?? 1;
-    width = newDescriptor.width;
     showNotes = newDescriptor.showNotes ?? showNotes;
-    showTime = newDescriptor.showTime ?? showTime;
-    updateHeight();
-    updateSize(width);
+    showDates = newDescriptor.showDates ?? showDates;
+    hideEmptyDays = newDescriptor.hideEmptyDays ?? hideEmptyDays;
+    updateSize();
     scheduleDraw();
   }
   function destroy() {
@@ -217,7 +182,6 @@ export default function timeline(
       cancelAnimationFrame(rafHandle);
     }
     colorThemeUnsubscriber();
-    observer.disconnect();
   }
 
   return { update, destroy };

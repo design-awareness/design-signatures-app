@@ -85,13 +85,16 @@
     <SectionHeader>Example “Asynchronous” bubble timelines</SectionHeader>
     <p>
       {#await signatureC() then signature}
-        <canvas
-          use:dotTimeline={{
-            project: signature,
-            showNotes: false,
-            showTime: false,
-          }}
-        />
+        <div class="timeline-container">
+          <canvas
+            use:dotTimeline={{
+              project: signature,
+              showNotes: false,
+              showDates: false,
+              hideEmptyDays: true,
+            }}
+          />
+        </div>
       {/await}
       Signature A - Ideal project envelope pattern
     </p>
@@ -144,5 +147,10 @@
 <style lang="scss">
   .page {
     min-height: 100%;
+  }
+
+  .timeline-container {
+    max-width: 100%;
+    overflow: auto;
   }
 </style>
