@@ -185,9 +185,10 @@
       onClick: function () {
         const model = project.designModel;
         const i = selectedActivity.index;
+        selectedActivity = { ...selectedActivityTemp };
         let { code, color, description, name } = selectedActivityTemp;
         let newActivity = {
-          code,
+          code: code.toUpperCase(),
           color,
           description,
           name,
@@ -195,7 +196,6 @@
         model.activities = setInArray(model.activities, i, newActivity);
         model.save();
         // This no-op is instrumented by svelte and updates accordingly
-        // FIXME: Activity detail modal isn't updated after saving.
         project.designModel = project.designModel;
         editingActivity = false;
       },
@@ -318,7 +318,7 @@
             shouldUpdate={hasProject && !params.wild}
             session={tracker.session}
             currentTime={subsessionTime + pastSessionTime}
-            designModel={project.designModel}
+            colors={project.designModel.activities.map(({ color }) => color)}
           />
         {/if}
 

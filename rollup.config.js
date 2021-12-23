@@ -86,6 +86,7 @@ export default [
         BUILDVAR__PULL_REQUEST: JSON.stringify(process.env.REVIEW_ID),
         BUILDVAR__GIT_HEAD: JSON.stringify(process.env.HEAD),
         BUILDVAR__GIT_REPO: JSON.stringify(process.env.REPOSITORY_URL),
+        BUILDVAR__FEEDBACK_LINK: JSON.stringify(process.env.FEEDBACK_LINK_URL),
         preventAssignment: true,
       }),
       commonjs(),

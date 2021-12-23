@@ -86,7 +86,7 @@
     as.name = name;
     as.description = null;
     as.activities = activities.map(({ code, color, description, name }) => ({
-      code,
+      code: code.toUpperCase(),
       color,
       description,
       name,
