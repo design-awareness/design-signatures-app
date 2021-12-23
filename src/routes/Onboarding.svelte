@@ -25,7 +25,6 @@
   import TypedMedia from "../components/TypedMedia.svelte";
   import CONFIG from "../data/config";
   import { delay } from "../util/delay";
-  import { tutorialPlaceholderMedia } from "./about/TutorialPanel.svelte";
 
   let showOverlay = true;
 
@@ -114,7 +113,15 @@
         </p>
         <div class="media">
           <DeviceOutline>
-            <TypedMedia media={tutorialPlaceholderMedia} />
+            <TypedMedia
+              media={{
+                type: "image",
+                url: {
+                  light: `${CDN_PREFIX}onboarding/design-models-light.png`,
+                  dark: `${CDN_PREFIX}onboarding/design-models-dark.png`,
+                },
+              }}
+            />
           </DeviceOutline>
         </div>
       </div>
@@ -129,7 +136,15 @@
         <p class="device-caption">Documenting in real-time</p>
         <div class="media">
           <DeviceOutline>
-            <TypedMedia media={tutorialPlaceholderMedia} />
+            <TypedMedia
+              media={{
+                type: "image",
+                url: {
+                  light: `${CDN_PREFIX}onboarding/realtime-light.png`,
+                  dark: `${CDN_PREFIX}onboarding/realtime-dark.png`,
+                },
+              }}
+            />
           </DeviceOutline>
         </div>
       </div>
@@ -144,7 +159,15 @@
         <p class="device-caption">Design timeline visualization</p>
         <div class="media">
           <DeviceOutline>
-            <TypedMedia media={tutorialPlaceholderMedia} />
+            <TypedMedia
+              media={{
+                type: "image",
+                url: {
+                  light: `${CDN_PREFIX}onboarding/visualization-light.png`,
+                  dark: `${CDN_PREFIX}onboarding/visualization-dark.png`,
+                },
+              }}
+            />
           </DeviceOutline>
         </div>
       </div>
