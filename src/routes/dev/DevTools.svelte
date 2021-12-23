@@ -3,7 +3,12 @@
   SPDX-License-Identifier: BSD-3-Clause
 -->
 <script lang="ts">
+  import { onDestroy } from "svelte";
+
+  import { writable } from "svelte/store";
+
   import BackButton from "../../components/BackButton.svelte";
+  import Checkbox from "../../components/Checkbox.svelte";
   import ContentFrame from "../../components/layout/ContentFrame.svelte";
   import Link from "../../components/Link.svelte";
   import Header from "../../components/type/Header.svelte";
@@ -24,6 +29,17 @@
   let reloadSuppressed = false;
   (async function () {
     reloadSuppressed = await CONFIG.getDevSuppressBeforeUnload();
+  })();
+
+  export const showCanvasTimelineOnProjectPage = writable<boolean>(false);
+  (async function () {
+    const initialValue = await CONFIG.getDevShowCanvasTimelineOnProjectPage();
+    showCanvasTimelineOnProjectPage.set(initialValue);
+    onDestroy(
+      showCanvasTimelineOnProjectPage.subscribe(
+        CONFIG.setDevShowCanvasTimelineOnProjectPage
+      )
+    );
   })();
 
   async function deleteAll() {
@@ -131,6 +147,13 @@
         CONFIG.setDevSuppressBeforeUnload(reloadSuppressed);
       }}>{reloadSuppressed ? "suppressed" : "normal"}</button
     >
+  </p>
+
+  <p>
+    <Checkbox
+      bind:checked={$showCanvasTimelineOnProjectPage}
+      label="Show canvas timeline on async project page"
+    />
   </p>
 
   <Header>Device Properties</Header>

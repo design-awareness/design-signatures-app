@@ -4,19 +4,20 @@
  */
 
 import type { AsyncActivityData } from "design-awareness-data-types";
-import type { DesignModel } from "../data/schema";
+import type { DesignModel, AsyncProject } from "../data/schema";
 import { colorScheme } from "./colorScheme";
 
 // TODO: update this to be like an async entry
 interface AsyncEntryLike {
-  data: AsyncActivityData[];
-  period: string;
+  data: readonly AsyncActivityData[];
+  period: Date;
 }
 
-interface AsyncProjectLike {
+export interface AsyncProjectLike {
   designModel: DesignModel;
   entries: readonly AsyncEntryLike[];
-  // TODO: also need reporting period and periodAlignment
+  reportingPeriod: AsyncProject["reportingPeriod"];
+  periodAlignment: AsyncProject["periodAlignment"];
 }
 
 interface TimelineRendererDescriptor {

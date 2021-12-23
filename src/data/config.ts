@@ -56,8 +56,14 @@ const CONFIG = {
     return getConfig<boolean>("enable_pinch_to_zoom", false);
   },
   setEnablePinchToZoom(v: boolean) {
-    console.log("writing", v);
     return setConfig("enable_pinch_to_zoom", v);
+  },
+
+  getDevShowCanvasTimelineOnProjectPage(): Promise<boolean> {
+    return getConfig<boolean>("show_canvas_timeline_on_project_page", false);
+  },
+  setDevShowCanvasTimelineOnProjectPage(v: boolean) {
+    return setConfig("show_canvas_timeline_on_project_page", v);
   },
 };
 

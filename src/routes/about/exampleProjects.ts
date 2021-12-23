@@ -5,6 +5,7 @@
 
 import { getDesignModel } from "../../data/database";
 import type { RealtimeSession } from "../../data/schema";
+import type { AsyncProjectLike } from "../../util/dotTimeline";
 
 export const signatureA = async () => ({
   designModel: await getDesignModel(
@@ -174,7 +175,7 @@ export const signatureB = async () => ({
   ],
 });
 
-export const signatureC = async () => ({
+export const signatureC = async (): Promise<AsyncProjectLike> => ({
   designModel: await getDesignModel("well-known:general.problem_solution@1"),
   entries: [
     {
@@ -182,15 +183,16 @@ export const signatureC = async () => ({
         { value: 180, note: "" },
         { value: 240, note: "" },
       ],
-
-      period: "2021-10-24T00:00:00.000Z",
+      period: new Date("2021-10-24T00:00:00.000Z"),
     },
     {
       data: [
         { value: 300, note: "" },
         { value: 120, note: "" },
       ],
-      period: "2021-10-25T00:00:00.000Z",
+      period: new Date("2021-10-25T00:00:00.000Z"),
     },
   ],
+  reportingPeriod: "day",
+  periodAlignment: 0,
 });
