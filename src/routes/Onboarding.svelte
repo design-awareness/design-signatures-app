@@ -20,7 +20,7 @@
   import CarouselControls from "../components/CarouselControls.svelte";
   import DeviceOutline from "../components/DeviceOutline.svelte";
   import Figure, { CDN_PREFIX } from "../components/Figure.svelte";
-  import { goUp } from "../components/Link.svelte";
+  import { goHorizontal } from "../components/Link.svelte";
   import Header from "../components/type/Header.svelte";
   import TypedMedia from "../components/TypedMedia.svelte";
   import CONFIG from "../data/config";
@@ -51,7 +51,7 @@
 
   function exitOnboarding() {
     CONFIG.setHasSeenOnboarding(true);
-    goUp("/");
+    goHorizontal("/");
   }
 </script>
 
