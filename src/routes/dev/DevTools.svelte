@@ -24,6 +24,10 @@
   (async function () {
     reloadSuppressed = await CONFIG.getDevSuppressBeforeUnload();
   })();
+  let alwaysShowOnboarding = false;
+  (async function () {
+    alwaysShowOnboarding = await CONFIG.getDevAlwaysShowOnboarding();
+  })();
 
   async function deleteAll() {
     if (
@@ -115,6 +119,16 @@
         reloadSuppressed = !reloadSuppressed;
         CONFIG.setDevSuppressBeforeUnload(reloadSuppressed);
       }}>{reloadSuppressed ? "suppressed" : "normal"}</button
+    >
+  </p>
+
+  <p>
+    Show onboarding on launch:
+    <button
+      on:click={() => {
+        alwaysShowOnboarding = !alwaysShowOnboarding;
+        CONFIG.setDevAlwaysShowOnboarding(alwaysShowOnboarding);
+      }}>{alwaysShowOnboarding ? "always" : "normal"}</button
     >
   </p>
 
