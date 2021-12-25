@@ -13,12 +13,28 @@
   import ProjectCard from "../components/ProjectCard.svelte";
   import Header from "../components/type/Header.svelte";
   import { getRecentProjects } from "../data/recentProjects";
+  import { canInstall, isInstalled, showInstallPrompt } from "../util/pwa";
+
+  async function install() {
+    if (canInstall()) {
+      if (await showInstallPrompt()) {
+        location.reload();
+      }
+    } else {
+      // TODO: direct to installation instructions page
+    }
+  }
 </script>
 
 <main class="device-frame home">
   <PageHeader />
 
   <ContentFrame>
+    {#if !$isInstalled}
+      <Header>Install app</Header>
+      <Button on:click={install}>Install</Button>
+    {/if}
+
     <Header>Recent Projects</Header>
 
     <HorizontalScrollArea>
