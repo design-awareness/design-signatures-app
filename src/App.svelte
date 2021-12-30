@@ -28,6 +28,7 @@
   import ThePoint from "./routes/about/ThePoint.svelte";
   import Tutorials from "./routes/about/Tutorials.svelte";
   import Update from "./routes/Update.svelte";
+  import Onboarding from "./routes/Onboarding.svelte";
 
   awaitObjectUpgradeIfNeeded();
   createPresets(); // noop, but keeps the linter happy :)
@@ -65,6 +66,9 @@
 
     "/settings/": Settings, // Settings
     "/settings": RedirectAddPath, // Settings
+
+    "/onboarding/": Onboarding,
+    "/onboarding": RedirectAddPath,
 
     "/update/:n": Update,
 

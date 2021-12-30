@@ -9,9 +9,7 @@
   // FIXME: can we get typings for this?
   import { Accordion } from "svelte-collapsible";
   import AccordionItem from "../../components/AccordionItem.svelte";
-  import TutorialPanel, {
-    tutorialPlaceholderMedia,
-  } from "./TutorialPanel.svelte";
+  import TutorialPanel from "./TutorialPanel.svelte";
 </script>
 
 <main class="device-frame page">

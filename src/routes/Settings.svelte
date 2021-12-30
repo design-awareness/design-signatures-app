@@ -30,6 +30,7 @@
   } from "../data/database";
   import type { DesignModel } from "../data/schema";
   import { WELL_KNOWN_ENTITY_PREFIX } from "../data/schema";
+  import { openOnboarding } from "../util/onboard";
   import { pinchToZoomEnabled, textScalingFactor } from "../util/scaling";
 
   async function resetWellKnownModels() {
@@ -174,6 +175,11 @@
         <Link href="/dev/">Developer tools</Link>
       </p>
     {/if}
+
+    <SectionHeader>Onboarding</SectionHeader>
+    <p>
+      <Button small on:click={openOnboarding}>Replay onboarding</Button>
+    </p>
 
     <SectionHeader>About app</SectionHeader>
     <p class="small">

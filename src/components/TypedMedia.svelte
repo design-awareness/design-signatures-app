@@ -3,9 +3,9 @@
   SPDX-License-Identifier: BSD-3-Clause
 -->
 <script lang="ts" context="module">
-  import type { Schemable } from "../../util/colorScheme";
+  import type { Schemable } from "../util/colorScheme";
 
-  export type TypedMedia = StrictTypedMedia | Schemable<string>;
+  export type TypedMediaDef = StrictTypedMedia | Schemable<string>;
 
   type StrictTypedMedia =
     | {
@@ -19,11 +19,11 @@
 </script>
 
 <script lang="ts">
-  import { hasOwnProperty } from "../../types/utility";
+  import { hasOwnProperty } from "../types/utility";
 
-  import { colorScheme, fromSchemable } from "../../util/colorScheme";
+  import { colorScheme, fromSchemable } from "../util/colorScheme";
   import { onMount } from "svelte";
-  export let media: TypedMedia;
+  export let media: TypedMediaDef;
   export let isVisible = true;
 
   let derivedMedia: StrictTypedMedia;
