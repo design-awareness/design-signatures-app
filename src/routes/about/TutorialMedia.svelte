@@ -22,7 +22,9 @@
   import { hasOwnProperty } from "../../types/utility";
 
   import { colorScheme, fromSchemable } from "../../util/colorScheme";
+  import { onMount } from "svelte";
   export let media: TypedMedia;
+  export let isVisible = true;
 
   let derivedMedia: StrictTypedMedia;
   $: if (!hasOwnProperty(media, "type")) {
@@ -33,12 +35,55 @@
   } else {
     derivedMedia = media;
   }
+
+  let wasVisible = isVisible;
+  let videoElement: HTMLVideoElement;
+  $: if (videoElement && wasVisible !== isVisible) {
+    wasVisible = isVisible;
+    if (isVisible) {
+      attemptPlay();
+    } else {
+      videoElement.pause();
+    }
+  }
+  onMount(() => {
+    if (videoElement && isVisible) {
+      attemptPlay();
+    }
+  });
+
+  function attemptPlay() {
+    if (videoElement) {
+      let promise = videoElement.play();
+      promise &&
+        promise.catch((e) => {
+          videoElement.addEventListener("click", attemptPlay, { once: true });
+          console.error("failed to autoplay video:", e);
+        });
+    }
+  }
 </script>
 
 {#if derivedMedia.type === "image"}
   <!-- svelte-ignore a11y-missing-attribute -->
-  <img src={fromSchemable(derivedMedia.url, $colorScheme)} />
+  <img src={fromSchemable(derivedMedia.url, $colorScheme)} loading="lazy" />
 {:else}
   <!-- svelte-ignore a11y-media-has-caption -->
-  <video src={fromSchemable(derivedMedia.url, $colorScheme)} loop />
+  <video
+    bind:this={videoElement}
+    src={fromSchemable(derivedMedia.url, $colorScheme)}
+    loop
+    muted
+    preload="metadata"
+    playsinline
+  />
 {/if}
+
+<style lang="scss">
+  video {
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+    border-radius: 16px; // 24 - 8, from deviceoutline
+    overflow: hidden;
+  }
+</style>
