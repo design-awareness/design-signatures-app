@@ -58,6 +58,20 @@ const CONFIG = {
   setDevAlwaysShowOnboarding(v: boolean) {
     return setConfig("dev__always_show_onboarding", v);
   },
+
+  getTextScalingFactor(): Promise<number> {
+    return getConfig<number>("text_scaling_factor", 0);
+  },
+  setTextScalingFactor(v: number) {
+    return setConfig("text_scaling_factor", v);
+  },
+
+  getEnablePinchToZoom(): Promise<boolean> {
+    return getConfig<boolean>("enable_pinch_to_zoom", false);
+  },
+  setEnablePinchToZoom(v: boolean) {
+    return setConfig("enable_pinch_to_zoom", v);
+  },
 };
 
 export default CONFIG;

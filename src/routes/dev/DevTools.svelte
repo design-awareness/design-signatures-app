@@ -9,6 +9,7 @@
   import Header from "../../components/type/Header.svelte";
   import CONFIG from "../../data/config";
   import {
+    deleteDB,
     getAll,
     getAsyncEntry,
     getAsyncProject,
@@ -31,7 +32,7 @@
 
   async function deleteAll() {
     if (
-      confirm("Are you absolutely sure? The entire database will be deleted.")
+      confirm("Are you absolutely sure? All database entities will be deleted.")
     ) {
       const [
         asyncEntries,
@@ -99,6 +100,20 @@
       location.reload();
     }
   }
+
+  async function deleteDb() {
+    if (
+      confirm("Are you absolutely sure? The entire database will be deleted.")
+    ) {
+      try {
+        await deleteDB();
+        alert("Database deleted successfully.");
+      } catch (e) {
+        alert("An error occurred while deleting the database.");
+      }
+      location.reload();
+    }
+  }
 </script>
 
 <ContentFrame>
@@ -136,5 +151,12 @@
   <p>Color scheme: {$colorScheme}</p>
 
   <Header>Danger Zone</Header>
-  <p>Purge the entire database: <button on:click={deleteAll}>purge</button></p>
+  <p>
+    Remove all entries from the database:
+    <button on:click={deleteAll}>purge</button>
+  </p>
+  <p>
+    Delete the database itself (including configuration):
+    <button on:click={deleteDb}>delete</button>
+  </p>
 </ContentFrame>
