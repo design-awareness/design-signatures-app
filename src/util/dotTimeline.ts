@@ -4,8 +4,12 @@
  */
 
 import type { AsyncActivityData } from "design-awareness-data-types";
+import html2canvas from "html2canvas";
+import { getDesignModel } from "../data/database";
 import type { DesignModel, AsyncProject } from "../data/schema";
 import { colorScheme } from "./colorScheme";
+
+export let project: AsyncProject;
 
 // TODO: update this to be like an async entry
 interface AsyncEntryLike {
@@ -109,6 +113,7 @@ export default function timeline(
   const ctx = ctxOrNull;
 
   let { activities } = project.designModel;
+  let { entries } = project.entries;
   let rafHandle = -1;
   let numberOfActivities = activities.length;
 
@@ -117,7 +122,7 @@ export default function timeline(
   let contentHeight = 0;
   function updateSize() {
     // TODO: figure out how to calculate the height
-    let height = numberOfActivities * ROW_HEIGHT + 2 * TIMELINE_PAD_V;
+    let height = numberOfActivities * ROW_HEIGHT + 2 * TIMELINE_PAD_V * 50;
     // if (showNotes) {
     //   height += SEPARATOR + NOTE_GUTTER_HEIGHT;
     // }
@@ -126,7 +131,7 @@ export default function timeline(
     // }
 
     // TODO: calculate the width
-    let width = 600;
+    let width = 1000;
 
     contentHeight = height;
     node.style.height = height + "px";
@@ -147,23 +152,153 @@ export default function timeline(
   });
 
   function draw() {
+    // console.log(reporting)
     // draw timeline
     ctx.resetTransform();
     ctx.scale(dpi, dpi);
+    // ctx.fillStyle = "#" + "ff0000";
+    // ctx.fill();
     ctx.fillStyle = theme.background;
     ctx.fillRect(0, 0, contentWidth, contentHeight);
 
+    
+    // draw rails
+    {
+      // ctx.lineWidth = 500;
+      // ctx.fillStyle = theme.rail;
+      // ctx.fillStyle = "#" + "00ff00";
+      let y = TIMELINE_PAD_V + ROW_HEIGHT / 2 - RAIL_HEIGHT / 2;
+      let w = contentWidth - ACTIVITY_LABEL_AREA_WIDTH;
+      for (let i = 0; i < numberOfActivities; i++) {
+        console.log("color: #" + activities[i]["color"][0] + "0D")
+        ctx.fillStyle = "#" + activities[i]["color"][0];
+        ctx.fill();
+        ctx.font = 'bold 15px sans-serif';
+        ctx.fillText(activities[i]["code"], 0, y + 45);
+        ctx.fillStyle = "#" + activities[i]["color"][0] + "0D";
+        ctx.fill();
+        ctx.fillRect(ACTIVITY_LABEL_AREA_WIDTH, y, w, RAIL_HEIGHT*30);
+        y += 3*ROW_HEIGHT;
+        
+      }
+    }
+
+    // dates
+    // {
+    //   let y = TIMELINE_PAD_V + ROW_HEIGHT / 2 - RAIL_HEIGHT / 2;
+    //   let w = contentWidth - ACTIVITY_LABEL_AREA_WIDTH;
+    //   for (let i = 0; i < project.entries.length; i++) {
+    //     let rad2 = 10;
+    //     ctx.beginPath();
+    //     ctx.arc(y / 2, w / project.entries.length, rad2, 0, TAU);
+    //     ctx.fillStyle = "#" + "00ff00";
+    //     ctx.fill();
+    //     y += 3*ROW_HEIGHT;
+    //   }
+    // }
+
+    // draw rails
+    {
+      ctx.fillStyle = theme.rail;
+      let y = TIMELINE_PAD_V + ROW_HEIGHT / 2 - RAIL_HEIGHT / 2;
+      let w = contentWidth - ACTIVITY_LABEL_AREA_WIDTH;
+      let x = ACTIVITY_LABEL_AREA_WIDTH;
+      for (let i = 0; i < numberOfActivities; i++) {
+        // ctx.fillStyle = "#" + "ffffff0D";
+        // ctx.fill();
+        ctx.fillRect(x, 0, RAIL_HEIGHT, y*30);
+        // ctx.fillRect(ACTIVITY_LABEL_AREA_WIDTH, w, y, RAIL_HEIGHT);
+        // let rad2 = 10;
+        // ctx.beginPath();
+        // ctx.arc(y / 2, w / project.entries.length, rad2, 0, TAU);
+        
+        // w += 3*ROW_HEIGHT;
+        x += 100;
+      }
+    }
+
+    // {
+    //   for (let i = 0; i < numberOfActivities; i++) {
+    //     ctx.fillStyle = activities[i]["color"][0];
+    //     let y = TIMELINE_PAD_V + ROW_HEIGHT / 2 - RAIL_HEIGHT / 2;
+    //     let w = contentWidth - ACTIVITY_LABEL_AREA_WIDTH;
+    //   }
+    // }
+
+
+    // // draw bars & note dots
+    // noteTouchTargets = [];
+    // {
+    //   for (let { data, priorDuration, duration, notes } of renderData) {
+    //     let endX = toX(duration + priorDuration);
+
+    //     // this session isn't visible - skip and try next
+    //     if (endX < ACTIVITY_LABEL_AREA_WIDTH) continue;
+
+    //     let y = TIMELINE_PAD_V + ROW_HEIGHT / 2 - BAR_HEIGHT / 2;
+    //     for (let activity = 0; activity < numberOfActivities; activity++) {
+    //       ctx.fillStyle = "#" + activities[activity].color[colorSchemeIdx];
+    //       for (let [start, stop] of data[activity]) {
+    //         let x2 = toX(stop + priorDuration);
+    //         // this bar isn't visible - skip and try next
+    //         if (x2 < ACTIVITY_LABEL_AREA_WIDTH) continue;
+    //         let x = toX(start + priorDuration);
+    //         let w = x2 - x;
+    //         ctx.fillRect(x, y, w, BAR_HEIGHT);
+    //         // this bar goes over the right edge - skip any future bars
+    //         if (x2 > contentWidth + noteSize) break;
+    //       }
+    //       y += ROW_HEIGHT;
+    //     }
+
+    //     if (showNotes) {
+    //       ctx.fillStyle = theme.noteColor;
+    //       for (let note of notes) {
+    //         let x = toX(note.time + priorDuration);
+    //         if (x < 0) continue;
+    //         if (x > contentWidth + noteSize) break;
+    //         ctx.beginPath();
+    //         ctx.arc(x, noteY, noteSize, 0, TAU);
+    //         ctx.fill();
+    //         noteTouchTargets.push({ x, y: noteY, note });
+    //       }
+    //     }
+
+    //     // the next session won't be visible - done drawing bars!
+    //     if (endX > contentWidth) break;
+    //   }
+    // }
+
+
     // TODO: Drawing goes here!
+    // const image = document.querySelector(".dotgrid-body") as HTMLCanvasElement
+    // html2canvas(image).then(ctx => {
+    //   document.body.appendChild(ctx);
+    //   // ctx.toDataURL("image/png");
+    // });
+    // var img = ctx.toDataURL("image/png");
+
+    console.log("tortillas2");
+    console.log(numberOfActivities);
+    console.log("Activities: ");
+    console.log(activities);
+    console.log("Entries: ");
+    console.log(project.entries);
+    // console.log(addDays);
+    // console.log(project.reportingPeriod);
+    console.log(document.querySelector(".dotgrid-body")?.clientWidth);
+    console.log(document.querySelector(".dotgrid-body"));
 
     // example - drawing a red dot in the middle :)
-    let rad = 20;
-    ctx.beginPath();
-    ctx.arc(contentWidth / 2, contentHeight / 2, rad, 0, TAU);
-    ctx.fillStyle = "#" + "ff0000";
-    ctx.fill();
+    // let rad2 = 10;
+    // ctx.beginPath();
+    // ctx.arc(contentWidth / 2, contentHeight / 2, rad2, 0, TAU);
+    // ctx.fillStyle = "#" + "00ff00";
+    // ctx.fill();
   }
 
   function scheduleDraw() {
+    // console.log("tacos");
     if (rafHandle !== -1) {
       cancelAnimationFrame(rafHandle);
     }
