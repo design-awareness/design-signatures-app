@@ -4,7 +4,6 @@
  */
 
 import type { AsyncActivityData } from "design-awareness-data-types";
-import html2canvas from "html2canvas";
 import { getDesignModel } from "../data/database";
 import type { DesignModel, AsyncProject } from "../data/schema";
 import { colorScheme } from "./colorScheme";
@@ -171,11 +170,11 @@ export default function timeline(
       let w = contentWidth - ACTIVITY_LABEL_AREA_WIDTH;
       for (let i = 0; i < numberOfActivities; i++) {
         console.log("color: #" + activities[i]["color"][0] + "0D")
-        ctx.fillStyle = "#" + activities[i]["color"][0];
+        ctx.fillStyle = "#" + activities[i].color[colorSchemeIdx];
         ctx.fill();
         ctx.font = 'bold 15px sans-serif';
         ctx.fillText(activities[i]["code"], 0, y + 45);
-        ctx.fillStyle = "#" + activities[i]["color"][0] + "0D";
+        ctx.fillStyle = "#" + activities[i].color[colorSchemeIdx] + "0D";
         ctx.fill();
         ctx.fillRect(ACTIVITY_LABEL_AREA_WIDTH, y, w, RAIL_HEIGHT*30);
         y += 3*ROW_HEIGHT;
