@@ -121,7 +121,7 @@ export default function timeline(
   let contentHeight = 0;
   function updateSize() {
     // TODO: figure out how to calculate the height
-    let height = numberOfActivities * ROW_HEIGHT + 2 * TIMELINE_PAD_V * 50;
+    let height = numberOfActivities * ROW_HEIGHT + 2.9 * TIMELINE_PAD_V * 50;
     // if (showNotes) {
     //   height += SEPARATOR + NOTE_GUTTER_HEIGHT;
     // }
@@ -130,7 +130,8 @@ export default function timeline(
     // }
 
     // TODO: calculate the width
-    let width = 1000;
+    // let width = 1000;
+    let width = project.entries.length * 100 + 55;
 
     contentHeight = height;
     node.style.height = height + "px";
@@ -166,7 +167,7 @@ export default function timeline(
       // ctx.lineWidth = 500;
       // ctx.fillStyle = theme.rail;
       // ctx.fillStyle = "#" + "00ff00";
-      let y = TIMELINE_PAD_V + ROW_HEIGHT / 2 - RAIL_HEIGHT / 2;
+      let y = TIMELINE_PAD_V + ROW_HEIGHT / 2 - RAIL_HEIGHT / 2 + 50;
       let w = contentWidth - ACTIVITY_LABEL_AREA_WIDTH;
       for (let i = 0; i < numberOfActivities; i++) {
         console.log("color: #" + activities[i]["color"][0] + "0D")
@@ -196,16 +197,27 @@ export default function timeline(
     //   }
     // }
 
-    // draw rails
+    // draw dividing rails
     {
       ctx.fillStyle = theme.rail;
-      let y = TIMELINE_PAD_V + ROW_HEIGHT / 2 - RAIL_HEIGHT / 2;
+      // let height = numberOfActivities * ROW_HEIGHT + 2.9 * TIMELINE_PAD_V * 50;
+      let section = 60;
+      let spacer = 10.5;
+      let timelineWidth = (section*numberOfActivities) + (spacer*numberOfActivities);
+      console.log("activities: " + numberOfActivities);
+      console.log("content height:" + contentHeight);
+      console.log("section: " + section);
+      
+      // let railHeight = contentHeight - (numberOfActivities * 10)
+
+      let y = TIMELINE_PAD_V + ROW_HEIGHT / 2 - RAIL_HEIGHT / 2 ;
       let w = contentWidth - ACTIVITY_LABEL_AREA_WIDTH;
       let x = ACTIVITY_LABEL_AREA_WIDTH;
-      for (let i = 0; i < numberOfActivities; i++) {
+      for (let i = 0; i < project.entries.length + 1; i++) {
         // ctx.fillStyle = "#" + "ffffff0D";
         // ctx.fill();
-        ctx.fillRect(x, 0, RAIL_HEIGHT, y*30);
+        // console.log(project.entries[i]["period"].toString());
+        ctx.fillRect(x, 65, RAIL_HEIGHT, timelineWidth);
         // ctx.fillRect(ACTIVITY_LABEL_AREA_WIDTH, w, y, RAIL_HEIGHT);
         // let rad2 = 10;
         // ctx.beginPath();
@@ -215,6 +227,88 @@ export default function timeline(
         x += 100;
       }
     }
+
+    // draw month bars
+    {
+      let w = contentWidth - ACTIVITY_LABEL_AREA_WIDTH;
+      let section = w / project.entries.length;
+      let spacer = 10.5;
+      let timelineWidth = (section*numberOfActivities) + (spacer*numberOfActivities);
+      
+      let start = 0;
+      // let end = 
+      ctx.fillStyle = ctx.fillStyle = "#" + "80808080";
+      let months = ["January", "Februrary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+      let y = TIMELINE_PAD_V + ROW_HEIGHT / 2 - RAIL_HEIGHT / 2;
+      
+      
+      let entriesInCurrentMonth = 0;
+      let currentMonth = "";
+      let previousMonth = "";
+      let position = ACTIVITY_LABEL_AREA_WIDTH;
+      for (let i=0; i < project.entries.length; i++) {
+        console.log("position: " + position);
+        currentMonth = project.entries[i].period.toDateString().substring(4,7);
+        if (currentMonth == previousMonth || previousMonth == "") {
+          entriesInCurrentMonth += 1;
+          previousMonth = currentMonth;
+        } else { // Moved on to new 
+          let width = section*entriesInCurrentMonth-5;
+          let height = RAIL_HEIGHT*10;
+          ctx.fillRect(position, y, width, height);
+          ctx.fillStyle = "#000000";
+          ctx.font = 'bold 15px sans-serif';
+          ctx.textAlign="center"; 
+          ctx.textBaseline = "middle";
+          ctx.fillText(previousMonth, position+(width/2),y+(height/2));
+          position += section*entriesInCurrentMonth;
+          entriesInCurrentMonth = 1;
+          previousMonth = currentMonth;
+          // ctx.fillStyle = "#" + activities[i].color[colorSchemeIdx];
+          // ctx.fill();
+          // ctx.font = 'bold 15px sans-serif';
+          // ctx.fillText(activities[i]["code"], 0, y + 45);
+        }
+        
+        // Makes sure to plot the last month
+        if ((i+1) == project.entries.length) {
+          ctx.fillStyle = "#" + "80808080";
+          let width = section*entriesInCurrentMonth-5;
+          let height = RAIL_HEIGHT*10;
+          ctx.fillRect(position, y, width, height);
+          ctx.fillStyle = "#000000";
+          ctx.font = 'bold 15px sans-serif';
+          ctx.textAlign="center"; 
+          ctx.textBaseline = "middle";
+          ctx.fillText(currentMonth, position+(width/2),y+(height/2));
+        }
+
+        console.log(project.entries[i].period.toDateString().substring(4,7));
+      }
+
+      // ctx.fillRect(ACTIVITY_LABEL_AREA_WIDTH, y, w, RAIL_HEIGHT*10);
+      // ctx.fillRect(ACTIVITY_LABEL_AREA_WIDTH, y, section , RAIL_HEIGHT*10);
+    }
+
+    // {
+    //   ctx.fillStyle = theme.rail;
+    //   let y = TIMELINE_PAD_V + ROW_HEIGHT / 2 - RAIL_HEIGHT / 2;
+    //   let w = contentWidth - ACTIVITY_LABEL_AREA_WIDTH;
+    //   let x = ACTIVITY_LABEL_AREA_WIDTH;
+    //   for (let i = 0; i < project.entries.length; i++) {
+    //     // ctx.fillStyle = "#" + "ffffff0D";
+    //     // ctx.fill();
+    //     console.log(project.entries[i]["period"].toString());
+    //     ctx.fillRect(x, 0, RAIL_HEIGHT, y*30);
+    //     // ctx.fillRect(ACTIVITY_LABEL_AREA_WIDTH, w, y, RAIL_HEIGHT);
+    //     // let rad2 = 10;
+    //     // ctx.beginPath();
+    //     // ctx.arc(y / 2, w / project.entries.length, rad2, 0, TAU);
+        
+    //     // w += 3*ROW_HEIGHT;
+    //     x += 100;
+    //   }
+    // }
 
     // {
     //   for (let i = 0; i < numberOfActivities; i++) {
