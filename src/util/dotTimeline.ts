@@ -255,6 +255,7 @@ export default function timeline(
         } else { // Moved on to new 
           let width = section*entriesInCurrentMonth-5;
           let height = RAIL_HEIGHT*10;
+          ctx.fillStyle = "#" + "80808080";
           ctx.fillRect(position, y, width, height);
           ctx.fillStyle = "#000000";
           ctx.font = 'bold 15px sans-serif';
