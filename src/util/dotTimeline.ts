@@ -72,6 +72,7 @@ interface TimelineColors {
   sessionMarker: string;
   noteColor: string;
   timeLabel: string;
+  dates: string;
 }
 
 const LIGHT_THEME: TimelineColors = {
@@ -81,6 +82,7 @@ const LIGHT_THEME: TimelineColors = {
   sessionMarker: "#dadada",
   noteColor: "#dbab0b", // accent-note
   timeLabel: "#757575", // text-secondary
+  dates: "#000000"
 };
 const DARK_THEME: TimelineColors = {
   background: "#212121", // alt-background
@@ -89,6 +91,7 @@ const DARK_THEME: TimelineColors = {
   sessionMarker: "#757575",
   noteColor: "#c79611", // accent-note
   timeLabel: "#bdbdbd", // text-secondary
+  dates: "ffffff"
 };
 
 export default function timeline(
@@ -174,7 +177,7 @@ export default function timeline(
         ctx.fillStyle = "#" + activities[i].color[colorSchemeIdx];
         ctx.fill();
         ctx.font = 'bold 15px sans-serif';
-        ctx.fillText(activities[i]["code"], 0, y + 45);
+        ctx.fillText(activities[i]["code"], 0, y + 35);
         ctx.fillStyle = "#" + activities[i].color[colorSchemeIdx] + "0D";
         ctx.fill();
         ctx.fillRect(ACTIVITY_LABEL_AREA_WIDTH, y, w, RAIL_HEIGHT*30);
@@ -224,6 +227,23 @@ export default function timeline(
         // ctx.arc(y / 2, w / project.entries.length, rad2, 0, TAU);
         
         // w += 3*ROW_HEIGHT;
+        x += 100;
+      }
+    }
+
+    // draw dates
+    {
+      let section = 60;
+      let spacer = 10.5;
+      let timelineWidth = (section*numberOfActivities) + (spacer*numberOfActivities);
+      let x = ACTIVITY_LABEL_AREA_WIDTH;
+      // let numSections = timelineWidth / n
+      for (let i = 0; i < project.entries.length; i++) {
+        ctx.fillStyle = theme.timeLabel;
+        ctx.font = 'bold 15px sans-serif';
+        ctx.textAlign="center"; 
+        ctx.textBaseline = "middle";
+        ctx.fillText(project.entries[i].period.getUTCDate().toString(), x+50,50+(RAIL_HEIGHT/2));
         x += 100;
       }
     }
@@ -290,6 +310,25 @@ export default function timeline(
       // ctx.fillRect(ACTIVITY_LABEL_AREA_WIDTH, y, w, RAIL_HEIGHT*10);
       // ctx.fillRect(ACTIVITY_LABEL_AREA_WIDTH, y, section , RAIL_HEIGHT*10);
     }
+
+    // Circles
+    {
+      let w = contentWidth - ACTIVITY_LABEL_AREA_WIDTH;
+      let section = w / project.entries.length;
+      let xpos = section;
+      for (let i = 0; i < project.entries.length; i++) {
+        let ypos = 95;
+        for (let k = 0; k < project.entries[i].data.length; k++) {
+          let baseSize = 5;
+          ctx.beginPath();
+          // (baseSize + project.entries[i].data[k].value)/10
+          ctx.arc(section+(section*i), ypos+(72*k), project.entries[i].data[k].value/15, 0, TAU);
+          ctx.fillStyle = "#" + activities[k].color[colorSchemeIdx];
+          ctx.fill();
+        }
+      }
+    }
+
 
     // {
     //   ctx.fillStyle = theme.rail;
@@ -365,12 +404,6 @@ export default function timeline(
 
 
     // TODO: Drawing goes here!
-    // const image = document.querySelector(".dotgrid-body") as HTMLCanvasElement
-    // html2canvas(image).then(ctx => {
-    //   document.body.appendChild(ctx);
-    //   // ctx.toDataURL("image/png");
-    // });
-    // var img = ctx.toDataURL("image/png");
 
     console.log("tortillas2");
     console.log(numberOfActivities);
@@ -378,6 +411,10 @@ export default function timeline(
     console.log(activities);
     console.log("Entries: ");
     console.log(project.entries);
+
+    for (let i = 0; i < project.entries.length; i++) {
+      console.log(project.entries[i].period.getUTCDate());
+    }
     // console.log(addDays);
     // console.log(project.reportingPeriod);
     console.log(document.querySelector(".dotgrid-body")?.clientWidth);
