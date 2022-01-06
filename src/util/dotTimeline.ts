@@ -10,6 +10,17 @@ import { colorScheme } from "./colorScheme";
 
 export let project: AsyncProject;
 
+// Edgar's Magic Numbers!
+const ROW_SIZE = 40; // vertical height of rows
+const ROW_SPACING = 30; // vertical spacing between rows
+
+// How far down the vertical dividers go
+// I wanted to make an automatic forumula that would make
+// perfect length dividers based on the row size and spacing,
+// but I couldn't figure it out. Need to manually 
+// tinker with this value a bit if you change size or spacing :/
+const DIVIDER_ADJUSTMENT = 9; 
+
 // TODO: update this to be like an async entry
 interface AsyncEntryLike {
   data: readonly AsyncActivityData[];
@@ -50,7 +61,6 @@ interface TimelineRendererDescriptor {
 const TAU = 2 * Math.PI;
 
 // TODO: figure out what constants you need!
-const ROW_HEIGHT = 24;
 const BAR_HEIGHT = 20;
 const RAIL_HEIGHT = 2;
 const SEPARATOR = 1;
@@ -124,7 +134,7 @@ export default function timeline(
   let contentHeight = 0;
   function updateSize() {
     // TODO: figure out how to calculate the height
-    let height = numberOfActivities * ROW_HEIGHT + 2.9 * TIMELINE_PAD_V * 50;
+    let height = numberOfActivities * ROW_SPACING + 2.9 * TIMELINE_PAD_V * 50;
     // if (showNotes) {
     //   height += SEPARATOR + NOTE_GUTTER_HEIGHT;
     // }
@@ -155,89 +165,64 @@ export default function timeline(
   });
 
   function draw() {
-    // console.log(reporting)
-    // draw timeline
     ctx.resetTransform();
     ctx.scale(dpi, dpi);
-    // ctx.fillStyle = "#" + "ff0000";
-    // ctx.fill();
     ctx.fillStyle = theme.background;
     ctx.fillRect(0, 0, contentWidth, contentHeight);
 
     
-    // draw rails
+    // draws activity labels and rows
     {
-      // ctx.lineWidth = 500;
-      // ctx.fillStyle = theme.rail;
-      // ctx.fillStyle = "#" + "00ff00";
-      let y = TIMELINE_PAD_V + ROW_HEIGHT / 2 - RAIL_HEIGHT / 2 + 50;
+      let y = TIMELINE_PAD_V + ROW_SPACING / 2 - RAIL_HEIGHT / 2 + 50;
       let w = contentWidth - ACTIVITY_LABEL_AREA_WIDTH;
+
       for (let i = 0; i < numberOfActivities; i++) {
         console.log("color: #" + activities[i]["color"][0] + "0D")
         ctx.fillStyle = "#" + activities[i].color[colorSchemeIdx];
         ctx.fill();
         ctx.font = 'bold 15px sans-serif';
-        ctx.fillText(activities[i]["code"], 0, y + 35);
+        ctx.fillText(activities[i]["code"], 3, y+(RAIL_HEIGHT*ROW_SIZE/2));
         ctx.fillStyle = "#" + activities[i].color[colorSchemeIdx] + "0D";
         ctx.fill();
-        ctx.fillRect(ACTIVITY_LABEL_AREA_WIDTH, y, w, RAIL_HEIGHT*30);
-        y += 3*ROW_HEIGHT;
-        
+        ctx.fillRect(ACTIVITY_LABEL_AREA_WIDTH, y, w, RAIL_HEIGHT*ROW_SIZE);
+
+        y += 3*ROW_SPACING;
+      }
+    } 
+
+    // Draws dots!
+    {
+      let w = contentWidth - ACTIVITY_LABEL_AREA_WIDTH;
+      let section = w / project.entries.length;
+      // let max_radius = (RAIL_HEIGHT * ROW_SIZE) / 2;
+      for (let i = 0; i < project.entries.length; i++) {
+        let y = TIMELINE_PAD_V + ROW_SPACING / 2 - RAIL_HEIGHT / 2 + 50;
+        for (let k = 0; k < project.entries[i].data.length; k++) {
+          ctx.beginPath();
+          ctx.arc(section+(section*i), y+(RAIL_HEIGHT*ROW_SIZE/2), project.entries[i].data[k].value/15, 0, TAU);
+          ctx.fillStyle = "#" + activities[k].color[colorSchemeIdx];
+          ctx.fill();
+          y += 3*ROW_SPACING;
+        }
       }
     }
 
-    // dates
-    // {
-    //   let y = TIMELINE_PAD_V + ROW_HEIGHT / 2 - RAIL_HEIGHT / 2;
-    //   let w = contentWidth - ACTIVITY_LABEL_AREA_WIDTH;
-    //   for (let i = 0; i < project.entries.length; i++) {
-    //     let rad2 = 10;
-    //     ctx.beginPath();
-    //     ctx.arc(y / 2, w / project.entries.length, rad2, 0, TAU);
-    //     ctx.fillStyle = "#" + "00ff00";
-    //     ctx.fill();
-    //     y += 3*ROW_HEIGHT;
-    //   }
-    // }
 
-    // draw dividing rails
+    // vertical dividing lines
     {
       ctx.fillStyle = theme.rail;
-      // let height = numberOfActivities * ROW_HEIGHT + 2.9 * TIMELINE_PAD_V * 50;
-      let section = 60;
-      let spacer = 10.5;
-      let timelineWidth = (section*numberOfActivities) + (spacer*numberOfActivities);
-      console.log("activities: " + numberOfActivities);
-      console.log("content height:" + contentHeight);
-      console.log("section: " + section);
-      
-      // let railHeight = contentHeight - (numberOfActivities * 10)
-
-      let y = TIMELINE_PAD_V + ROW_HEIGHT / 2 - RAIL_HEIGHT / 2 ;
-      let w = contentWidth - ACTIVITY_LABEL_AREA_WIDTH;
+      let section = ROW_SIZE*2;
+      let timelineWidth = (section*numberOfActivities) + (DIVIDER_ADJUSTMENT*numberOfActivities);
       let x = ACTIVITY_LABEL_AREA_WIDTH;
       for (let i = 0; i < project.entries.length + 1; i++) {
-        // ctx.fillStyle = "#" + "ffffff0D";
-        // ctx.fill();
-        // console.log(project.entries[i]["period"].toString());
         ctx.fillRect(x, 65, RAIL_HEIGHT, timelineWidth);
-        // ctx.fillRect(ACTIVITY_LABEL_AREA_WIDTH, w, y, RAIL_HEIGHT);
-        // let rad2 = 10;
-        // ctx.beginPath();
-        // ctx.arc(y / 2, w / project.entries.length, rad2, 0, TAU);
-        
-        // w += 3*ROW_HEIGHT;
         x += 100;
       }
     }
 
     // draw dates
     {
-      let section = 60;
-      let spacer = 10.5;
-      let timelineWidth = (section*numberOfActivities) + (spacer*numberOfActivities);
       let x = ACTIVITY_LABEL_AREA_WIDTH;
-      // let numSections = timelineWidth / n
       for (let i = 0; i < project.entries.length; i++) {
         ctx.fillStyle = theme.timeLabel;
         ctx.font = 'bold 15px sans-serif';
@@ -252,15 +237,9 @@ export default function timeline(
     {
       let w = contentWidth - ACTIVITY_LABEL_AREA_WIDTH;
       let section = w / project.entries.length;
-      let spacer = 10.5;
-      let timelineWidth = (section*numberOfActivities) + (spacer*numberOfActivities);
-      
-      let start = 0;
-      // let end = 
+
       ctx.fillStyle = ctx.fillStyle = "#" + "80808080";
-      let months = ["January", "Februrary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-      let y = TIMELINE_PAD_V + ROW_HEIGHT / 2 - RAIL_HEIGHT / 2;
-      
+      let y = TIMELINE_PAD_V + ROW_SPACING / 2 - RAIL_HEIGHT / 2;
       
       let entriesInCurrentMonth = 0;
       let currentMonth = "";
@@ -285,10 +264,6 @@ export default function timeline(
           position += section*entriesInCurrentMonth;
           entriesInCurrentMonth = 1;
           previousMonth = currentMonth;
-          // ctx.fillStyle = "#" + activities[i].color[colorSchemeIdx];
-          // ctx.fill();
-          // ctx.font = 'bold 15px sans-serif';
-          // ctx.fillText(activities[i]["code"], 0, y + 45);
         }
         
         // Makes sure to plot the last month
@@ -306,130 +281,10 @@ export default function timeline(
 
         console.log(project.entries[i].period.toDateString().substring(4,7));
       }
-
-      // ctx.fillRect(ACTIVITY_LABEL_AREA_WIDTH, y, w, RAIL_HEIGHT*10);
-      // ctx.fillRect(ACTIVITY_LABEL_AREA_WIDTH, y, section , RAIL_HEIGHT*10);
     }
-
-    // Circles
-    {
-      let w = contentWidth - ACTIVITY_LABEL_AREA_WIDTH;
-      let section = w / project.entries.length;
-      let xpos = section;
-      for (let i = 0; i < project.entries.length; i++) {
-        let ypos = 95;
-        for (let k = 0; k < project.entries[i].data.length; k++) {
-          let baseSize = 5;
-          ctx.beginPath();
-          // (baseSize + project.entries[i].data[k].value)/10
-          ctx.arc(section+(section*i), ypos+(72*k), project.entries[i].data[k].value/15, 0, TAU);
-          ctx.fillStyle = "#" + activities[k].color[colorSchemeIdx];
-          ctx.fill();
-        }
-      }
-    }
-
-
-    // {
-    //   ctx.fillStyle = theme.rail;
-    //   let y = TIMELINE_PAD_V + ROW_HEIGHT / 2 - RAIL_HEIGHT / 2;
-    //   let w = contentWidth - ACTIVITY_LABEL_AREA_WIDTH;
-    //   let x = ACTIVITY_LABEL_AREA_WIDTH;
-    //   for (let i = 0; i < project.entries.length; i++) {
-    //     // ctx.fillStyle = "#" + "ffffff0D";
-    //     // ctx.fill();
-    //     console.log(project.entries[i]["period"].toString());
-    //     ctx.fillRect(x, 0, RAIL_HEIGHT, y*30);
-    //     // ctx.fillRect(ACTIVITY_LABEL_AREA_WIDTH, w, y, RAIL_HEIGHT);
-    //     // let rad2 = 10;
-    //     // ctx.beginPath();
-    //     // ctx.arc(y / 2, w / project.entries.length, rad2, 0, TAU);
-        
-    //     // w += 3*ROW_HEIGHT;
-    //     x += 100;
-    //   }
-    // }
-
-    // {
-    //   for (let i = 0; i < numberOfActivities; i++) {
-    //     ctx.fillStyle = activities[i]["color"][0];
-    //     let y = TIMELINE_PAD_V + ROW_HEIGHT / 2 - RAIL_HEIGHT / 2;
-    //     let w = contentWidth - ACTIVITY_LABEL_AREA_WIDTH;
-    //   }
-    // }
-
-
-    // // draw bars & note dots
-    // noteTouchTargets = [];
-    // {
-    //   for (let { data, priorDuration, duration, notes } of renderData) {
-    //     let endX = toX(duration + priorDuration);
-
-    //     // this session isn't visible - skip and try next
-    //     if (endX < ACTIVITY_LABEL_AREA_WIDTH) continue;
-
-    //     let y = TIMELINE_PAD_V + ROW_HEIGHT / 2 - BAR_HEIGHT / 2;
-    //     for (let activity = 0; activity < numberOfActivities; activity++) {
-    //       ctx.fillStyle = "#" + activities[activity].color[colorSchemeIdx];
-    //       for (let [start, stop] of data[activity]) {
-    //         let x2 = toX(stop + priorDuration);
-    //         // this bar isn't visible - skip and try next
-    //         if (x2 < ACTIVITY_LABEL_AREA_WIDTH) continue;
-    //         let x = toX(start + priorDuration);
-    //         let w = x2 - x;
-    //         ctx.fillRect(x, y, w, BAR_HEIGHT);
-    //         // this bar goes over the right edge - skip any future bars
-    //         if (x2 > contentWidth + noteSize) break;
-    //       }
-    //       y += ROW_HEIGHT;
-    //     }
-
-    //     if (showNotes) {
-    //       ctx.fillStyle = theme.noteColor;
-    //       for (let note of notes) {
-    //         let x = toX(note.time + priorDuration);
-    //         if (x < 0) continue;
-    //         if (x > contentWidth + noteSize) break;
-    //         ctx.beginPath();
-    //         ctx.arc(x, noteY, noteSize, 0, TAU);
-    //         ctx.fill();
-    //         noteTouchTargets.push({ x, y: noteY, note });
-    //       }
-    //     }
-
-    //     // the next session won't be visible - done drawing bars!
-    //     if (endX > contentWidth) break;
-    //   }
-    // }
-
-
-    // TODO: Drawing goes here!
-
-    console.log("tortillas2");
-    console.log(numberOfActivities);
-    console.log("Activities: ");
-    console.log(activities);
-    console.log("Entries: ");
-    console.log(project.entries);
-
-    for (let i = 0; i < project.entries.length; i++) {
-      console.log(project.entries[i].period.getUTCDate());
-    }
-    // console.log(addDays);
-    // console.log(project.reportingPeriod);
-    console.log(document.querySelector(".dotgrid-body")?.clientWidth);
-    console.log(document.querySelector(".dotgrid-body"));
-
-    // example - drawing a red dot in the middle :)
-    // let rad2 = 10;
-    // ctx.beginPath();
-    // ctx.arc(contentWidth / 2, contentHeight / 2, rad2, 0, TAU);
-    // ctx.fillStyle = "#" + "00ff00";
-    // ctx.fill();
   }
 
   function scheduleDraw() {
-    // console.log("tacos");
     if (rafHandle !== -1) {
       cancelAnimationFrame(rafHandle);
     }
