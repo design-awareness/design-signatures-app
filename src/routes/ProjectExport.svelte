@@ -19,6 +19,7 @@
   import { getProjectOrFail } from "../data/database";
   import type { AsyncProject, RealtimeProject } from "../data/schema";
   import type { ThenType } from "../types/utility";
+  import dotTimeline from "../util/dotTimeline";
   import { download, downloadBlob } from "../util/download";
   import timeline from "../util/timeline";
 
@@ -41,8 +42,6 @@
 
   let canvasElement: HTMLCanvasElement | undefined;
 
-  // FIXME: add support for exporting async project visualizations
-
   async function doExport() {
     if (!project) await projectPromise;
     if (exportType === "data") {
@@ -51,13 +50,12 @@
         "application/json",
         project.serialize()
       );
-    } else if (projectData?.[0] === "RealtimeProject") {
+    } else {
       if (canvasElement) {
         let blob = await getImage(canvasElement);
         if (!blob) return;
         downloadBlob(`${safeName(project.name)}.png`, blob);
       }
-    } else if (projectData?.[0] === "AsyncProject") {
     }
   }
 
@@ -105,7 +103,7 @@
 
           <SegmentedSelector
             bind:value={imageScale}
-            label="Scale"
+            label="Resolution"
             fullWidth
             options={[
               [1, "1x"],
@@ -134,9 +132,37 @@
             />
           </HorizontalScrollArea>
         {:else}
-          <p>
-            Visualization exporting for Asynchronous projects is coming soon!
-          </p>
+          <SegmentedSelector
+            bind:value={imageScale}
+            label="Resolution"
+            fullWidth
+            options={[
+              [1, "1x"],
+              [2, "2x"],
+              [3, "3x"],
+            ]}
+          />
+
+          <RichLabel label="Features" />
+          <Checkbox bind:checked={showTime} label="Show dates" />
+          <p class="small">Additional export options will be available soon!</p>
+          <Checkbox checked={false} disabled label="Show notes" />
+          <Checkbox checked={true} disabled label="Skip days without entries" />
+
+          <RichLabel label="Preview" />
+
+          <HorizontalScrollArea>
+            <canvas
+              bind:this={canvasElement}
+              use:dotTimeline={{
+                project: projectInfo[1],
+                dpi: imageScale,
+                showDates: showTime,
+                // showNotes,
+                // hideEmptyDays
+              }}
+            />
+          </HorizontalScrollArea>
         {/if}
       {:else if exportType === "data"}
         <p>
@@ -171,5 +197,9 @@
     background: $alt-background-color;
     @include type-style($type-caption);
     padding: 0.75rem;
+  }
+
+  .small {
+    @include type-style($type-detail);
   }
 </style>

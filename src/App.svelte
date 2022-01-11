@@ -29,6 +29,7 @@
   import Tutorials from "./routes/about/Tutorials.svelte";
   import Update from "./routes/Update.svelte";
   import Install from "./routes/Install.svelte";
+  import Onboarding from "./routes/Onboarding.svelte";
 
   awaitObjectUpgradeIfNeeded();
   createPresets(); // noop, but keeps the linter happy :)
@@ -69,6 +70,9 @@
 
     "/install/": Install, // Install
     "/install": RedirectAddPath,
+
+    "/onboarding/": Onboarding,
+    "/onboarding": RedirectAddPath,
 
     "/update/:n": Update,
 

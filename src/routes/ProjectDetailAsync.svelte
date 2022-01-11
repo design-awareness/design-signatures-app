@@ -19,13 +19,20 @@
   import ProjectSummaryAsync from "../components/ProjectSummaryAsync.svelte";
   import Header from "../components/type/Header.svelte";
   import SectionHeader from "../components/type/SectionHeader.svelte";
+  import CONFIG from "../data/config";
   import type { AsyncEntry, AsyncProject } from "../data/schema";
   import { makeEntryTable } from "../util/asyncEntry";
   import { getToday } from "../util/date";
+  import dotTimeline from "../util/dotTimeline";
   import { expressiveDurationM } from "../util/time";
   import AsyncEntryEditor from "./AsyncEntryEditor.svelte";
 
   export let project: AsyncProject;
+
+  let showCanvas = false;
+  (async function () {
+    showCanvas = await CONFIG.getDevShowCanvasTimelineOnProjectPage();
+  })();
 
   let { reportingPeriod } = project;
   let entryTable = makeEntryTable(project);
@@ -135,6 +142,12 @@
         </div>
       {/if}
 
+      {#if project && showCanvas}
+        <div class="canvas-timeline-container">
+          <canvas use:dotTimeline={{ project }} />
+        </div>
+      {/if}
+
       {#if project.entries.length !== 0}
         <div class="reflect-button">
           <Button
@@ -203,5 +216,10 @@
       @include type-style($type-body);
       margin: 0.25rem 0 1rem 0;
     }
+  }
+
+  .canvas-timeline-container {
+    max-width: 100%;
+    overflow: auto;
   }
 </style>

@@ -5,6 +5,7 @@
 
 import { getDesignModel } from "../../data/database";
 import type { RealtimeSession } from "../../data/schema";
+import type { AsyncProjectLike } from "../../util/dotTimeline";
 
 export const signatureA = async () => ({
   designModel: await getDesignModel(
@@ -172,4 +173,178 @@ export const signatureB = async () => ({
       notes: [],
     },
   ],
+});
+
+export const signatureC = async (): Promise<AsyncProjectLike> => ({
+  designModel: await getDesignModel(
+    "well-known:edu.washington.hcde.atman_abbreviated@1"
+  ),
+  entries: [
+    {
+      data: [
+        { value: 240 },
+        { value: 180 },
+        { value: 60 },
+        { value: 0 },
+        { value: 0 },
+        { value: 0 },
+      ],
+      period: new Date("2021-07-18T00:00:00.000Z"),
+    },
+    {
+      data: [
+        { value: 180 },
+        { value: 240 },
+        { value: 120 },
+        { value: 60 },
+        { value: 30 },
+        { value: 0 },
+      ],
+      period: new Date("2021-07-19T00:00:00.000Z"),
+    },
+    {
+      data: [
+        { value: 120 },
+        { value: 240 },
+        { value: 300 },
+        { value: 60 },
+        { value: 60 },
+        { value: 0 },
+      ],
+      period: new Date("2021-07-20T00:00:00.000Z"),
+    },
+    {
+      data: [
+        { value: 30 },
+        { value: 120 },
+        { value: 180 },
+        { value: 240 },
+        { value: 180 },
+        { value: 60 },
+      ],
+      period: new Date("2021-07-21T00:00:00.000Z"),
+    },
+    {
+      data: [
+        { value: 15 },
+        { value: 120 },
+        { value: 240 },
+        { value: 240 },
+        { value: 60 },
+        { value: 60 },
+      ],
+      period: new Date("2021-07-22T00:00:00.000Z"),
+    },
+    {
+      data: [
+        { value: 0 },
+        { value: 0 },
+        { value: 60 },
+        { value: 300 },
+        { value: 180 },
+        { value: 180 },
+      ],
+      period: new Date("2021-07-23T00:00:00.000Z"),
+    },
+    {
+      data: [
+        { value: 0 },
+        { value: 0 },
+        { value: 15 },
+        { value: 120 },
+        { value: 180 },
+        { value: 240 },
+      ],
+      period: new Date("2021-07-24T00:00:00.000Z"),
+    },
+  ],
+  reportingPeriod: "day",
+  periodAlignment: 0,
+});
+
+export const signatureD = async (): Promise<AsyncProjectLike> => ({
+  designModel: await getDesignModel(
+    "well-known:edu.washington.hcde.atman_abbreviated@1"
+  ),
+  entries: [
+    {
+      data: [
+        { value: 0 },
+        { value: 0 },
+        { value: 0 },
+        { value: 120 },
+        { value: 240 },
+        { value: 600 },
+      ],
+      period: new Date("2021-07-24T00:00:00.000Z"),
+    },
+    {
+      data: [
+        { value: 480 },
+        { value: 600 },
+        { value: 0 },
+        { value: 0 },
+        { value: 0 },
+        { value: 0 },
+      ],
+      period: new Date("2021-07-18T00:00:00.000Z"),
+    },
+    {
+      data: [
+        { value: 300 },
+        { value: 180 },
+        { value: 480 },
+        { value: 0 },
+        { value: 60 },
+        { value: 0 },
+      ],
+      period: new Date("2021-07-19T00:00:00.000Z"),
+    },
+    {
+      data: [
+        { value: 120 },
+        { value: 0 },
+        { value: 240 },
+        { value: 600 },
+        { value: 480 },
+        { value: 0 },
+      ],
+      period: new Date("2021-07-21T00:00:00.000Z"),
+    },
+    {
+      data: [
+        { value: 0 },
+        { value: 600 },
+        { value: 420 },
+        { value: 180 },
+        { value: 0 },
+        { value: 0 },
+      ],
+      period: new Date("2021-07-20T00:00:00.000Z"),
+    },
+    {
+      data: [
+        { value: 0 },
+        { value: 120 },
+        { value: 0 },
+        { value: 360 },
+        { value: 480 },
+        { value: 0 },
+      ],
+      period: new Date("2021-07-23T00:00:00.000Z"),
+    },
+    {
+      data: [
+        { value: 0 },
+        { value: 0 },
+        { value: 120 },
+        { value: 240 },
+        { value: 600 },
+        { value: 60 },
+      ],
+      period: new Date("2021-07-22T00:00:00.000Z"),
+    },
+  ],
+  reportingPeriod: "day",
+  periodAlignment: 0,
 });
