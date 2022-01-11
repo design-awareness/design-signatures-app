@@ -142,8 +142,7 @@ export default function dotTimeline(
   let contentHeight = 0;
   function updateSize() {
     let height =
-      MONTH_BAR_HEIGHT +
-      DATE_AREA_HEIGHT +
+      (showDates ? MONTH_BAR_HEIGHT + DATE_AREA_HEIGHT : 0) +
       // timeline
       (numberOfActivities - 1) * ROW_SPACING +
       numberOfActivities * (DOT_SIZE + CELL_PADDING) * 2 +
@@ -178,6 +177,7 @@ export default function dotTimeline(
   });
 
   function draw() {
+    let yTop = showDates ? MONTH_BAR_HEIGHT + DATE_AREA_HEIGHT : 0;
     ctx.resetTransform();
     ctx.scale(dpi, dpi);
     ctx.fillStyle = theme.background;
@@ -191,7 +191,7 @@ export default function dotTimeline(
 
     // draws activity labels
     {
-      let y = MONTH_BAR_HEIGHT + DATE_AREA_HEIGHT + ENTRY_DIVIDER_OVERHANG;
+      let y = yTop + ENTRY_DIVIDER_OVERHANG;
       ctx.textBaseline = "middle";
       ctx.textAlign = "center";
 
@@ -212,7 +212,7 @@ export default function dotTimeline(
     {
       let x = ACTIVITY_LABEL_AREA_WIDTH + ENTRY_DIVIDER_WIDTH;
       for (let entry of entries) {
-        let y = MONTH_BAR_HEIGHT + DATE_AREA_HEIGHT + ENTRY_DIVIDER_OVERHANG;
+        let y = yTop + ENTRY_DIVIDER_OVERHANG;
         for (let activity = 0; activity < entry.data.length; activity++) {
           if (entry.data[activity].value > 0) {
             // draw background
@@ -249,7 +249,7 @@ export default function dotTimeline(
     {
       ctx.fillStyle = theme.rail;
       let x = ACTIVITY_LABEL_AREA_WIDTH;
-      let y = MONTH_BAR_HEIGHT + DATE_AREA_HEIGHT;
+      let y = yTop;
       let h =
         FULL_ROW_HEIGHT * numberOfActivities -
         ROW_SPACING +
@@ -262,7 +262,7 @@ export default function dotTimeline(
     }
 
     // draw dates
-    {
+    if (showDates) {
       let x =
         ACTIVITY_LABEL_AREA_WIDTH +
         ENTRY_DIVIDER_WIDTH +
@@ -281,7 +281,7 @@ export default function dotTimeline(
 
     // draw month bars
     // FIXME: refactor to fix duplication from fencepost pull-out
-    {
+    if (showDates) {
       let entriesInCurrentMonth = 0;
       let currentMonth = "";
       let monthStr = "";

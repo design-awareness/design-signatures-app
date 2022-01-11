@@ -144,10 +144,10 @@
           />
 
           <RichLabel label="Features" />
-          <p class="small">These export options will be available soon!</p>
+          <Checkbox bind:checked={showTime} label="Show dates" />
+          <p class="small">Additional export options will be available soon!</p>
           <Checkbox checked={false} disabled label="Show notes" />
-          <Checkbox checked={true} disabled label="Show timestamps" />
-          <Checkbox checked={true} disabled label="Hide days without entries" />
+          <Checkbox checked={true} disabled label="Skip days without entries" />
 
           <RichLabel label="Preview" />
 
@@ -157,7 +157,9 @@
               use:dotTimeline={{
                 project: projectInfo[1],
                 dpi: imageScale,
+                showDates: showTime,
                 // showNotes,
+                // hideEmptyDays
               }}
             />
           </HorizontalScrollArea>
