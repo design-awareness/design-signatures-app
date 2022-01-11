@@ -52,12 +52,12 @@ const TAU = 2 * Math.PI;
 /** Activity label area width */
 const ACTIVITY_LABEL_AREA_WIDTH = 52;
 
-const DOT_SIZE = 24;
-const CELL_PADDING = 4;
+const DOT_SIZE = 20;
+const CELL_PADDING = 2;
 const ENTRY_DIVIDER_WIDTH = 2;
 const ENTRY_DIVIDER_OVERHANG = 2;
 const CELL_SIZE = 2 * (DOT_SIZE + CELL_PADDING);
-const ROW_SPACING = 8; // vertical spacing between rows
+const ROW_SPACING = 4; // vertical spacing between rows
 
 const FULL_ROW_HEIGHT = CELL_SIZE + ROW_SPACING;
 const FULL_ENTRY_WIDTH = (DOT_SIZE + CELL_PADDING) * 2 + ENTRY_DIVIDER_WIDTH;
@@ -72,7 +72,7 @@ const TIME_LABEL_FONT = "500 14px Inter";
 const MONTH_LABEL_FONT = "600 14px Inter";
 const ACTIVITY_LABEL_FONT = "600 14px Inter";
 
-const PAD_EDGE = 12;
+const PAD_EDGE = 8;
 
 interface TimelineColors {
   background: string;
@@ -189,16 +189,20 @@ export default function dotTimeline(
     );
     ctx.translate(PAD_EDGE, PAD_EDGE);
 
-    // draws activity labels and rows
+    // draws activity labels
     {
       let y = MONTH_BAR_HEIGHT + DATE_AREA_HEIGHT + ENTRY_DIVIDER_OVERHANG;
       ctx.textBaseline = "middle";
-      ctx.textAlign = "left";
+      ctx.textAlign = "center";
 
       for (let activity of activities) {
         ctx.fillStyle = "#" + activity.color[colorSchemeIdx];
         ctx.font = ACTIVITY_LABEL_FONT;
-        ctx.fillText(activity.code, 3, y + DOT_SIZE + CELL_PADDING);
+        ctx.fillText(
+          activity.code,
+          ACTIVITY_LABEL_AREA_WIDTH / 2,
+          y + DOT_SIZE + CELL_PADDING
+        );
 
         y += FULL_ROW_HEIGHT;
       }
