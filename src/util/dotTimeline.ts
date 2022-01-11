@@ -113,7 +113,7 @@ const DARK_THEME: TimelineColors = {
 
 const maxFn = (a: number, b: number) => Math.max(a, b);
 
-export default function timeline(
+export default function dotTimeline(
   node: HTMLCanvasElement,
   {
     project,
