@@ -11,8 +11,15 @@
   import Link from "../../components/Link.svelte";
   import Header from "../../components/type/Header.svelte";
   import SectionHeader from "../../components/type/SectionHeader.svelte";
+  import dotTimeline from "../../util/dotTimeline";
   import timeline from "../../util/timeline";
-  import { signatureA, signatureB } from "./exampleProjects";
+  import {
+    signatureA,
+    signatureB,
+    signatureC,
+    signatureD,
+  } from "./exampleProjects";
+  let fakeproject: any = null;
 </script>
 
 <main class="device-frame page">
@@ -81,7 +88,36 @@
     </p>
 
     <SectionHeader>Example “Asynchronous” bubble timelines</SectionHeader>
-
+    <p>
+      {#await signatureC() then signature}
+        <div class="timeline-container">
+          <canvas
+            use:dotTimeline={{
+              project: signature,
+              showNotes: false,
+              showDates: false,
+              hideEmptyDays: true,
+            }}
+          />
+        </div>
+      {/await}
+      Signature C - Ideal project envelope pattern
+    </p>
+    <p>
+      {#await signatureD() then signature}
+        <div class="timeline-container">
+          <canvas
+            use:dotTimeline={{
+              project: signature,
+              showNotes: false,
+              showDates: false,
+              hideEmptyDays: true,
+            }}
+          />
+        </div>
+      {/await}
+      Signature D - Ideal project envelope pattern with variation
+    </p>
     <p>
       You can compare the signatures that you create across your projects to
       better understand yourself as a designer. On the
@@ -131,5 +167,10 @@
 <style lang="scss">
   .page {
     min-height: 100%;
+  }
+
+  .timeline-container {
+    max-width: 100%;
+    overflow: auto;
   }
 </style>
