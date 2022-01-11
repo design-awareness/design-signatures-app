@@ -8,6 +8,7 @@
   type GroupT = $$Generic<string | number>;
 
   export let checked: boolean = false;
+  export let disabled: boolean = false;
   export let label: string;
   export let helptext: string = "";
 
@@ -15,7 +16,7 @@
 </script>
 
 <div class="wrapper">
-  <input type="checkbox" bind:checked {id} />
+  <input type="checkbox" bind:checked {id} {disabled} />
   <label for={id}>
     <p>{label}</p>
     {#if helptext}
@@ -53,6 +54,10 @@
     &:checked {
       border-color: $input-selected-color;
       background-color: $input-selected-color;
+    }
+
+    &:disabled {
+      opacity: 0.5;
     }
   }
   label {
