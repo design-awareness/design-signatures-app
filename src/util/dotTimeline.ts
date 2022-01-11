@@ -1,10 +1,9 @@
 /*
- * Copyright (c) 2021, Design Awareness Contributors.
+ * Copyright (c) 2021-2022, Design Awareness Contributors.
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
 import type { AsyncActivityData } from "design-awareness-data-types";
-import { getDesignModel } from "../data/database";
 import type { DesignModel, AsyncProject } from "../data/schema";
 import { colorScheme } from "./colorScheme";
 
@@ -17,11 +16,10 @@ const ROW_SPACING = 30; // vertical spacing between rows
 // How far down the vertical dividers go
 // I wanted to make an automatic forumula that would make
 // perfect length dividers based on the row size and spacing,
-// but I couldn't figure it out. Need to manually 
+// but I couldn't figure it out. Need to manually
 // tinker with this value a bit if you change size or spacing :/
-const DIVIDER_ADJUSTMENT = 9; 
+const DIVIDER_ADJUSTMENT = 9;
 
-// TODO: update this to be like an async entry
 interface AsyncEntryLike {
   data: readonly AsyncActivityData[];
   period: Date;
@@ -61,18 +59,13 @@ interface TimelineRendererDescriptor {
 const TAU = 2 * Math.PI;
 
 // TODO: figure out what constants you need!
-const BAR_HEIGHT = 20;
 const RAIL_HEIGHT = 2;
-const SEPARATOR = 1;
-const SESSION_MARKER = 2;
-const NOTE_GUTTER_HEIGHT = 16;
-const TIME_GUTTER_HEIGHT = 20;
 const TIMELINE_PAD_V = 4;
 /** Activity label area width, *including separator!* */
 const ACTIVITY_LABEL_AREA_WIDTH = 52;
-const MIN_TIME_SPACING = 60;
 
 const TIME_LABEL_FONT = "500 12px Inter";
+const MONTH_LABEL_FONT = "500 12px Inter";
 const ACTIVITY_LABEL_FONT = "600 14px Inter";
 
 interface TimelineColors {
@@ -82,7 +75,7 @@ interface TimelineColors {
   sessionMarker: string;
   noteColor: string;
   timeLabel: string;
-  dates: string;
+  monthBar: string;
 }
 
 const LIGHT_THEME: TimelineColors = {
@@ -92,7 +85,7 @@ const LIGHT_THEME: TimelineColors = {
   sessionMarker: "#dadada",
   noteColor: "#dbab0b", // accent-note
   timeLabel: "#757575", // text-secondary
-  dates: "#000000"
+  monthBar: "#eaeaea",
 };
 const DARK_THEME: TimelineColors = {
   background: "#212121", // alt-background
@@ -101,7 +94,7 @@ const DARK_THEME: TimelineColors = {
   sessionMarker: "#757575",
   noteColor: "#c79611", // accent-note
   timeLabel: "#bdbdbd", // text-secondary
-  dates: "ffffff"
+  monthBar: "#333333",
 };
 
 export default function timeline(
@@ -170,25 +163,27 @@ export default function timeline(
     ctx.fillStyle = theme.background;
     ctx.fillRect(0, 0, contentWidth, contentHeight);
 
-    
     // draws activity labels and rows
     {
       let y = TIMELINE_PAD_V + ROW_SPACING / 2 - RAIL_HEIGHT / 2 + 50;
       let w = contentWidth - ACTIVITY_LABEL_AREA_WIDTH;
 
       for (let i = 0; i < numberOfActivities; i++) {
-        console.log("color: #" + activities[i]["color"][0] + "0D")
         ctx.fillStyle = "#" + activities[i].color[colorSchemeIdx];
         ctx.fill();
-        ctx.font = 'bold 15px sans-serif';
-        ctx.fillText(activities[i]["code"], 3, y+(RAIL_HEIGHT*ROW_SIZE/2));
+        ctx.font = ACTIVITY_LABEL_FONT;
+        ctx.fillText(
+          activities[i]["code"],
+          3,
+          y + (RAIL_HEIGHT * ROW_SIZE) / 2
+        );
         ctx.fillStyle = "#" + activities[i].color[colorSchemeIdx] + "0D";
         ctx.fill();
-        ctx.fillRect(ACTIVITY_LABEL_AREA_WIDTH, y, w, RAIL_HEIGHT*ROW_SIZE);
+        ctx.fillRect(ACTIVITY_LABEL_AREA_WIDTH, y, w, RAIL_HEIGHT * ROW_SIZE);
 
-        y += 3*ROW_SPACING;
+        y += 3 * ROW_SPACING;
       }
-    } 
+    }
 
     // Draws dots!
     {
@@ -199,20 +194,26 @@ export default function timeline(
         let y = TIMELINE_PAD_V + ROW_SPACING / 2 - RAIL_HEIGHT / 2 + 50;
         for (let k = 0; k < project.entries[i].data.length; k++) {
           ctx.beginPath();
-          ctx.arc(section+(section*i), y+(RAIL_HEIGHT*ROW_SIZE/2), project.entries[i].data[k].value/15, 0, TAU);
+          ctx.arc(
+            section + section * i,
+            y + (RAIL_HEIGHT * ROW_SIZE) / 2,
+            project.entries[i].data[k].value / 15,
+            0,
+            TAU
+          );
           ctx.fillStyle = "#" + activities[k].color[colorSchemeIdx];
           ctx.fill();
-          y += 3*ROW_SPACING;
+          y += 3 * ROW_SPACING;
         }
       }
     }
 
-
     // vertical dividing lines
     {
       ctx.fillStyle = theme.rail;
-      let section = ROW_SIZE*2;
-      let timelineWidth = (section*numberOfActivities) + (DIVIDER_ADJUSTMENT*numberOfActivities);
+      let section = ROW_SIZE * 2;
+      let timelineWidth =
+        section * numberOfActivities + DIVIDER_ADJUSTMENT * numberOfActivities;
       let x = ACTIVITY_LABEL_AREA_WIDTH;
       for (let i = 0; i < project.entries.length + 1; i++) {
         ctx.fillRect(x, 65, RAIL_HEIGHT, timelineWidth);
@@ -225,10 +226,14 @@ export default function timeline(
       let x = ACTIVITY_LABEL_AREA_WIDTH;
       for (let i = 0; i < project.entries.length; i++) {
         ctx.fillStyle = theme.timeLabel;
-        ctx.font = 'bold 15px sans-serif';
-        ctx.textAlign="center"; 
+        ctx.font = TIME_LABEL_FONT;
+        ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.fillText(project.entries[i].period.getUTCDate().toString(), x+50,50+(RAIL_HEIGHT/2));
+        ctx.fillText(
+          project.entries[i].period.getUTCDate().toString(),
+          x + 50,
+          50 + RAIL_HEIGHT / 2
+        );
         x += 100;
       }
     }
@@ -238,48 +243,45 @@ export default function timeline(
       let w = contentWidth - ACTIVITY_LABEL_AREA_WIDTH;
       let section = w / project.entries.length;
 
-      ctx.fillStyle = ctx.fillStyle = "#" + "80808080";
       let y = TIMELINE_PAD_V + ROW_SPACING / 2 - RAIL_HEIGHT / 2;
-      
+
       let entriesInCurrentMonth = 0;
       let currentMonth = "";
       let previousMonth = "";
       let position = ACTIVITY_LABEL_AREA_WIDTH;
-      for (let i=0; i < project.entries.length; i++) {
-        console.log("position: " + position);
-        currentMonth = project.entries[i].period.toDateString().substring(4,7);
+      for (let i = 0; i < project.entries.length; i++) {
+        currentMonth = project.entries[i].period.toDateString().substring(4, 7);
         if (currentMonth == previousMonth || previousMonth == "") {
           entriesInCurrentMonth += 1;
           previousMonth = currentMonth;
-        } else { // Moved on to new 
-          let width = section*entriesInCurrentMonth-5;
-          let height = RAIL_HEIGHT*10;
-          ctx.fillStyle = "#" + "80808080";
+        } else {
+          // Moved on to new
+          let width = section * entriesInCurrentMonth - 5;
+          let height = RAIL_HEIGHT * 10;
+          ctx.fillStyle = theme.monthBar;
           ctx.fillRect(position, y, width, height);
-          ctx.fillStyle = "#000000";
-          ctx.font = 'bold 15px sans-serif';
-          ctx.textAlign="center"; 
+          ctx.fillStyle = theme.timeLabel;
+          ctx.font = MONTH_LABEL_FONT;
+          ctx.textAlign = "center";
           ctx.textBaseline = "middle";
-          ctx.fillText(previousMonth, position+(width/2),y+(height/2));
-          position += section*entriesInCurrentMonth;
+          ctx.fillText(previousMonth, position + width / 2, y + height / 2);
+          position += section * entriesInCurrentMonth;
           entriesInCurrentMonth = 1;
           previousMonth = currentMonth;
         }
-        
-        // Makes sure to plot the last month
-        if ((i+1) == project.entries.length) {
-          ctx.fillStyle = "#" + "80808080";
-          let width = section*entriesInCurrentMonth-5;
-          let height = RAIL_HEIGHT*10;
-          ctx.fillRect(position, y, width, height);
-          ctx.fillStyle = "#000000";
-          ctx.font = 'bold 15px sans-serif';
-          ctx.textAlign="center"; 
-          ctx.textBaseline = "middle";
-          ctx.fillText(currentMonth, position+(width/2),y+(height/2));
-        }
 
-        console.log(project.entries[i].period.toDateString().substring(4,7));
+        // Makes sure to plot the last month
+        if (i + 1 == project.entries.length) {
+          ctx.fillStyle = theme.monthBar;
+          let width = section * entriesInCurrentMonth - 5;
+          let height = RAIL_HEIGHT * 10;
+          ctx.fillRect(position, y, width, height);
+          ctx.fillStyle = theme.timeLabel;
+          ctx.font = MONTH_LABEL_FONT;
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText(currentMonth, position + width / 2, y + height / 2);
+        }
       }
     }
   }
