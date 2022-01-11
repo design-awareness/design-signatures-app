@@ -502,7 +502,7 @@ function createClientObject(
           type: store,
           data: entryData,
           meta: {
-            encoder: "design-awareness-app@" + VERSION,
+            encoder: "design-signatures-app@" + VERSION,
           },
         },
         null,
