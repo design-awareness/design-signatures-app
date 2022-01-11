@@ -30,6 +30,10 @@
   (async function () {
     reloadSuppressed = await CONFIG.getDevSuppressBeforeUnload();
   })();
+  let alwaysShowOnboarding = false;
+  (async function () {
+    alwaysShowOnboarding = await CONFIG.getDevAlwaysShowOnboarding();
+  })();
 
   export const showCanvasTimelineOnProjectPage = writable<boolean>(false);
   (async function () {
@@ -154,6 +158,16 @@
       bind:checked={$showCanvasTimelineOnProjectPage}
       label="Show canvas timeline on async project page"
     />
+  </p>
+
+  <p>
+    Show onboarding on launch:
+    <button
+      on:click={() => {
+        alwaysShowOnboarding = !alwaysShowOnboarding;
+        CONFIG.setDevAlwaysShowOnboarding(alwaysShowOnboarding);
+      }}>{alwaysShowOnboarding ? "always" : "normal"}</button
+    >
   </p>
 
   <Header>Device Properties</Header>

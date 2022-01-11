@@ -7,6 +7,7 @@ import App from "./App.svelte";
 
 import * as db from "./data/database";
 import { BUILD_ENV } from "./data/buildData";
+import { triggerOnboardingIfFirstTime } from "./util/onboard";
 
 if (BUILD_ENV !== "prod") {
   // in non production environments, expose db on the window object!
@@ -23,5 +24,7 @@ if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("/service-worker.js");
   });
 }
+
+triggerOnboardingIfFirstTime();
 
 export default app;
