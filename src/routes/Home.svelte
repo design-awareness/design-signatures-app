@@ -8,7 +8,7 @@
   import Button from "../components/Button.svelte";
   import ContentFrame from "../components/layout/ContentFrame.svelte";
   import HorizontalScrollArea from "../components/layout/HorizontalScrollArea.svelte";
-  import Link from "../components/Link.svelte";
+  import Link, { goDown } from "../components/Link.svelte";
   import PageHeader from "../components/PageHeader.svelte";
   import ProjectCard from "../components/ProjectCard.svelte";
   import Header from "../components/type/Header.svelte";
@@ -16,12 +16,10 @@
   import { canInstall, isInstalled, showInstallPrompt } from "../util/pwa";
 
   async function install() {
-    if (canInstall()) {
-      if (await showInstallPrompt()) {
-        location.reload();
-      }
+    if ($canInstall && (await showInstallPrompt())) {
+      location.reload();
     } else {
-      // TODO: direct to installation instructions page
+      goDown("/install");
     }
   }
 </script>

@@ -34,14 +34,23 @@ interface BeforeInstallPromptEvent extends Event {
 }
 
 let deferredInstallPrompt: BeforeInstallPromptEvent | null = null;
+
+let setCanInstall: (canInstall: boolean) => void = (_) => {};
+export const canInstall = readable<boolean>(
+  deferredInstallPrompt !== null,
+  (set) => {
+    setCanInstall = set;
+    return () => {
+      setCanInstall = (_) => {};
+    };
+  }
+);
+
 window.addEventListener("beforeinstallprompt", (e) => {
   e.preventDefault();
   deferredInstallPrompt = e as BeforeInstallPromptEvent;
+  setCanInstall(true);
 });
-
-export function canInstall() {
-  return deferredInstallPrompt !== null;
-}
 
 export async function showInstallPrompt() {
   if (!deferredInstallPrompt) return false;
@@ -49,6 +58,7 @@ export async function showInstallPrompt() {
   deferredInstallPrompt?.prompt();
   const { outcome } = await deferredInstallPrompt.userChoice;
   deferredInstallPrompt = null;
+  setCanInstall(false);
 
   return outcome === "accepted";
 }
