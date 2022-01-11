@@ -6,6 +6,7 @@
 import type { AsyncActivityData } from "design-awareness-data-types";
 import type { DesignModel, AsyncProject } from "../data/schema";
 import { colorScheme } from "./colorScheme";
+import { sortBy } from "./sort";
 
 export let project: AsyncProject;
 
@@ -118,7 +119,7 @@ export default function timeline(
   const ctx = ctxOrNull;
 
   let { activities } = project.designModel;
-  let { entries } = project.entries;
+  let entries = sortBy("period", project.entries);
   let rafHandle = -1;
   let numberOfActivities = activities.length;
 
@@ -137,7 +138,7 @@ export default function timeline(
 
     // TODO: calculate the width
     // let width = 1000;
-    let width = project.entries.length * 100 + 55;
+    let width = entries.length * 100 + 55;
 
     contentHeight = height;
     node.style.height = height + "px";
@@ -188,16 +189,16 @@ export default function timeline(
     // Draws dots!
     {
       let w = contentWidth - ACTIVITY_LABEL_AREA_WIDTH;
-      let section = w / project.entries.length;
+      let section = w / entries.length;
       // let max_radius = (RAIL_HEIGHT * ROW_SIZE) / 2;
-      for (let i = 0; i < project.entries.length; i++) {
+      for (let i = 0; i < entries.length; i++) {
         let y = TIMELINE_PAD_V + ROW_SPACING / 2 - RAIL_HEIGHT / 2 + 50;
-        for (let k = 0; k < project.entries[i].data.length; k++) {
+        for (let k = 0; k < entries[i].data.length; k++) {
           ctx.beginPath();
           ctx.arc(
             section + section * i,
             y + (RAIL_HEIGHT * ROW_SIZE) / 2,
-            project.entries[i].data[k].value / 15,
+            entries[i].data[k].value / 15,
             0,
             TAU
           );
@@ -215,7 +216,7 @@ export default function timeline(
       let timelineWidth =
         section * numberOfActivities + DIVIDER_ADJUSTMENT * numberOfActivities;
       let x = ACTIVITY_LABEL_AREA_WIDTH;
-      for (let i = 0; i < project.entries.length + 1; i++) {
+      for (let i = 0; i < entries.length + 1; i++) {
         ctx.fillRect(x, 65, RAIL_HEIGHT, timelineWidth);
         x += 100;
       }
@@ -224,13 +225,13 @@ export default function timeline(
     // draw dates
     {
       let x = ACTIVITY_LABEL_AREA_WIDTH;
-      for (let i = 0; i < project.entries.length; i++) {
+      for (let i = 0; i < entries.length; i++) {
         ctx.fillStyle = theme.timeLabel;
         ctx.font = TIME_LABEL_FONT;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.fillText(
-          project.entries[i].period.getUTCDate().toString(),
+          entries[i].period.getUTCDate().toString(),
           x + 50,
           50 + RAIL_HEIGHT / 2
         );
@@ -241,7 +242,7 @@ export default function timeline(
     // draw month bars
     {
       let w = contentWidth - ACTIVITY_LABEL_AREA_WIDTH;
-      let section = w / project.entries.length;
+      let section = w / entries.length;
 
       let y = TIMELINE_PAD_V + ROW_SPACING / 2 - RAIL_HEIGHT / 2;
 
@@ -249,8 +250,8 @@ export default function timeline(
       let currentMonth = "";
       let previousMonth = "";
       let position = ACTIVITY_LABEL_AREA_WIDTH;
-      for (let i = 0; i < project.entries.length; i++) {
-        currentMonth = project.entries[i].period.toDateString().substring(4, 7);
+      for (let i = 0; i < entries.length; i++) {
+        currentMonth = entries[i].period.toDateString().substring(4, 7);
         if (currentMonth == previousMonth || previousMonth == "") {
           entriesInCurrentMonth += 1;
           previousMonth = currentMonth;
@@ -271,7 +272,7 @@ export default function timeline(
         }
 
         // Makes sure to plot the last month
-        if (i + 1 == project.entries.length) {
+        if (i + 1 == entries.length) {
           ctx.fillStyle = theme.monthBar;
           let width = section * entriesInCurrentMonth - 5;
           let height = RAIL_HEIGHT * 10;
