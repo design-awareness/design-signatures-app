@@ -56,22 +56,17 @@ const DOT_SIZE = 24;
 const CELL_PADDING = 4;
 const ENTRY_DIVIDER_WIDTH = 2;
 const ENTRY_DIVIDER_OVERHANG = 2;
-
 const CELL_SIZE = 2 * (DOT_SIZE + CELL_PADDING);
+const ROW_SPACING = 8; // vertical spacing between rows
+
+const FULL_ROW_HEIGHT = CELL_SIZE + ROW_SPACING;
+const FULL_ENTRY_WIDTH = (DOT_SIZE + CELL_PADDING) * 2 + ENTRY_DIVIDER_WIDTH;
+
+const DASH_HEIGHT = 2;
+const DASH_WIDTH = 6;
 
 const MONTH_BAR_HEIGHT = 24;
 const DATE_AREA_HEIGHT = 24;
-
-// Edgar's Magic Numbers!
-// const ROW_SIZE = DOT_SIZE + CELL_PADDING * 2; // vertical height of rows
-const ROW_SPACING = 8; // vertical spacing between rows
-
-// How far down the vertical dividers go
-// I wanted to make an automatic forumula that would make
-// perfect length dividers based on the row size and spacing,
-// but I couldn't figure it out. Need to manually
-// tinker with this value a bit if you change size or spacing :/
-// const DIVIDER_ADJUSTMENT = 9;
 
 const TIME_LABEL_FONT = "500 14px Inter";
 const MONTH_LABEL_FONT = "600 14px Inter";
@@ -146,7 +141,6 @@ export default function dotTimeline(
   let contentWidth = 0;
   let contentHeight = 0;
   function updateSize() {
-    // TODO: figure out how to calculate the height
     let height =
       MONTH_BAR_HEIGHT +
       DATE_AREA_HEIGHT +
@@ -155,15 +149,6 @@ export default function dotTimeline(
       numberOfActivities * (DOT_SIZE + CELL_PADDING) * 2 +
       2 * ENTRY_DIVIDER_OVERHANG;
 
-    // if (showNotes) {
-    //   height += SEPARATOR + NOTE_GUTTER_HEIGHT;
-    // }
-    // if (showTime) {
-    //   height += SEPARATOR + TIME_GUTTER_HEIGHT;
-    // }
-
-    // TODO: calculate the width
-    // let width = 1000;
     let width =
       // activity label area
       ACTIVITY_LABEL_AREA_WIDTH +
@@ -205,11 +190,8 @@ export default function dotTimeline(
     ctx.translate(PAD_EDGE, PAD_EDGE);
 
     // draws activity labels and rows
-    const fullRowHeight = CELL_SIZE + ROW_SPACING;
-    const fullEntryWidth = (DOT_SIZE + CELL_PADDING) * 2 + ENTRY_DIVIDER_WIDTH;
     {
       let y = MONTH_BAR_HEIGHT + DATE_AREA_HEIGHT + ENTRY_DIVIDER_OVERHANG;
-      const w = contentWidth - ACTIVITY_LABEL_AREA_WIDTH;
       ctx.textBaseline = "middle";
       ctx.textAlign = "left";
 
@@ -218,14 +200,13 @@ export default function dotTimeline(
         ctx.font = ACTIVITY_LABEL_FONT;
         ctx.fillText(activity.code, 3, y + DOT_SIZE + CELL_PADDING);
 
-        y += fullRowHeight;
+        y += FULL_ROW_HEIGHT;
       }
     }
 
     // Draws dots!
     {
       let x = ACTIVITY_LABEL_AREA_WIDTH + ENTRY_DIVIDER_WIDTH;
-      // let max_radius = (RAIL_HEIGHT * ROW_SIZE) / 2;
       for (let entry of entries) {
         let y = MONTH_BAR_HEIGHT + DATE_AREA_HEIGHT + ENTRY_DIVIDER_OVERHANG;
         for (let activity = 0; activity < entry.data.length; activity++) {
@@ -248,18 +229,16 @@ export default function dotTimeline(
           } else {
             // draw dash
             ctx.fillStyle = theme.dash;
-            const D_HEIGHT = 2;
-            const D_WIDTH = 6;
             ctx.fillRect(
-              x + (CELL_SIZE - D_WIDTH) / 2,
-              y + (CELL_SIZE - D_HEIGHT) / 2,
-              D_WIDTH,
-              D_HEIGHT
+              x + (CELL_SIZE - DASH_WIDTH) / 2,
+              y + (CELL_SIZE - DASH_HEIGHT) / 2,
+              DASH_WIDTH,
+              DASH_HEIGHT
             );
           }
-          y += fullRowHeight;
+          y += FULL_ROW_HEIGHT;
         }
-        x += fullEntryWidth;
+        x += FULL_ENTRY_WIDTH;
       }
     }
     // vertical dividing lines
@@ -268,13 +247,13 @@ export default function dotTimeline(
       let x = ACTIVITY_LABEL_AREA_WIDTH;
       let y = MONTH_BAR_HEIGHT + DATE_AREA_HEIGHT;
       let h =
-        fullRowHeight * numberOfActivities -
+        FULL_ROW_HEIGHT * numberOfActivities -
         ROW_SPACING +
         2 * ENTRY_DIVIDER_OVERHANG;
 
       for (let i = 0; i < entries.length + 1; i++) {
         ctx.fillRect(x, y, ENTRY_DIVIDER_WIDTH, h);
-        x += fullEntryWidth;
+        x += FULL_ENTRY_WIDTH;
       }
     }
 
@@ -292,11 +271,12 @@ export default function dotTimeline(
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.fillText(entries[i].period.getUTCDate().toString(), x, y);
-        x += fullEntryWidth;
+        x += FULL_ENTRY_WIDTH;
       }
     }
 
     // draw month bars
+    // FIXME: refactor to fix duplication from fencepost pull-out
     {
       let entriesInCurrentMonth = 0;
       let currentMonth = "";
@@ -311,7 +291,7 @@ export default function dotTimeline(
         } else {
           // Moved on to new
           let width =
-            fullEntryWidth * entriesInCurrentMonth - ENTRY_DIVIDER_WIDTH;
+            FULL_ENTRY_WIDTH * entriesInCurrentMonth - ENTRY_DIVIDER_WIDTH;
           ctx.fillStyle = theme.monthBar;
           ctx.fillRect(x, 0, width, MONTH_BAR_HEIGHT);
           ctx.fillStyle = theme.timeLabel;
@@ -319,13 +299,14 @@ export default function dotTimeline(
           ctx.textAlign = "center";
           ctx.textBaseline = "middle";
           ctx.fillText(monthStr, x + width / 2, MONTH_BAR_HEIGHT / 2);
-          x += fullEntryWidth * entriesInCurrentMonth;
+          x += FULL_ENTRY_WIDTH * entriesInCurrentMonth;
           entriesInCurrentMonth = 1;
           previousMonth = currentMonth;
         }
         monthStr = MONTH_NAME[entries[i].period.getUTCMonth()];
       }
-      let width = fullEntryWidth * entriesInCurrentMonth - ENTRY_DIVIDER_WIDTH;
+      let width =
+        FULL_ENTRY_WIDTH * entriesInCurrentMonth - ENTRY_DIVIDER_WIDTH;
       ctx.fillStyle = theme.monthBar;
       ctx.fillRect(x, 0, width, MONTH_BAR_HEIGHT);
       ctx.fillStyle = theme.timeLabel;
