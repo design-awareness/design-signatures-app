@@ -169,17 +169,17 @@
       </ButtonGroup>
     </div>
 
+    <SectionHeader>Onboarding</SectionHeader>
+    <p>
+      <Button small on:click={openOnboarding}>Replay onboarding</Button>
+    </p>
+
     {#if BUILD_ENV === "dev" || tapCount > 4}
       <SectionHeader>Developer</SectionHeader>
       <p>
         <Link href="/dev/">Developer tools</Link>
       </p>
     {/if}
-
-    <SectionHeader>Onboarding</SectionHeader>
-    <p>
-      <Button small on:click={openOnboarding}>Replay onboarding</Button>
-    </p>
 
     <SectionHeader>About app</SectionHeader>
     <p class="small">
