@@ -3,7 +3,6 @@
   SPDX-License-Identifier: BSD-3-Clause
 -->
 <script lang="ts">
-  // FIXME: can we get typings for this?
   import { Accordion } from "svelte-collapsible";
   import AccordionItem from "../components/AccordionItem.svelte";
   import BackButton from "../components/BackButton.svelte";
