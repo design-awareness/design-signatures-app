@@ -8,17 +8,31 @@
   import Button from "../components/Button.svelte";
   import ContentFrame from "../components/layout/ContentFrame.svelte";
   import HorizontalScrollArea from "../components/layout/HorizontalScrollArea.svelte";
-  import Link from "../components/Link.svelte";
+  import Link, { goDown } from "../components/Link.svelte";
   import PageHeader from "../components/PageHeader.svelte";
   import ProjectCard from "../components/ProjectCard.svelte";
   import Header from "../components/type/Header.svelte";
   import { getRecentProjects } from "../data/recentProjects";
+  import { canInstall, isInstalled, showInstallPrompt } from "../util/pwa";
+
+  async function install() {
+    if ($canInstall && (await showInstallPrompt())) {
+      location.reload();
+    } else {
+      goDown("/install");
+    }
+  }
 </script>
 
 <main class="device-frame home">
   <PageHeader />
 
   <ContentFrame>
+    {#if !$isInstalled}
+      <Header>Install app</Header>
+      <Button on:click={install}>Install</Button>
+    {/if}
+
     <Header>Recent Projects</Header>
 
     <HorizontalScrollArea>

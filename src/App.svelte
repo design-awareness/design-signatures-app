@@ -28,6 +28,7 @@
   import ThePoint from "./routes/about/ThePoint.svelte";
   import Tutorials from "./routes/about/Tutorials.svelte";
   import Update from "./routes/Update.svelte";
+  import Install from "./routes/Install.svelte";
   import Onboarding from "./routes/Onboarding.svelte";
 
   awaitObjectUpgradeIfNeeded();
@@ -66,6 +67,9 @@
 
     "/settings/": Settings, // Settings
     "/settings": RedirectAddPath, // Settings
+
+    "/install/": Install, // Install
+    "/install": RedirectAddPath,
 
     "/onboarding/": Onboarding,
     "/onboarding": RedirectAddPath,
