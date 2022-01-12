@@ -174,7 +174,7 @@
   <Header>Device Properties</Header>
   <p>Color scheme: {$colorScheme}</p>
   <p>PWA status: {$isInstalled ? "installed" : "not installed"}</p>
-  <p>Has installation prompt: {canInstall()}</p>
+  <p>Has installation prompt: {$canInstall}</p>
 
   <Header>Danger Zone</Header>
   <p>
