@@ -1,6 +1,6 @@
 {
-  "name": "design-awareness-www",
-  "version": "0.3.1",
+  "name": "design-signatures-app",
+  "version": "0.4.0",
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
@@ -45,13 +45,13 @@
   "license": "BSD-3-Clause",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/design-awareness/design-awareness-app.git"
+    "url": "git+https://github.com/design-awareness/design-signatures-app.git"
   },
   "contributors": [
     "Jordan Yoon-Buck <jordan@yoonbuck.com> (https://github.com/yoonbuck)"
   ],
   "bugs": {
-    "url": "https://github.com/design-awareness/design-awareness-app/issues"
+    "url": "https://github.com/design-awareness/design-signatures-app/issues"
   },
-  "homepage": "https://github.com/design-awareness/design-awareness-app#readme"
+  "homepage": "https://github.com/design-awareness/design-signatures-app#readme"
 }
