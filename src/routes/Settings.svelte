@@ -209,6 +209,12 @@
     <p>
       <Button small on:click={update}>Force update and reload</Button>
     </p>
+    <p>
+      <a href="/legal/tos.html" target="_blank">Terms of Service</a>
+    </p>
+    <p>
+      <a href="/legal/privacy.html" target="_blank">Privacy Information</a>
+    </p>
   </ContentFrame>
 </main>
 
