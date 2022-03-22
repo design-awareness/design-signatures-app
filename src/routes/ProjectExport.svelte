@@ -179,6 +179,13 @@
           </pre>
         </HorizontalScrollArea>
       {/if}
+      <p class="small">
+        Visualizations and data generated using or exported from this app are
+        yours to modify, redistribute, share, license, remix, and use as you
+        please. No attribution is necessary. If you would like to cite this app,
+        you find information about citations under “About this project” on the
+        main screen.
+      </p>
       <BottomActionBar label="Export" on:click={doExport} />
     </ContentFrame>
   </main>
