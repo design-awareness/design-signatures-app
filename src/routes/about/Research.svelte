@@ -172,6 +172,11 @@
       understanding of the problem (problem space).
     </p>
 
+    <Figure
+      path="models/prob-sol.svg"
+      alt="illustration representing moving back and forth through problem and solution spaces"
+    />
+
     <p class="citation">
       Dorst, K. (2019). Co-evolution and emergence in design. Design Studies,
       65, p. 60–77.
@@ -202,6 +207,12 @@
       diverge/converge phases, one in the problem space (discover, define) and
       one in the solution space (develop, deliver).
     </p>
+
+    <Figure
+      path="models/div-conv.svg"
+      alt="illustration representing a design process with divergent and convergent phases (“double diamond”)"
+    />
+
     <p class="citation">
       Banathy, Bela H. (2013). Designing Social Systems in a Changing World.
       Germany, Springer US, p. 75.
