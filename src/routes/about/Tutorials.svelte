@@ -6,7 +6,6 @@
   import ContentFrame from "../../components/layout/ContentFrame.svelte";
   import BackButton from "../../components/BackButton.svelte";
   import Header from "../../components/type/Header.svelte";
-  // FIXME: can we get typings for this?
   import { Accordion } from "svelte-collapsible";
   import AccordionItem from "../../components/AccordionItem.svelte";
   import TutorialPanel from "./TutorialPanel.svelte";
