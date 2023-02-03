@@ -1,5 +1,5 @@
 <!--
-  Copyright (c) 2021, Design Awareness Contributors.
+  Copyright (c) 2021-2023, Design Awareness Contributors.
   SPDX-License-Identifier: BSD-3-Clause
 -->
 <script lang="ts">
@@ -132,6 +132,7 @@
     activity={designModel.activities[0]}
     bind:value={total}
     on:blur={update(-1)}
+    on:input={update(-1)}
     note=""
     entryMode="raw"
     isTotalRow
@@ -155,6 +156,7 @@
       bind:note={notes[i]}
       {entryMode}
       on:blur={update(i)}
+      on:input={update(i)}
     />
   {/each}
 
