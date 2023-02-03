@@ -1,5 +1,5 @@
 <!--
-  Copyright (c) 2021, Design Awareness Contributors.
+  Copyright (c) 2021-2023, Design Awareness Contributors.
   SPDX-License-Identifier: BSD-3-Clause
 -->
 <script lang="ts">
@@ -145,9 +145,8 @@
 
           <RichLabel label="Features" />
           <Checkbox bind:checked={showTime} label="Show dates" />
-          <p class="small">Additional export options will be available soon!</p>
-          <Checkbox checked={false} disabled label="Show notes" />
-          <Checkbox checked={true} disabled label="Skip days without entries" />
+          <Checkbox bind:checked={showNotes} label="Show notes" />
+          <!-- <Checkbox checked={true} disabled label="Skip days without entries" /> -->
 
           <RichLabel label="Preview" />
 
@@ -158,7 +157,7 @@
                 project: projectInfo[1],
                 dpi: imageScale,
                 showDates: showTime,
-                // showNotes,
+                showNotes,
                 // hideEmptyDays
               }}
             />
@@ -197,9 +196,5 @@
     background: $alt-background-color;
     @include type-style($type-caption);
     padding: 0.75rem;
-  }
-
-  .small {
-    @include type-style($type-detail);
   }
 </style>

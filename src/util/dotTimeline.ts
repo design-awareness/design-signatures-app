@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Design Awareness Contributors.
+ * Copyright (c) 2021-2023, Design Awareness Contributors.
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
@@ -13,6 +13,7 @@ export let project: AsyncProject;
 
 interface AsyncEntryLike {
   data: readonly AsyncActivityData[];
+  note?: string;
   period: Date;
 }
 
@@ -51,6 +52,7 @@ const TAU = 2 * Math.PI;
 
 /** Activity label area width */
 const ACTIVITY_LABEL_AREA_WIDTH = 52;
+const LABEL_PADDING = 6;
 
 const DOT_SIZE = 20;
 const CELL_PADDING = 2;
@@ -189,18 +191,27 @@ export default function dotTimeline(
     );
     ctx.translate(PAD_EDGE, PAD_EDGE);
 
+    function drawNoteTriangle(x: number, y: number) {
+      ctx.fillStyle = theme.noteColor;
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(x - 6, y);
+      ctx.lineTo(x, y + 6);
+      ctx.fill();
+    }
+
     // draws activity labels
     {
       let y = yTop + ENTRY_DIVIDER_OVERHANG;
       ctx.textBaseline = "middle";
-      ctx.textAlign = "center";
+      ctx.textAlign = "right";
 
       for (let activity of activities) {
         ctx.fillStyle = "#" + activity.color[colorSchemeIdx];
         ctx.font = ACTIVITY_LABEL_FONT;
         ctx.fillText(
           activity.code,
-          ACTIVITY_LABEL_AREA_WIDTH / 2,
+          ACTIVITY_LABEL_AREA_WIDTH - LABEL_PADDING,
           y + DOT_SIZE + CELL_PADDING
         );
 
@@ -240,6 +251,9 @@ export default function dotTimeline(
               DASH_HEIGHT
             );
           }
+          if (showNotes && entry.data[activity].note) {
+            drawNoteTriangle(x + CELL_SIZE, y);
+          }
           y += FULL_ROW_HEIGHT;
         }
         x += FULL_ENTRY_WIDTH;
@@ -275,6 +289,9 @@ export default function dotTimeline(
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.fillText(entries[i].period.getUTCDate().toString(), x, y);
+        if (showNotes && entries[i].note) {
+          drawNoteTriangle(x + DOT_SIZE + CELL_PADDING, MONTH_BAR_HEIGHT);
+        }
         x += FULL_ENTRY_WIDTH;
       }
     }
