@@ -3,10 +3,6 @@
   SPDX-License-Identifier: BSD-3-Clause
 -->
 <script lang="ts">
-  import { onDestroy } from "svelte";
-
-  import { writable } from "svelte/store";
-
   import BackButton from "../../components/BackButton.svelte";
   import Checkbox from "../../components/Checkbox.svelte";
   import ContentFrame from "../../components/layout/ContentFrame.svelte";
@@ -28,23 +24,13 @@
   import { canInstall, isInstalled } from "../../util/pwa";
 
   let reloadSuppressed = false;
+  let alwaysShowOnboarding = false;
+  let showCanvasTimelineOnProjectPage = false;
   (async function () {
     reloadSuppressed = await CONFIG.getDevSuppressBeforeUnload();
-  })();
-  let alwaysShowOnboarding = false;
-  (async function () {
     alwaysShowOnboarding = await CONFIG.getDevAlwaysShowOnboarding();
-  })();
-
-  export const showCanvasTimelineOnProjectPage = writable<boolean>(false);
-  (async function () {
-    const initialValue = await CONFIG.getDevShowCanvasTimelineOnProjectPage();
-    showCanvasTimelineOnProjectPage.set(initialValue);
-    onDestroy(
-      showCanvasTimelineOnProjectPage.subscribe(
-        CONFIG.setDevShowCanvasTimelineOnProjectPage
-      )
-    );
+    showCanvasTimelineOnProjectPage =
+      await CONFIG.getDevShowCanvasTimelineOnProjectPage();
   })();
 
   async function deleteAll() {
@@ -155,10 +141,15 @@
   </p>
 
   <p>
-    <Checkbox
-      bind:checked={$showCanvasTimelineOnProjectPage}
-      label="Show canvas timeline on async project page"
-    />
+    Show canvas timeline on async project page:
+    <button
+      on:click={() => {
+        showCanvasTimelineOnProjectPage = !showCanvasTimelineOnProjectPage;
+        CONFIG.setDevShowCanvasTimelineOnProjectPage(
+          showCanvasTimelineOnProjectPage
+        );
+      }}>{showCanvasTimelineOnProjectPage ? "shown" : "hidden"}</button
+    >
   </p>
 
   <p>
