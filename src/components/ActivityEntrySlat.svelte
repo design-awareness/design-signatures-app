@@ -1,5 +1,5 @@
 <!--
-  Copyright (c) 2021, Design Awareness Contributors.
+  Copyright (c) 2021-2023, Design Awareness Contributors.
   SPDX-License-Identifier: BSD-3-Clause
 -->
 <script lang="ts">
@@ -56,6 +56,7 @@
     <input
       type="number"
       bind:value
+      on:input
       on:blur
       on:focus={select}
       disabled={isTotalDisabled}
