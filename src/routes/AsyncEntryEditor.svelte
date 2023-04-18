@@ -81,11 +81,7 @@
     if (i >= 0) {
       values[i] = Math.max(values[i], 0);
     }
-    if (entryMode === "raw") {
-      calculateTotal();
-    } else {
-      calculateTotalPercentage();
-    }
+    updateTotals();
     entry.data = values.map((value, i) => ({
       value:
         entryMode === "raw"
@@ -94,6 +90,15 @@
       note: notes[i],
     }));
   };
+
+  const updateTotals = () => {
+    if (entryMode === "raw") {
+      calculateTotal();
+    } else {
+      calculateTotalPercentage();
+    }
+  };
+
   const updateNote = () => {
     entry.note = entry.note.trim();
   };
@@ -156,7 +161,7 @@
       bind:note={notes[i]}
       {entryMode}
       on:blur={update(i)}
-      on:input={update(i)}
+      on:input={updateTotals}
     />
   {/each}
 
