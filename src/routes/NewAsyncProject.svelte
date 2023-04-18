@@ -32,6 +32,36 @@
 
   export let params: { wild: string };
 
+  let periodsPage: 0 | 1 | 2 = 0;
+  $: if (periodAlignment === -1) {
+    periodsPage++;
+    if (periodsPage > 2) {
+      periodsPage = 0;
+    }
+    setTimeout(() => {
+      periodAlignment = [0, 2, 5][periodsPage];
+    }, 0);
+  }
+
+  const periodOptions: [number, string][][] = [
+    [
+      [0, "Sunday"],
+      [1, "Monday"],
+      [-1, "More…"],
+    ],
+    [
+      [2, "Tuesday"],
+      [3, "Wednesday"],
+      [4, "Thursday"],
+      [-1, "More…"],
+    ],
+    [
+      [5, "Friday"],
+      [6, "Saturday"],
+      [-1, "More…"],
+    ],
+  ];
+
   let canContinue = false;
   $: canContinue =
     name !== "" &&
@@ -87,11 +117,7 @@
         fullWidth
         label="Start week on:"
         bind:value={periodAlignment}
-        options={[
-          [6, "Saturday"],
-          [0, "Sunday"],
-          [1, "Monday"],
-        ]}
+        options={periodOptions[periodsPage]}
       />
       <DesignModelChooser
         bind:selectedDesignModel={designModel}
