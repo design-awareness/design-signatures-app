@@ -185,6 +185,36 @@
           src="{CDN_PREFIX}onboarding/reflect.svg"
           alt="Reflect illustration"
         />
+      </div>
+    </CarouselItem>
+    <CarouselItem>
+      <div class="slide">
+        <Header>So you know:</Header>
+
+        <p>
+          The projects you create are only stored on your device. Before you
+          delete the app, make sure you back up any projects you want to keep
+          using the "Export" feature.
+        </p>
+
+        <p>
+          By using this app, you accept the terms of the BSD 3-Clause License,
+          as described in the <a href="/legal/tos.html" target="_blank"
+            >Terms of Service</a
+          >.
+        </p>
+        <p>
+          This app doesn't track you or collect any personal data. For more
+          information, please review our <a
+            href="/legal/privacy.html"
+            target="_blank">Privacy Information</a
+          >.
+        </p>
+        <p>
+          If you'd like to play this onboarding again, you can do so from the
+          app settings.
+        </p>
+
         <div class="cta-button">
           <Button on:click={exitOnboarding}>Let’s go!</Button>
         </div>
@@ -199,10 +229,11 @@
       let:previousAvailable
       let:count
       let:position
+      let:goTo
     >
       {#if position !== count - 1}
         <div class="skip-button" transition:fade={{ duration: 150 }}>
-          <Button small on:click={exitOnboarding}>Skip</Button>
+          <Button small on:click={() => goTo(count - 1)}>Skip</Button>
         </div>
       {/if}
       <CarouselControls

@@ -1,0 +1,31 @@
+@import url("https://rsms.me/inter/inter.css");
+html {
+  font-family: "Inter", sans-serif;
+}
+body {
+  background: white;
+  color: black;
+  font-size: 1rem;
+  padding: 2rem;
+  max-width: 60rem;
+  margin: 4rem auto;
+}
+a {
+  color: #496cee;
+}
+@media (prefers-color-scheme: dark) {
+  body {
+    background: black;
+    color: white;
+  }
+  a {
+    color: #8697ee;
+  }
+}
+pre {
+  max-width: 100%;
+  overflow: auto;
+}
+li {
+  margin: 1rem 0;
+}
