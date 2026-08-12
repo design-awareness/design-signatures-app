@@ -27,7 +27,6 @@
     "svelte-collapsible": "^0.1.1",
     "svelte-dnd-action": "^0.9.78",
     "svelte-masonry": "github:yoonbuck/svelte-masonry",
-    "svelte-snappy-carousel": "^0.2.2",
     "svelte-spa-router": "^5.1.1",
     "tslib": "^2.3.0",
     "typescript": "^5.9.3",

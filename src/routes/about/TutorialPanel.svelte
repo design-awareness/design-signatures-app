@@ -18,7 +18,7 @@
 </script>
 
 <script lang="ts">
-  import { Carousel, CarouselItem } from "svelte-snappy-carousel";
+  import { Carousel, CarouselItem } from "../../components/carousel";
   import CarouselControls from "../../components/CarouselControls.svelte";
   import DeviceOutline from "../../components/DeviceOutline.svelte";
   import TypedMedia from "../../components/TypedMedia.svelte";

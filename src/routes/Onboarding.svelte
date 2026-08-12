@@ -9,7 +9,7 @@
 
 <script lang="ts">
   import { onMount } from "svelte";
-  import { Carousel, CarouselItem } from "svelte-snappy-carousel";
+  import { Carousel, CarouselItem } from "../components/carousel";
   import { spring } from "svelte/motion";
   import { fade } from "svelte/transition";
   import Logo from "../assets/Logo.svelte";
