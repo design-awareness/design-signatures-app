@@ -2,11 +2,10 @@
  * Copyright (c) 2021, Design Awareness Contributors.
  * SPDX-License-Identifier: BSD-3-Clause
  *
- * A minimal local replacement for the private `loop` helper that
- * `svelte-snappy-carousel` used to import from `svelte/internal`. Svelte 5
- * no longer exports that helper, so this reimplements just the behavior this
- * carousel relies on: run `callback(now)` on every animation frame until it
- * returns `false`, and allow the loop to be cancelled at any time.
+ * A minimal `requestAnimationFrame`-based loop used by the carousel to
+ * animate its scroll position. Runs `callback(now)` on every animation
+ * frame until it returns a falsy value, and allows the loop to be
+ * cancelled at any time.
  */
 
 export interface LoopTask {

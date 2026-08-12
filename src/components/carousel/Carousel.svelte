@@ -1,10 +1,6 @@
 <!--
   Copyright (c) 2021, Design Awareness Contributors.
   SPDX-License-Identifier: BSD-3-Clause
-
-  Vendored from svelte-snappy-carousel (MIT, Jordan Yoon-Buck). See ./LICENSE.
-  Adapted for Svelte 5: the private `svelte/internal` `loop` helper has been
-  replaced with the local `requestAnimationFrame`-based loop in ./loop.ts.
 -->
 <script lang="ts">
   import { getContext, onMount, setContext } from "svelte";
