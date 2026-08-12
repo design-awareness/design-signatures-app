@@ -7,12 +7,8 @@ import {
 import { CacheableResponsePlugin } from "workbox-cacheable-response";
 import { ExpirationPlugin } from "workbox-expiration";
 
-const STATIC_PREFIXES = ["/build/", "/images/"];
-const STATIC_RESOURCES = [
-  "/favicon.png",
-  "/index.css",
-  "/manifest.webmanifest",
-];
+const STATIC_PREFIXES = ["/assets/", "/images/", "/icons/"];
+const STATIC_RESOURCES = ["/index.css", "/manifest.webmanifest"];
 
 const PAGE_TIMEOUT_SECONDS = 3;
 
