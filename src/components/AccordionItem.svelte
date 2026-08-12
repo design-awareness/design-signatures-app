@@ -5,7 +5,7 @@
 <script lang="ts">
   import caretDownIcon from "@iconify/icons-ic/baseline-keyboard-arrow-down";
   import caretUpIcon from "@iconify/icons-ic/baseline-keyboard-arrow-up";
-  import Icon from "@iconify/svelte/dist/Icon.svelte";
+  import Icon from "@iconify/svelte";
   import { getContext } from "svelte";
   import { AccordionItem } from "svelte-collapsible";
   import type { IconifyIcon } from "../types/IconifyIcon";

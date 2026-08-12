@@ -2,7 +2,7 @@
   Copyright (c) 2021, Design Awareness Contributors.
   SPDX-License-Identifier: BSD-3-Clause
 -->
-<script type="ts">
+<script lang="ts">
   import ActivityToken from "../../../components/ActivityToken.svelte";
 
   import BackButton from "../../../components/BackButton.svelte";

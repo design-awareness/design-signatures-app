@@ -4,7 +4,7 @@
 -->
 <script lang="ts">
   import check from "@iconify/icons-ic/baseline-check";
-  import Icon from "@iconify/svelte/dist/Icon.svelte";
+  import Icon from "@iconify/svelte";
   import colorPresets from "../../data/colorPresets";
   import { randomID } from "../../util/id";
 

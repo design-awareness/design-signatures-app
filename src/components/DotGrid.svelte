@@ -14,9 +14,9 @@
   import deleteIcon from "@iconify/icons-ic/baseline-delete";
   import editIcon from "@iconify/icons-ic/baseline-edit";
   import infoIcon from "@iconify/icons-ic/baseline-info";
-  import Icon from "@iconify/svelte/dist/Icon.svelte";
+  import Icon from "@iconify/svelte";
   import { tick } from "svelte";
-  import { pop, push, querystring } from "svelte-spa-router";
+  import { pop, push, router } from "svelte-spa-router";
   import { newAsyncEntry } from "../data/database";
   import type { AsyncEntry, AsyncProject, DesignModel } from "../data/schema";
   import type { EntryTable } from "../util/asyncEntry";
@@ -524,7 +524,7 @@
 </div>
 
 <Modal
-  visible={$querystring === "delete"}
+  visible={router.querystring === "delete"}
   title="Delete Entry?"
   closeWithScrim={false}
   buttons={[

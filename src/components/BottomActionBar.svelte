@@ -2,7 +2,7 @@
   Copyright (c) 2021, Design Awareness Contributors.
   SPDX-License-Identifier: BSD-3-Clause
 -->
-<script type="ts">
+<script lang="ts">
   import Button from "./Button.svelte";
 
   export let disabled = false;
@@ -14,7 +14,7 @@
   <Button on:click {disabled}>{label}</Button>
 </div>
 
-<style type="scss">
+<style lang="scss">
   @import "src/styles/tokens";
   .bar {
     position: fixed;

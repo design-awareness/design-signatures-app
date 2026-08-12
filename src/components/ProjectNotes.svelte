@@ -4,7 +4,7 @@
 -->
 <script lang="ts">
   import addIcon from "@iconify/icons-ic/baseline-add";
-  import { pop, push, querystring } from "svelte-spa-router";
+  import { pop, push, router } from "svelte-spa-router";
   import { newProjectNote } from "../data/database";
   import type {
     AsyncProject,
@@ -36,7 +36,7 @@
     open();
   };
   function open() {
-    if ($querystring !== "note") {
+    if (router.querystring !== "note") {
       push(`/projects/${project.id}/?note`);
     }
   }
@@ -68,7 +68,7 @@
   }
   async function close() {
     activeNote = null;
-    if ($querystring === "note") {
+    if (router.querystring === "note") {
       await pop();
     }
   }
@@ -101,7 +101,7 @@
 {#if project.active}
   <Modal
     maxWidth
-    visible={$querystring === "note"}
+    visible={router.querystring === "note"}
     closeWithScrim={false}
     title={activeNoteIsNew ? "New Note" : "Edit Note"}
     buttons={[

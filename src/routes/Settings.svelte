@@ -3,7 +3,7 @@
   SPDX-License-Identifier: BSD-3-Clause
 -->
 <script lang="ts">
-  import { replace } from "svelte-spa-router/Router.svelte";
+  import { replace } from "svelte-spa-router";
   import BackButton from "../components/BackButton.svelte";
   import Button from "../components/Button.svelte";
   import ButtonGroup from "../components/ButtonGroup.svelte";

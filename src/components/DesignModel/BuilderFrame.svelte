@@ -3,7 +3,7 @@
   SPDX-License-Identifier: BSD-3-Clause
 -->
 <script lang="ts">
-  import { pop } from "svelte-spa-router/Router.svelte";
+  import { pop } from "svelte-spa-router";
   import type { DesignModel } from "../../data/schema";
   import BackButton from "../BackButton.svelte";
   import ContentFrame from "../layout/ContentFrame.svelte";

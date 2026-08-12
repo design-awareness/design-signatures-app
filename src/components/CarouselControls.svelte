@@ -5,7 +5,7 @@
 <script lang="ts">
   import arrowLeft from "@iconify/icons-ic/outline-arrow-circle-left.js";
   import arrowRight from "@iconify/icons-ic/outline-arrow-circle-right.js";
-  import Icon from "@iconify/svelte/dist/Icon.svelte";
+  import Icon from "@iconify/svelte";
 
   export let next: () => void;
   export let previous: () => void;

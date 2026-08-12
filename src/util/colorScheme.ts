@@ -29,7 +29,7 @@ export const colorScheme = readable<ColorScheme>(
 
 export type Schemable<T> = T | { light: T; dark: T };
 
-export function fromSchemable<T>(
+export function fromSchemable<T extends {}>(
   schemable: Schemable<T>,
   theme: ColorScheme
 ): T {

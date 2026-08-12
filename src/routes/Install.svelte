@@ -3,7 +3,7 @@
   SPDX-License-Identifier: BSD-3-Clause
 -->
 <script lang="ts">
-  import Icon from "@iconify/svelte/dist/Icon.svelte";
+  import Icon from "@iconify/svelte";
   import moreIconAndroid from "@iconify/icons-ic/baseline-more-vert";
 
   import { onDestroy } from "svelte";

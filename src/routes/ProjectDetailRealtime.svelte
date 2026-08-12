@@ -5,7 +5,7 @@
 <script lang="ts">
   import closeIcon from "@iconify/icons-ic/baseline-close";
   import { tick } from "svelte";
-  import { push } from "svelte-spa-router/Router.svelte";
+  import { push } from "svelte-spa-router";
   import reflectIcon from "../assets/reflectIcon";
   import BackButton from "../components/BackButton.svelte";
   import BottomActionBar from "../components/BottomActionBar.svelte";

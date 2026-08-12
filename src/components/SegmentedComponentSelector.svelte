@@ -2,17 +2,18 @@
   Copyright (c) 2021, Design Awareness Contributors.
   SPDX-License-Identifier: BSD-3-Clause
 -->
-<script lang="ts">
-  import type { SvelteComponent } from "svelte";
+<script
+  lang="ts"
+  generics="InnerComponentProps extends Record<string, unknown> = Record<string, unknown>"
+>
   import type { ComponentConstructor } from "../types/ComponentConstructor";
   import { randomID } from "../util/id";
 
-  type InnerComponentType = $$Generic<SvelteComponent>;
   type Options = string | number;
 
-  export let component: ComponentConstructor<InnerComponentType>;
+  export let component: ComponentConstructor<InnerComponentProps>;
   export let direction: "horizontal" | "vertical" = "horizontal";
-  export let options: [Options, InnerComponentType["$$"]["props"]][];
+  export let options: [Options, InnerComponentProps][];
   export let value: Options | null;
   export let label: string = "";
   export let inlabel: boolean = false;

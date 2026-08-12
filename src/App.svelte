@@ -3,7 +3,7 @@
   SPDX-License-Identifier: BSD-3-Clause
 -->
 <script lang="ts">
-  import Router from "svelte-spa-router/Router.svelte";
+  import Router, { type RouteDefinition } from "svelte-spa-router";
   import { createPresets } from "./data/designModelPresets";
   import { awaitObjectUpgradeIfNeeded } from "./data/upgradeObjects";
   import AboutProject from "./routes/about/AboutProject.svelte";
@@ -34,7 +34,7 @@
   awaitObjectUpgradeIfNeeded();
   createPresets(); // noop, but keeps the linter happy :)
 
-  const routes: object = {
+  const routes: RouteDefinition = {
     "/": Home, // Home
 
     "/new/realtime/*": NewRealtimeProject,

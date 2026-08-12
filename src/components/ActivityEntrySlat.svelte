@@ -5,7 +5,7 @@
 <script lang="ts">
   import infoIcon from "@iconify/icons-ic/baseline-info";
   import editIcon from "@iconify/icons-ic/baseline-edit";
-  import Icon from "@iconify/svelte/dist/Icon.svelte";
+  import Icon from "@iconify/svelte";
   import type { DesignModel } from "../data/schema";
   import InvisibleButton from "./InvisibleButton.svelte";
   import InputField from "./InputField.svelte";

@@ -18,7 +18,7 @@ export default function useInterval(
 ): [(active: boolean) => void, () => void] {
   let isActive = false;
   let isDestroyed = false;
-  let handle: number;
+  let handle: ReturnType<typeof setInterval>;
 
   function _start() {
     start();

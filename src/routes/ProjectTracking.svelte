@@ -10,7 +10,7 @@
   import settingsIcon from "@iconify/icons-ic/baseline-settings";
   import stopIcon from "@iconify/icons-ic/baseline-stop";
   import { onDestroy } from "svelte";
-  import { pop, push, replace } from "svelte-spa-router/Router.svelte";
+  import { pop, push, replace } from "svelte-spa-router";
   import ActivitySlat from "../components/ActivitySlat.svelte";
   import ActivityToken from "../components/ActivityToken.svelte";
   import Button from "../components/Button.svelte";

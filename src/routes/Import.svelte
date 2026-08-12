@@ -68,7 +68,10 @@
       data = JSON.parse(body);
       rawData = data;
     } catch (e) {
-      return bail("Failed to parse JSON.", e?.message);
+      return bail(
+        "Failed to parse JSON.",
+        e instanceof Error ? e.message : undefined
+      );
     }
     if (!typeIsRecord(data)) {
       return bail(
@@ -118,9 +121,9 @@
       });
       buildDryRunResults(result);
     } catch (e) {
-      errorStack = e?.stack;
+      errorStack = e instanceof Error ? e.stack : undefined;
       console.error(e);
-      bail("This file can't be imported.", e?.message);
+      bail("This file can't be imported.", e instanceof Error ? e.message : undefined);
     }
   }
 
@@ -320,9 +323,12 @@
       projectID = result.entity.id;
       state = "done";
     } catch (e) {
-      errorStack = e?.stack;
+      errorStack = e instanceof Error ? e.stack : undefined;
       console.error(e);
-      bail("An error occured while importing.", e?.message);
+      bail(
+        "An error occured while importing.",
+        e instanceof Error ? e.message : undefined
+      );
     }
   }
 

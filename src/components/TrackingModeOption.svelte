@@ -6,7 +6,7 @@
   import realtimeIcon from "@iconify/icons-ic/baseline-access-time";
   import asyncIcon from "@iconify/icons-ic/baseline-list";
   import helpIcon from "@iconify/icons-ic/baseline-help-outline";
-  import Icon from "@iconify/svelte/dist/Icon.svelte";
+  import Icon from "@iconify/svelte";
 
   export let type: "realtime" | "async";
 

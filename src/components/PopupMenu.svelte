@@ -5,7 +5,7 @@
 <script lang="ts" context="module">
   import caretDownIcon from "@iconify/icons-ic/baseline-keyboard-arrow-down";
   import caretUpIcon from "@iconify/icons-ic/baseline-keyboard-arrow-up";
-  import Icon from "@iconify/svelte/dist/Icon.svelte";
+  import Icon from "@iconify/svelte";
   import type { IconifyIcon } from "../types/IconifyIcon";
   import { randomID } from "../util/id";
   interface OptionDescriptor {

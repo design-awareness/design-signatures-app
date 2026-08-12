@@ -3,7 +3,7 @@
   SPDX-License-Identifier: BSD-3-Clause
 -->
 <script lang="ts">
-  import Icon from "@iconify/svelte/dist/Icon.svelte";
+  import Icon from "@iconify/svelte";
   import reflectIcon from "../../assets/reflectIcon";
   import BackButton from "../../components/BackButton.svelte";
   import Figure from "../../components/Figure.svelte";

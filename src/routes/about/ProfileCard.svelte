@@ -3,7 +3,7 @@
   SPDX-License-Identifier: BSD-3-Clause
 -->
 <script lang="ts">
-  import Icon from "@iconify/svelte/dist/Icon.svelte";
+  import Icon from "@iconify/svelte";
   import { link } from "svelte-spa-router";
   import { CDN_PREFIX } from "../../components/Figure.svelte";
 
