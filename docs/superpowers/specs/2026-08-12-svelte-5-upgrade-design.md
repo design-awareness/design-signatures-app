@@ -102,6 +102,10 @@ baseline:
 5. Checks that the root page, static assets, environment-specific icons,
    manifest, and generated service worker are emitted and served at their
    expected URLs.
+6. Collaborative manual end-to-end testing of affected user flows. The
+   implementation will identify specific components and features that need
+   verification, and the user will exercise those scenarios in the running
+   application.
 
 The repository currently has no automated test suite. This migration will not
 introduce a test framework solely for the toolchain change.
