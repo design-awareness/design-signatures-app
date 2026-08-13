@@ -11,7 +11,8 @@
     "start": "vite preview --host",
     "validate": "svelte-check --tsconfig ./tsconfig.json && tsc --noEmit -p tsconfig.node.json",
     "test:iconify-icons": "node --test test/iconify-icon-shape.test.mjs",
-    "test:router-state": "node --conditions browser --test test/router-state.test.mjs"
+    "test:router-state": "node --conditions browser --test test/router-state.test.mjs",
+    "test:sass": "node --test test/sass-deprecations.test.mjs"
   },
   "devDependencies": {
     "@iconify-icons/ic": "^1.2.13",

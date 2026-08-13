@@ -15,7 +15,7 @@
 </div>
 
 <style lang="scss">
-  @import "src/styles/tokens";
+  @use "src/styles/tokens" as *;
   .bar {
     position: fixed;
     z-index: 10;

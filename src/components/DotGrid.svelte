@@ -556,8 +556,8 @@
 </Modal>
 
 <style lang="scss">
-  @import "src/styles/tokens";
-  @import "src/styles/type";
+  @use "src/styles/tokens" as *;
+  @use "src/styles/type" as *;
 
   .choose-theme-color {
     --activity-color: var(--activity-color-light);

@@ -10,8 +10,8 @@
 </h3>
 
 <style lang="scss">
-  @import "src/styles/type";
-  @import "src/styles/tokens";
+  @use "src/styles/type" as *;
+  @use "src/styles/tokens" as *;
   h3 {
     @include type-style($type-section-header);
     margin: 1rem 0;

@@ -10,8 +10,8 @@
 </h1>
 
 <style lang="scss">
-  @import "src/styles/type";
-  @import "src/styles/tokens";
+  @use "src/styles/type" as *;
+  @use "src/styles/tokens" as *;
   h1 {
     margin: 2.5rem 0 1rem 0;
     @include type-style($type-header);

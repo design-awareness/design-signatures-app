@@ -28,8 +28,9 @@
 </label>
 
 <style lang="scss">
-  @import "src/styles/tokens";
-  @import "src/styles/type";
+  @use "sass:map";
+  @use "src/styles/tokens" as *;
+  @use "src/styles/type" as *;
   div {
     @include type-style($type-input-label);
     margin: $block-vertical-spacing 0 $input-spacing-inner 0;
@@ -61,13 +62,13 @@
     min-height: calc(
       2 *
         (
-          #{rem(map-get($type-input, height))} + #{$input-padding-vertical} + #{$input-border-size}
+          #{rem(map.get($type-input, height))} + #{$input-padding-vertical} + #{$input-border-size}
         )
     );
     &.xlarge {
       min-height: calc(
         2 * (#{$input-padding-vertical} + #{$input-border-size}) + 4 * #{rem(
-            map-get($type-input, height)
+            map.get($type-input, height)
           )}
       );
     }

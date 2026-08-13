@@ -71,8 +71,8 @@
 {/if}
 
 <style lang="scss">
-  @import "src/styles/tokens.scss";
-  @import "src/styles/type.scss";
+  @use "src/styles/tokens.scss" as *;
+  @use "src/styles/type.scss" as *;
 
   .scrim {
     position: fixed;

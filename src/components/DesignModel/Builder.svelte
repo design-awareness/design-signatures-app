@@ -166,8 +166,8 @@
 
 <style lang="scss">
   @use "sass:math";
-  @import "src/styles/tokens";
-  @import "src/styles/type";
+  @use "src/styles/tokens" as *;
+  @use "src/styles/type" as *;
   .label {
     @include type-style($type-input-label);
     margin: $block-vertical-spacing 0 $input-spacing-inner 0;

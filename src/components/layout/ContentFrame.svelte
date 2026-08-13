@@ -10,7 +10,7 @@
 </div>
 
 <style lang="scss">
-  @import "src/styles/tokens";
+  @use "src/styles/tokens" as *;
   .content-frame {
     margin: 0;
     padding: $content-frame-pad;

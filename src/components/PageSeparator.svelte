@@ -8,7 +8,7 @@
 <hr />
 
 <style lang="scss">
-  @import "src/styles/tokens";
+  @use "src/styles/tokens" as *;
 
   hr {
     margin: $block-vertical-spacing (-$content-frame-pad);

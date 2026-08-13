@@ -8,7 +8,7 @@
 <div class="note-indicator" aria-label="This has a note." />
 
 <style lang="scss">
-  @import "src/styles/tokens";
+  @use "src/styles/tokens" as *;
   .note-indicator {
     position: absolute;
     top: 0;

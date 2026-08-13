@@ -213,7 +213,7 @@
 </main>
 
 <style lang="scss">
-  @import "src/styles/tokens";
+  @use "src/styles/tokens" as *;
   .page {
     background-color: $background-color;
     min-height: 100%;

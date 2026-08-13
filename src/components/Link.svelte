@@ -56,7 +56,7 @@
 </a>
 
 <style lang="scss">
-  @import "src/styles/tokens";
+  @use "src/styles/tokens" as *;
   a {
     color: $text-actionable-color;
     text-decoration: none;

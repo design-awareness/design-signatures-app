@@ -141,7 +141,7 @@
 </div>
 
 <style lang="scss">
-  @import "src/styles/tokens";
+  @use "src/styles/tokens" as *;
 
   .container > :global(button) {
     margin-top: $block-vertical-spacing;

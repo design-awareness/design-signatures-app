@@ -193,8 +193,9 @@
 />
 
 <style lang="scss">
-  @import "src/styles/tokens";
-  @import "src/styles/type";
+  @use "sass:map";
+  @use "src/styles/tokens" as *;
+  @use "src/styles/type" as *;
 
   .header {
     position: fixed;
@@ -209,7 +210,7 @@
     z-index: 10;
   }
   .spacer {
-    height: 1rem + rem(map-get($type-section-header, height));
+    height: 1rem + rem(map.get($type-section-header, height));
   }
   .alert-area {
     margin: $block-vertical-spacing 0;

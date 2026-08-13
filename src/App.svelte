@@ -89,9 +89,9 @@
 <Router {routes} />
 
 <style lang="scss">
-  @import "styles/colors";
-  @import "styles/tokens";
-  @import "styles/type";
+  @use "styles/colors" as *;
+  @use "styles/tokens" as *;
+  @use "styles/type" as *;
 
   :global(:root) {
     @include color-theme-light;

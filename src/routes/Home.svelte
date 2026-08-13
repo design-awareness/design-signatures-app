@@ -95,7 +95,7 @@
 </main>
 
 <style lang="scss">
-  @import "src/styles/tokens";
+  @use "src/styles/tokens" as *;
   .home {
     background-color: $background-color;
     min-height: 100%;

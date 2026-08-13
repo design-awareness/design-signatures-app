@@ -27,7 +27,7 @@
 </div>
 
 <style lang="scss">
-  @import "src/styles/tokens.scss";
+  @use "src/styles/tokens.scss" as *;
 
   .editor {
     max-width: 32rem;

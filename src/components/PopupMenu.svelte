@@ -242,8 +242,8 @@
 </div>
 
 <style lang="scss">
-  @import "src/styles/type.scss";
-  @import "src/styles/tokens.scss";
+  @use "src/styles/type.scss" as *;
+  @use "src/styles/tokens.scss" as *;
 
   .popup-container {
     position: relative;

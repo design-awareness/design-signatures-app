@@ -34,7 +34,7 @@
 </div>
 
 <style lang="scss">
-  @import "src/styles/tokens";
+  @use "src/styles/tokens" as *;
   .device-frame {
     position: fixed;
     left: 0;

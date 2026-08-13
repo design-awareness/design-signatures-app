@@ -22,9 +22,10 @@
 </div>
 
 <style lang="scss">
+  @use "sass:map";
   @use "sass:math";
-  @import "src/styles/tokens";
-  @import "src/styles/type";
+  @use "src/styles/tokens" as *;
+  @use "src/styles/type" as *;
 
   .container {
     display: block;
@@ -56,7 +57,7 @@
     &::after {
       position: absolute;
       top: calc(
-        50% - #{math.div(rem(map-get($type-activity-toggle-on, size)), 2)}
+        50% - #{math.div(rem(map.get($type-activity-toggle-on, size)), 2)}
       );
       transition: opacity $activity-toggle-transition-speed;
     }

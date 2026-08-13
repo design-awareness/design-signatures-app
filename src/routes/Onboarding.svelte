@@ -228,8 +228,8 @@
 </main>
 
 <style lang="scss">
-  @import "src/styles/tokens";
-  @import "src/styles/type";
+  @use "src/styles/tokens" as *;
+  @use "src/styles/type" as *;
   .page {
     background-color: $alt-background-color;
     > :global(.carousel-container) {

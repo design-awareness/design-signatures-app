@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
+@use "sass:map";
 @use "sass:math";
 
 $type-body: (
@@ -79,13 +80,13 @@ $type-input-label: (
 $type-segmented-selector-inlabel: (
   size: 12,
   weight: 500,
-  height: map-get($type-input-label, height),
+  height: map.get($type-input-label, height),
 );
 
 $type-button-inlabel: (
   size: 12,
   weight: 400,
-  height: map-get($type-input-label, height),
+  height: map.get($type-input-label, height),
 );
 
 $type-modal-status: (
@@ -143,7 +144,7 @@ $type-detail: (
 $type-note-meta: (
   size: 12,
   weight: 400,
-  height: map-get($type-body, height),
+  height: map.get($type-body, height),
 );
 
 @function rem($px) {
@@ -151,7 +152,7 @@ $type-note-meta: (
 }
 
 @mixin type-style($style) {
-  font-size: rem(map-get($style, size));
-  font-weight: map-get($style, weight);
-  line-height: rem(map-get($style, height));
+  font-size: rem(map.get($style, size));
+  font-weight: map.get($style, weight);
+  line-height: rem(map.get($style, height));
 }

@@ -3,7 +3,8 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-@import "vars";
+@forward "vars";
+@use "vars" as *;
 
 // Color tokens
 

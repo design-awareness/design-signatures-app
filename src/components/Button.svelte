@@ -19,8 +19,9 @@
 </button>
 
 <style lang="scss">
-  @import "src/styles/type.scss";
-  @import "src/styles/tokens.scss";
+  @use "sass:map";
+  @use "src/styles/type.scss" as *;
+  @use "src/styles/tokens.scss" as *;
 
   button {
     @include type-style($type-button);
@@ -56,7 +57,7 @@
 
   .inlabel {
     @include type-style($type-button-inlabel);
-    $height: rem(map-get($type-button-inlabel, height));
+    $height: rem(map.get($type-button-inlabel, height));
     line-height: calc(#{$height} - #{2 * $button-border-size});
     padding: 0 $button-padding-horizontal-label;
     min-width: $button-min-width-label;

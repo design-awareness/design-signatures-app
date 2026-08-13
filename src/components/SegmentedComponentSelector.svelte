@@ -41,8 +41,9 @@
 </div>
 
 <style lang="scss">
-  @import "src/styles/tokens";
-  @import "src/styles/type";
+  @use "sass:map";
+  @use "src/styles/tokens" as *;
+  @use "src/styles/type" as *;
   .label {
     @include type-style($type-input-label);
     margin: $block-vertical-spacing 0 $input-spacing-inner 0;
@@ -64,7 +65,7 @@
     }
     &.inlabel > label {
       @include type-style($type-segmented-selector-inlabel);
-      $height: rem(map-get($type-segmented-selector-inlabel, height));
+      $height: rem(map.get($type-segmented-selector-inlabel, height));
       line-height: calc(#{$height} - #{2 * $segmented-selector-border-size});
       padding: 0 $segmented-selector-padding-inlabel-horizontal;
     }

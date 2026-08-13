@@ -64,8 +64,8 @@
 {/await}
 
 <style lang="scss">
-  @import "src/styles/tokens";
-  @import "src/styles/type";
+  @use "src/styles/tokens" as *;
+  @use "src/styles/type" as *;
   .container {
     border-radius: $input-border-radius;
     background-color: none;

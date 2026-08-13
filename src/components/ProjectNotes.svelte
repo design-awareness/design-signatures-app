@@ -115,8 +115,8 @@
 {/if}
 
 <style lang="scss">
-  @import "src/styles/tokens";
-  @import "src/styles/type";
+  @use "src/styles/tokens" as *;
+  @use "src/styles/type" as *;
   .notes {
     margin: 1rem 0;
   }

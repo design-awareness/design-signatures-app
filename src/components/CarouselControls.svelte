@@ -44,7 +44,7 @@
 </div>
 
 <style lang="scss">
-  @import "src/styles/tokens";
+  @use "src/styles/tokens" as *;
 
   .controls {
     display: flex;
