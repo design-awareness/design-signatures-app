@@ -6,13 +6,12 @@
     "module": "ESNext",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
-    "types": ["node", "resize-observer-browser", "vite/client"]
+    "types": ["resize-observer-browser", "vite/client"]
   },
   "include": [
     "src/**/*.d.ts",
     "src/**/*.ts",
     "src/**/*.svelte",
-    "global.d.ts",
-    "vite.config.ts"
+    "global.d.ts"
   ]
 }

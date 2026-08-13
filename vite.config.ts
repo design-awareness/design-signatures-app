@@ -13,13 +13,18 @@ const packageJson = JSON.parse(
 const optionalString = (value: string | undefined): string =>
   value === undefined ? "undefined" : JSON.stringify(value);
 
-export default defineConfig(({ command }) => {
+export default defineConfig(({ command, mode }) => {
   const production = command === "build";
   const buildEnvironment = !production
     ? "dev"
     : process.env.PULL_REQUEST === "true"
       ? "preview"
       : "prod";
+  // `command` alone can't gate source maps: every `vite build` sets it to
+  // "build", so keying off it disables source maps even for a build that was
+  // explicitly asked for a development mode. `mode` is what distinguishes
+  // `vite build` (production) from `vite build --mode development`.
+  const sourcemap = mode !== "production";
 
   return {
     plugins: [
@@ -49,7 +54,7 @@ export default defineConfig(({ command }) => {
     },
     build: {
       outDir: "build",
-      sourcemap: !production,
+      sourcemap,
       rollupOptions: {
         input: {
           app: resolve(root, "index.html"),

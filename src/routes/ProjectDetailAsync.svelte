@@ -4,7 +4,7 @@
 -->
 <script lang="ts">
   import bellIcon from "@iconify-icons/ic/baseline-notifications-none";
-  import { pop, push, router } from "svelte-spa-router";
+  import { pop, push } from "svelte-spa-router";
   import reflectIcon from "../assets/reflectIcon";
   import ActivityToken from "../components/ActivityToken.svelte";
   import Alert from "../components/Alert.svelte";
@@ -24,6 +24,7 @@
   import { makeEntryTable } from "../util/asyncEntry";
   import { getToday } from "../util/date";
   import dotTimeline from "../util/dotTimeline";
+  import { querystring } from "../util/routerState";
   import { expressiveDurationM } from "../util/time";
   import AsyncEntryEditor from "./AsyncEntryEditor.svelte";
 
@@ -53,7 +54,7 @@
   let showEntry: boolean;
   let wasShowingEntry = false;
   $: {
-    showEntry = router.querystring === "entry";
+    showEntry = $querystring === "entry";
     if (showEntry && !activeEntry) pop();
     if (wasShowingEntry && !showEntry && activeEntry && activeEntry.dirty) {
       project.save();

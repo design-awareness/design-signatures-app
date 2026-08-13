@@ -11,6 +11,7 @@
     ProjectNote,
     RealtimeProject,
   } from "../data/schema";
+  import { querystring } from "../util/routerState";
   import { sortBy } from "../util/sort";
   import Button from "./Button.svelte";
   import InputField from "./InputField.svelte";
@@ -101,7 +102,7 @@
 {#if project.active}
   <Modal
     maxWidth
-    visible={router.querystring === "note"}
+    visible={$querystring === "note"}
     closeWithScrim={false}
     title={activeNoteIsNew ? "New Note" : "Edit Note"}
     buttons={[

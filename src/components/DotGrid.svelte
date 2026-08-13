@@ -16,7 +16,7 @@
   import infoIcon from "@iconify-icons/ic/baseline-info";
   import Icon from "@iconify/svelte";
   import { tick } from "svelte";
-  import { pop, push, router } from "svelte-spa-router";
+  import { pop, push } from "svelte-spa-router";
   import { newAsyncEntry } from "../data/database";
   import type { AsyncEntry, AsyncProject, DesignModel } from "../data/schema";
   import type { EntryTable } from "../util/asyncEntry";
@@ -36,6 +36,7 @@
     MONTH_SHORT_NAME,
     toDateString,
   } from "../util/date";
+  import { querystring } from "../util/routerState";
   import { expressiveDurationM } from "../util/time";
   import Button from "./Button.svelte";
   import DotGridCell from "./DotGridCell.svelte";
@@ -524,7 +525,7 @@
 </div>
 
 <Modal
-  visible={router.querystring === "delete"}
+  visible={$querystring === "delete"}
   title="Delete Entry?"
   closeWithScrim={false}
   buttons={[
