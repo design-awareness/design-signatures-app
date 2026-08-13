@@ -4,7 +4,7 @@
 -->
 <script lang="ts">
   import Icon from "@iconify/svelte";
-  import moreIconAndroid from "@iconify/icons-ic/baseline-more-vert";
+  import moreIconAndroid from "@iconify-icons/ic/baseline-more-vert";
 
   import { onDestroy } from "svelte";
 

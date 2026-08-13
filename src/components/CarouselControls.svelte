@@ -3,8 +3,8 @@
   SPDX-License-Identifier: BSD-3-Clause
 -->
 <script lang="ts">
-  import arrowLeft from "@iconify/icons-ic/outline-arrow-circle-left.js";
-  import arrowRight from "@iconify/icons-ic/outline-arrow-circle-right.js";
+  import arrowLeft from "@iconify-icons/ic/outline-arrow-circle-left.js";
+  import arrowRight from "@iconify-icons/ic/outline-arrow-circle-right.js";
   import Icon from "@iconify/svelte";
 
   export let next: () => void;
