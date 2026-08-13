@@ -5,7 +5,7 @@
 <script lang="ts">
 </script>
 
-<div class="note-indicator" aria-label="This has a note." />
+<div class="note-indicator" aria-label="This has a note."></div>
 
 <style lang="scss">
   @use "src/styles/tokens" as *;

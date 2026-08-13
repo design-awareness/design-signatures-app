@@ -217,7 +217,7 @@
   >
     {#each descriptor as item, i}
       {#if item.separator}
-        <li class="separator" role="separator" tabindex="-1" />
+        <li class="separator" role="separator" tabindex="-1"></li>
       {:else}
         <li
           class="item {item.class || ''}"
@@ -237,7 +237,7 @@
     {/each}
   </ul>
   {#if opened}
-    <div class="scrim" role="presentation" on:click={close} />
+    <div class="scrim" role="presentation" on:click={close}></div>
   {/if}
 </div>
 

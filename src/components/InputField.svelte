@@ -18,7 +18,7 @@
     <div>{label}</div>
   {/if}
   {#if large}
-    <textarea bind:value class:xlarge {placeholder} on:blur />
+    <textarea bind:value class:xlarge {placeholder} on:blur></textarea>
   {:else}
     <input type="text" bind:value {placeholder} on:input on:blur {...$$props} />
   {/if}

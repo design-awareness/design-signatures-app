@@ -21,7 +21,7 @@
   <p style="--color-light: {lightColor}; --color-dark: {darkColor}" class="clr">
     <ActivityToggle bind:checked activityName={name} />
   </p>
-  <p />
+  <p></p>
   <p>light color <input type="color" bind:value={lightColor} /></p>
   <p>dark color <input type="color" bind:value={darkColor} /></p>
   <hr />

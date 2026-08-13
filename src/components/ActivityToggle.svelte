@@ -15,8 +15,8 @@
   <input type="checkbox" bind:checked on:change {id} />
   <label for={id} aria-label="Toggle {activityName}">
     <div role="presentation" class="toggle">
-      <div class="thumb" />
-      <div class="background" />
+      <div class="thumb"></div>
+      <div class="background"></div>
     </div>
   </label>
 </div>

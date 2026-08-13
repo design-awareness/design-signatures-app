@@ -120,7 +120,7 @@
 
 <svelte:window on:beforeunload={beforeUnload} />
 <div class="header">{label}</div>
-<div class="spacer" role="presentation" />
+<div class="spacer" role="presentation"></div>
 <ContentFrame>
   <RichLabel label="Activity times">
     <SegmentedSelector
@@ -169,7 +169,7 @@
     <div class="alert-area">
       <Alert type="note" icon={totalAlertIcon}>
         Activity percentages should add up to 100%. (Current total: {Math.round(
-          totalPercentage
+          totalPercentage,
         )}%)
       </Alert>
     </div>

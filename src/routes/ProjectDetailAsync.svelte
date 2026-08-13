@@ -145,7 +145,7 @@
 
       {#if project && showCanvas}
         <div class="canvas-timeline-container">
-          <canvas use:dotTimeline={{ project }} />
+          <canvas use:dotTimeline={{ project }}></canvas>
         </div>
       {/if}
 

@@ -162,9 +162,9 @@
             weekEntries
               ? sumActivityTimes(
                   weekEntries,
-                  project.designModel.activities.length
+                  project.designModel.activities.length,
                 )
-              : undefined
+              : undefined,
           );
           columnNotes.push(false);
         }
@@ -179,7 +179,7 @@
     columnData.forEach((column) =>
       column?.forEach(({ value }) => {
         if (value > pointMax) pointMax = value;
-      })
+      }),
     );
   }
 
@@ -307,14 +307,14 @@
     isDeletingEntry = true;
     if (activeEntry) {
       project.entries = project.entries.filter(
-        (entry) => entry !== activeEntry
+        (entry) => entry !== activeEntry,
       );
       let entryToDelete = activeEntry;
       removeFromEntryTable(
         entryTable,
         entryToDelete,
         reportingPeriod,
-        periodAlignment
+        periodAlignment,
       );
       activeEntry = null;
       await entryToDelete.remove();
@@ -413,7 +413,7 @@
 
     {#if showActivityDefinitions}
       <div class="dotgrid-definitions">
-        <div class="dotgrid-column-header" />
+        <div class="dotgrid-column-header"></div>
         {#each project.designModel.activities as activity}
           <button
             class="dotgrid-definition-row choose-theme-color"
@@ -456,7 +456,7 @@
                   {:else}
                     {project.designModel.activities[selectedActivity].name}:
                     {expressiveDurationM(
-                      activeEntry.data[selectedActivity].value
+                      activeEntry.data[selectedActivity].value,
                     )}
                   {/if}
                 </div>

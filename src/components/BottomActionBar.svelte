@@ -9,7 +9,7 @@
   export let label: string;
 </script>
 
-<div class="spacer" role="presentation" />
+<div class="spacer" role="presentation"></div>
 <div class="bar" class:disabled>
   <Button on:click {disabled}>{label}</Button>
 </div>

@@ -48,7 +48,7 @@
       download(
         `${safeName(project.name)}.json`,
         "application/json",
-        project.serialize()
+        project.serialize(),
       );
     } else {
       if (canvasElement) {
@@ -129,7 +129,7 @@
                 showNotes,
                 showTime,
               }}
-            />
+            ></canvas>
           </HorizontalScrollArea>
         {:else}
           <SegmentedSelector
@@ -160,7 +160,7 @@
                 showNotes,
                 // hideEmptyDays
               }}
-            />
+            ></canvas>
           </HorizontalScrollArea>
         {/if}
       {:else if exportType === "data"}

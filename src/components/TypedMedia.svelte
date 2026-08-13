@@ -76,7 +76,7 @@
     muted
     preload="metadata"
     playsinline
-  />
+  ></video>
 {/if}
 
 <style lang="scss">

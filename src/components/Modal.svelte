@@ -45,7 +45,7 @@
 
 {#if visible}
   <div role="dialog" aria-labelledby="dialog__Title" use:inject>
-    <div class="scrim" on:click={clickScrim} />
+    <div class="scrim" on:click={clickScrim}></div>
     <div class="modal" class:maxWidth>
       {#if status}
         <div class="status">{status}</div>

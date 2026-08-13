@@ -68,7 +68,7 @@
       () => subsessionTime + pastSessionTime,
       () => {
         tracker = tracker;
-      }
+      },
     );
   });
 
@@ -100,7 +100,7 @@
 
   const [enableInterval, destroyInterval] = useInterval(
     { start: startTracking, tick, stop: stopTracking },
-    TIMER_TICK
+    TIMER_TICK,
   );
 
   const [enableSaveInterval, destroySaveInterval] = useInterval(
@@ -109,7 +109,7 @@
       tick: () => tracker?.save(),
       stop() {},
     },
-    SAVE_FREQUENCY
+    SAVE_FREQUENCY,
   );
 
   // tracking is enabled when no modal is open
@@ -294,7 +294,7 @@
             sessionTime={subsessionTime + pastSessionTime}
             {projectTime}
           />
-          <div class="flex-spacer" />
+          <div class="flex-spacer"></div>
           <Button small icon={settingsIcon} on:click={openModal("options")}>
             Options
           </Button>
@@ -355,7 +355,7 @@
                 shortDuration(
                   timerDisplayMode === "project"
                     ? pastSessionTime + projectTime
-                    : pastSessionTime
+                    : pastSessionTime,
                 )}
           />
         </Modal>

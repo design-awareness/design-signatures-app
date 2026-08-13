@@ -35,7 +35,7 @@
         class="indicator"
         class:active={i === position}
         role="presentation"
-      />
+      ></div>
     {/each}
   </div>
   <button on:click={next} disabled={!nextAvailable} aria-label="next">

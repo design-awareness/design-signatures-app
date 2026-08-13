@@ -98,7 +98,7 @@
         class="timeline-spacer"
         role="presentation"
         style="height: {timelineHeight}px"
-      />
+      ></div>
     {:else}
       <div class="top-bar">
         <BackButton href="/" />
@@ -123,7 +123,7 @@
       <canvas
         use:timeline={{ project, selectNote: showNote }}
         on:click={pinTimeline}
-      />
+      ></canvas>
     </div>
 
     {#if !timelinePinned}
