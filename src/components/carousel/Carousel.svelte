@@ -244,8 +244,10 @@
 
     return {
       destroy() {
-        // Cancel any in-flight scroll animation when this carousel is torn
-        // down, so it doesn't keep driving `node.scrollLeft` after unmount.
+        // Cancel any in-flight scroll animation and any pending wheel-debounce
+        // timeout when this carousel is torn down, so neither drives
+        // `node.scrollLeft` after unmount.
+        clearTimeout(wheelScrollEndHandle);
         loopAborter?.();
       },
     };
