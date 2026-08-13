@@ -29,6 +29,7 @@ export default defineConfig(({ command }) => {
           {
             src: `icons/icons-${buildEnvironment}/*`,
             dest: "icons",
+            rename: { stripBase: true },
           },
         ],
       }),
