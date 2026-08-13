@@ -43,7 +43,7 @@
   entries.forEach((entry) =>
     entry.data.forEach(({ value }) => {
       if (value > maxValue) maxValue = value;
-    })
+    }),
   );
 
   function clr(i: number): string {
@@ -73,7 +73,7 @@
   });
 </script>
 
-<canvas use:grid />
+<canvas use:grid></canvas>
 
 <style lang="scss">
   canvas {

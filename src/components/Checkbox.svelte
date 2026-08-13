@@ -26,9 +26,10 @@
 </div>
 
 <style lang="scss">
+  @use "sass:map";
   @use "sass:math";
-  @import "src/styles/tokens";
-  @import "src/styles/type";
+  @use "src/styles/tokens" as *;
+  @use "src/styles/type" as *;
 
   .wrapper {
     display: flex;
@@ -46,7 +47,7 @@
     flex-shrink: 0;
     box-sizing: border-box;
     $vertical-pad: math.div(
-      rem(map-get($type-input-label, height)) - $checkbox-size,
+      rem(map.get($type-input-label, height)) - $checkbox-size,
       2
     );
     margin: $vertical-pad 0;

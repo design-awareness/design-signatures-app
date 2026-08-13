@@ -3,14 +3,14 @@
   SPDX-License-Identifier: BSD-3-Clause
 -->
 <script lang="ts">
-  import createIcon from "@iconify/icons-ic/baseline-create";
-  import undoIcon from "@iconify/icons-ic/baseline-history";
-  import pauseIcon from "@iconify/icons-ic/baseline-pause";
-  import playIcon from "@iconify/icons-ic/baseline-play-arrow";
-  import settingsIcon from "@iconify/icons-ic/baseline-settings";
-  import stopIcon from "@iconify/icons-ic/baseline-stop";
+  import createIcon from "@iconify-icons/ic/baseline-create";
+  import undoIcon from "@iconify-icons/ic/baseline-history";
+  import pauseIcon from "@iconify-icons/ic/baseline-pause";
+  import playIcon from "@iconify-icons/ic/baseline-play-arrow";
+  import settingsIcon from "@iconify-icons/ic/baseline-settings";
+  import stopIcon from "@iconify-icons/ic/baseline-stop";
   import { onDestroy } from "svelte";
-  import { pop, push, replace } from "svelte-spa-router/Router.svelte";
+  import { pop, push, replace } from "svelte-spa-router";
   import ActivitySlat from "../components/ActivitySlat.svelte";
   import ActivityToken from "../components/ActivityToken.svelte";
   import Button from "../components/Button.svelte";
@@ -68,7 +68,7 @@
       () => subsessionTime + pastSessionTime,
       () => {
         tracker = tracker;
-      }
+      },
     );
   });
 
@@ -100,7 +100,7 @@
 
   const [enableInterval, destroyInterval] = useInterval(
     { start: startTracking, tick, stop: stopTracking },
-    TIMER_TICK
+    TIMER_TICK,
   );
 
   const [enableSaveInterval, destroySaveInterval] = useInterval(
@@ -109,7 +109,7 @@
       tick: () => tracker?.save(),
       stop() {},
     },
-    SAVE_FREQUENCY
+    SAVE_FREQUENCY,
   );
 
   // tracking is enabled when no modal is open
@@ -294,7 +294,7 @@
             sessionTime={subsessionTime + pastSessionTime}
             {projectTime}
           />
-          <div class="flex-spacer" />
+          <div class="flex-spacer"></div>
           <Button small icon={settingsIcon} on:click={openModal("options")}>
             Options
           </Button>
@@ -355,7 +355,7 @@
                 shortDuration(
                   timerDisplayMode === "project"
                     ? pastSessionTime + projectTime
-                    : pastSessionTime
+                    : pastSessionTime,
                 )}
           />
         </Modal>
@@ -468,8 +468,8 @@
 </main>
 
 <style lang="scss">
-  @import "src/styles/tokens";
-  @import "src/styles/type";
+  @use "src/styles/tokens" as *;
+  @use "src/styles/type" as *;
 
   .device-frame {
     height: 100%;

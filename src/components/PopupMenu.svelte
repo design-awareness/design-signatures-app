@@ -3,9 +3,9 @@
   SPDX-License-Identifier: BSD-3-Clause
 -->
 <script lang="ts" context="module">
-  import caretDownIcon from "@iconify/icons-ic/baseline-keyboard-arrow-down";
-  import caretUpIcon from "@iconify/icons-ic/baseline-keyboard-arrow-up";
-  import Icon from "@iconify/svelte/dist/Icon.svelte";
+  import caretDownIcon from "@iconify-icons/ic/baseline-keyboard-arrow-down";
+  import caretUpIcon from "@iconify-icons/ic/baseline-keyboard-arrow-up";
+  import Icon from "@iconify/svelte";
   import type { IconifyIcon } from "../types/IconifyIcon";
   import { randomID } from "../util/id";
   interface OptionDescriptor {
@@ -217,7 +217,7 @@
   >
     {#each descriptor as item, i}
       {#if item.separator}
-        <li class="separator" role="separator" tabindex="-1" />
+        <li class="separator" role="separator" tabindex="-1"></li>
       {:else}
         <li
           class="item {item.class || ''}"
@@ -237,13 +237,13 @@
     {/each}
   </ul>
   {#if opened}
-    <div class="scrim" role="presentation" on:click={close} />
+    <div class="scrim" role="presentation" on:click={close}></div>
   {/if}
 </div>
 
 <style lang="scss">
-  @import "src/styles/type.scss";
-  @import "src/styles/tokens.scss";
+  @use "src/styles/type.scss" as *;
+  @use "src/styles/tokens.scss" as *;
 
   .popup-container {
     position: relative;

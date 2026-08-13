@@ -3,9 +3,9 @@
   SPDX-License-Identifier: BSD-3-Clause
 -->
 <script lang="ts">
-  import closeIcon from "@iconify/icons-ic/baseline-close";
+  import closeIcon from "@iconify-icons/ic/baseline-close";
   import { tick } from "svelte";
-  import { push } from "svelte-spa-router/Router.svelte";
+  import { push } from "svelte-spa-router";
   import reflectIcon from "../assets/reflectIcon";
   import BackButton from "../components/BackButton.svelte";
   import BottomActionBar from "../components/BottomActionBar.svelte";
@@ -98,7 +98,7 @@
         class="timeline-spacer"
         role="presentation"
         style="height: {timelineHeight}px"
-      />
+      ></div>
     {:else}
       <div class="top-bar">
         <BackButton href="/" />
@@ -123,7 +123,7 @@
       <canvas
         use:timeline={{ project, selectNote: showNote }}
         on:click={pinTimeline}
-      />
+      ></canvas>
     </div>
 
     {#if !timelinePinned}
@@ -191,8 +191,8 @@
 </main>
 
 <style lang="scss">
-  @import "src/styles/tokens";
-  @import "src/styles/type";
+  @use "src/styles/tokens" as *;
+  @use "src/styles/type" as *;
 
   .page {
     background-color: $background-color;

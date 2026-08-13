@@ -3,7 +3,7 @@
   SPDX-License-Identifier: BSD-3-Clause
 -->
 <script lang="ts" context="module">
-  import { push, replace } from "svelte-spa-router/Router.svelte";
+  import { push, replace } from "svelte-spa-router";
   import { goUpSafe } from "../util/history";
 
   function navigate({
@@ -56,7 +56,7 @@
 </a>
 
 <style lang="scss">
-  @import "src/styles/tokens";
+  @use "src/styles/tokens" as *;
   a {
     color: $text-actionable-color;
     text-decoration: none;

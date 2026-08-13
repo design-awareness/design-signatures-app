@@ -4,8 +4,8 @@
 -->
 <script lang="ts">
   import Link from "./Link.svelte";
-  import arrow from "@iconify/icons-ic/baseline-arrow-back";
-  import Icon from "@iconify/svelte/dist/Icon.svelte";
+  import arrow from "@iconify-icons/ic/baseline-arrow-back";
+  import Icon from "@iconify/svelte";
   export let href: string = "/";
   export let button: null | (() => void) = null;
 </script>
@@ -25,8 +25,8 @@
 </div>
 
 <style lang="scss">
-  @import "src/styles/tokens";
-  @import "src/styles/type";
+  @use "src/styles/tokens" as *;
+  @use "src/styles/type" as *;
 
   .back-button :global(a),
   .back-button button {

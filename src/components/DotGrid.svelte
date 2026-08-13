@@ -7,16 +7,16 @@
 </script>
 
 <script lang="ts">
-  import addIcon from "@iconify/icons-ic/baseline-add";
-  import leftChevron from "@iconify/icons-ic/baseline-chevron-left";
-  import rightChevron from "@iconify/icons-ic/baseline-chevron-right";
-  import clearIcon from "@iconify/icons-ic/baseline-clear";
-  import deleteIcon from "@iconify/icons-ic/baseline-delete";
-  import editIcon from "@iconify/icons-ic/baseline-edit";
-  import infoIcon from "@iconify/icons-ic/baseline-info";
-  import Icon from "@iconify/svelte/dist/Icon.svelte";
+  import addIcon from "@iconify-icons/ic/baseline-add";
+  import leftChevron from "@iconify-icons/ic/baseline-chevron-left";
+  import rightChevron from "@iconify-icons/ic/baseline-chevron-right";
+  import clearIcon from "@iconify-icons/ic/baseline-clear";
+  import deleteIcon from "@iconify-icons/ic/baseline-delete";
+  import editIcon from "@iconify-icons/ic/baseline-edit";
+  import infoIcon from "@iconify-icons/ic/baseline-info";
+  import Icon from "@iconify/svelte";
   import { tick } from "svelte";
-  import { pop, push, querystring } from "svelte-spa-router";
+  import { pop, push } from "svelte-spa-router";
   import { newAsyncEntry } from "../data/database";
   import type { AsyncEntry, AsyncProject, DesignModel } from "../data/schema";
   import type { EntryTable } from "../util/asyncEntry";
@@ -36,6 +36,7 @@
     MONTH_SHORT_NAME,
     toDateString,
   } from "../util/date";
+  import { querystring } from "../util/routerState";
   import { expressiveDurationM } from "../util/time";
   import Button from "./Button.svelte";
   import DotGridCell from "./DotGridCell.svelte";
@@ -161,9 +162,9 @@
             weekEntries
               ? sumActivityTimes(
                   weekEntries,
-                  project.designModel.activities.length
+                  project.designModel.activities.length,
                 )
-              : undefined
+              : undefined,
           );
           columnNotes.push(false);
         }
@@ -178,7 +179,7 @@
     columnData.forEach((column) =>
       column?.forEach(({ value }) => {
         if (value > pointMax) pointMax = value;
-      })
+      }),
     );
   }
 
@@ -306,14 +307,14 @@
     isDeletingEntry = true;
     if (activeEntry) {
       project.entries = project.entries.filter(
-        (entry) => entry !== activeEntry
+        (entry) => entry !== activeEntry,
       );
       let entryToDelete = activeEntry;
       removeFromEntryTable(
         entryTable,
         entryToDelete,
         reportingPeriod,
-        periodAlignment
+        periodAlignment,
       );
       activeEntry = null;
       await entryToDelete.remove();
@@ -412,7 +413,7 @@
 
     {#if showActivityDefinitions}
       <div class="dotgrid-definitions">
-        <div class="dotgrid-column-header" />
+        <div class="dotgrid-column-header"></div>
         {#each project.designModel.activities as activity}
           <button
             class="dotgrid-definition-row choose-theme-color"
@@ -455,7 +456,7 @@
                   {:else}
                     {project.designModel.activities[selectedActivity].name}:
                     {expressiveDurationM(
-                      activeEntry.data[selectedActivity].value
+                      activeEntry.data[selectedActivity].value,
                     )}
                   {/if}
                 </div>
@@ -555,8 +556,8 @@
 </Modal>
 
 <style lang="scss">
-  @import "src/styles/tokens";
-  @import "src/styles/type";
+  @use "src/styles/tokens" as *;
+  @use "src/styles/type" as *;
 
   .choose-theme-color {
     --activity-color: var(--activity-color-light);

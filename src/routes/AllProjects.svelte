@@ -3,7 +3,7 @@
   SPDX-License-Identifier: BSD-3-Clause
 -->
 <script lang="ts">
-  import loadingIcon from "@iconify/icons-ic/baseline-hourglass-empty";
+  import loadingIcon from "@iconify-icons/ic/baseline-hourglass-empty";
   import BackButton from "../components/BackButton.svelte";
   import ContentFrame from "../components/layout/ContentFrame.svelte";
   import ProjectCard from "../components/ProjectCard.svelte";
@@ -52,7 +52,7 @@
 {/await}
 
 <style lang="scss">
-  @import "src/styles/tokens";
+  @use "src/styles/tokens" as *;
   .page {
     background-color: $background-color;
     min-height: 100%;

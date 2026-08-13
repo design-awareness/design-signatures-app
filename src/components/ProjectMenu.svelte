@@ -3,12 +3,12 @@
   SPDX-License-Identifier: BSD-3-Clause
 -->
 <script lang="ts">
-  import archiveIcon from "@iconify/icons-ic/baseline-archive";
-  import deleteIcon from "@iconify/icons-ic/baseline-delete";
-  import editIcon from "@iconify/icons-ic/baseline-edit";
-  import exportIcon from "@iconify/icons-ic/baseline-share";
-  import unarchiveIcon from "@iconify/icons-ic/baseline-unarchive";
-  import { pop, push } from "svelte-spa-router/Router.svelte";
+  import archiveIcon from "@iconify-icons/ic/baseline-archive";
+  import deleteIcon from "@iconify-icons/ic/baseline-delete";
+  import editIcon from "@iconify-icons/ic/baseline-edit";
+  import exportIcon from "@iconify-icons/ic/baseline-share";
+  import unarchiveIcon from "@iconify-icons/ic/baseline-unarchive";
+  import { pop, push } from "svelte-spa-router";
   import {
     pushRecentProject,
     removeRecentProject,

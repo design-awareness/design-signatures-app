@@ -2,20 +2,20 @@
   Copyright (c) 2021, Design Awareness Contributors.
   SPDX-License-Identifier: BSD-3-Clause
 -->
-<script type="ts">
+<script lang="ts">
   import Button from "./Button.svelte";
 
   export let disabled = false;
   export let label: string;
 </script>
 
-<div class="spacer" role="presentation" />
+<div class="spacer" role="presentation"></div>
 <div class="bar" class:disabled>
   <Button on:click {disabled}>{label}</Button>
 </div>
 
-<style type="scss">
-  @import "src/styles/tokens";
+<style lang="scss">
+  @use "src/styles/tokens" as *;
   .bar {
     position: fixed;
     z-index: 10;

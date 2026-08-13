@@ -4,7 +4,7 @@
 -->
 <script lang="ts">
   import { getDesignModel, getAll, newDesignModel } from "../../data/database";
-  import add from "@iconify/icons-ic/baseline-add";
+  import add from "@iconify-icons/ic/baseline-add";
 
   import type { DesignModel } from "../../data/schema";
   import { sortBy } from "../../util/sort";
@@ -64,8 +64,8 @@
 {/await}
 
 <style lang="scss">
-  @import "src/styles/tokens";
-  @import "src/styles/type";
+  @use "src/styles/tokens" as *;
+  @use "src/styles/type" as *;
   .container {
     border-radius: $input-border-radius;
     background-color: none;

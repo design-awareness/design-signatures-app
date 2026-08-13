@@ -3,9 +3,9 @@
   SPDX-License-Identifier: BSD-3-Clause
 -->
 <script lang="ts">
-  import caretDownIcon from "@iconify/icons-ic/baseline-keyboard-arrow-down";
-  import caretUpIcon from "@iconify/icons-ic/baseline-keyboard-arrow-up";
-  import Icon from "@iconify/svelte/dist/Icon.svelte";
+  import caretDownIcon from "@iconify-icons/ic/baseline-keyboard-arrow-down";
+  import caretUpIcon from "@iconify-icons/ic/baseline-keyboard-arrow-up";
+  import Icon from "@iconify/svelte";
   import { getContext } from "svelte";
   import { AccordionItem } from "svelte-collapsible";
   import type { IconifyIcon } from "../types/IconifyIcon";
@@ -41,8 +41,8 @@
 
 <style lang="scss">
   @use "sass:math";
-  @import "src/styles/tokens";
-  @import "src/styles/type";
+  @use "src/styles/tokens" as *;
+  @use "src/styles/type" as *;
 
   .wrapper {
     box-shadow: $collapse-card-shadow;

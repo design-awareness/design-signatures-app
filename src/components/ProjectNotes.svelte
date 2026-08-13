@@ -3,14 +3,15 @@
   SPDX-License-Identifier: BSD-3-Clause
 -->
 <script lang="ts">
-  import addIcon from "@iconify/icons-ic/baseline-add";
-  import { pop, push, querystring } from "svelte-spa-router";
+  import addIcon from "@iconify-icons/ic/baseline-add";
+  import { pop, push, router } from "svelte-spa-router";
   import { newProjectNote } from "../data/database";
   import type {
     AsyncProject,
     ProjectNote,
     RealtimeProject,
   } from "../data/schema";
+  import { querystring } from "../util/routerState";
   import { sortBy } from "../util/sort";
   import Button from "./Button.svelte";
   import InputField from "./InputField.svelte";
@@ -36,7 +37,7 @@
     open();
   };
   function open() {
-    if ($querystring !== "note") {
+    if (router.querystring !== "note") {
       push(`/projects/${project.id}/?note`);
     }
   }
@@ -68,7 +69,7 @@
   }
   async function close() {
     activeNote = null;
-    if ($querystring === "note") {
+    if (router.querystring === "note") {
       await pop();
     }
   }
@@ -114,8 +115,8 @@
 {/if}
 
 <style lang="scss">
-  @import "src/styles/tokens";
-  @import "src/styles/type";
+  @use "src/styles/tokens" as *;
+  @use "src/styles/type" as *;
   .notes {
     margin: 1rem 0;
   }

@@ -9,7 +9,7 @@
 
 <script lang="ts">
   import { onMount } from "svelte";
-  import { Carousel, CarouselItem } from "svelte-snappy-carousel";
+  import { Carousel, CarouselItem } from "../components/carousel";
   import { spring } from "svelte/motion";
   import { fade } from "svelte/transition";
   import Logo from "../assets/Logo.svelte";
@@ -228,8 +228,8 @@
 </main>
 
 <style lang="scss">
-  @import "src/styles/tokens";
-  @import "src/styles/type";
+  @use "src/styles/tokens" as *;
+  @use "src/styles/type" as *;
   .page {
     background-color: $alt-background-color;
     > :global(.carousel-container) {

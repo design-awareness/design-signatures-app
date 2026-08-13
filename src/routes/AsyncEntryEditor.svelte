@@ -3,7 +3,7 @@
   SPDX-License-Identifier: BSD-3-Clause
 -->
 <script lang="ts">
-  import totalAlertIcon from "@iconify/icons-ic/baseline-percentage";
+  import totalAlertIcon from "@iconify-icons/ic/baseline-percentage";
   import ActivityEntrySlat from "../components/ActivityEntrySlat.svelte";
   import Alert from "../components/Alert.svelte";
   import BottomActionBar from "../components/BottomActionBar.svelte";
@@ -120,7 +120,7 @@
 
 <svelte:window on:beforeunload={beforeUnload} />
 <div class="header">{label}</div>
-<div class="spacer" role="presentation" />
+<div class="spacer" role="presentation"></div>
 <ContentFrame>
   <RichLabel label="Activity times">
     <SegmentedSelector
@@ -169,7 +169,7 @@
     <div class="alert-area">
       <Alert type="note" icon={totalAlertIcon}>
         Activity percentages should add up to 100%. (Current total: {Math.round(
-          totalPercentage
+          totalPercentage,
         )}%)
       </Alert>
     </div>
@@ -193,8 +193,9 @@
 />
 
 <style lang="scss">
-  @import "src/styles/tokens";
-  @import "src/styles/type";
+  @use "sass:map";
+  @use "src/styles/tokens" as *;
+  @use "src/styles/type" as *;
 
   .header {
     position: fixed;
@@ -209,7 +210,7 @@
     z-index: 10;
   }
   .spacer {
-    height: 1rem + rem(map-get($type-section-header, height));
+    height: 1rem + rem(map.get($type-section-header, height));
   }
   .alert-area {
     margin: $block-vertical-spacing 0;

@@ -3,7 +3,7 @@
   SPDX-License-Identifier: BSD-3-Clause
 -->
 <script lang="ts">
-  import Icon from "@iconify/svelte/dist/Icon.svelte";
+  import Icon from "@iconify/svelte";
   import type { IconifyIcon } from "../types/IconifyIcon";
 
   export let type: "info" | "danger" | "note" = "info";
@@ -22,8 +22,8 @@
 </div>
 
 <style lang="scss">
-  @import "src/styles/tokens";
-  @import "src/styles/type";
+  @use "src/styles/tokens" as *;
+  @use "src/styles/type" as *;
 
   .alert {
     &.type--info {

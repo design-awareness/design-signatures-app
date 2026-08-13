@@ -3,8 +3,8 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-import type { SvelteComponent } from "svelte";
+import type { Component } from "svelte";
 
-export type ComponentConstructor<C extends SvelteComponent> = new (
-  ...args: any[]
-) => C;
+export type ComponentConstructor<
+  Props extends Record<string, unknown> = Record<string, unknown>,
+> = Component<Props>;

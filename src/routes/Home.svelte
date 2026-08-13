@@ -3,7 +3,7 @@
   SPDX-License-Identifier: BSD-3-Clause
 -->
 <script lang="ts">
-  import { push } from "svelte-spa-router/Router.svelte";
+  import { push } from "svelte-spa-router";
   import reflectIcon from "../assets/reflectIcon";
   import Button from "../components/Button.svelte";
   import ContentFrame from "../components/layout/ContentFrame.svelte";
@@ -95,7 +95,7 @@
 </main>
 
 <style lang="scss">
-  @import "src/styles/tokens";
+  @use "src/styles/tokens" as *;
   .home {
     background-color: $background-color;
     min-height: 100%;

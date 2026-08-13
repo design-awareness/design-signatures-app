@@ -42,8 +42,8 @@
 
 <style lang="scss">
   @use "sass:math";
-  @import "src/styles/tokens";
-  @import "src/styles/type";
+  @use "src/styles/tokens" as *;
+  @use "src/styles/type" as *;
   ul {
     margin: math.div($input-spacing-inner, 2) 0 0 0;
     padding: 0;

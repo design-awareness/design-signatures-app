@@ -11,7 +11,7 @@
 </div>
 
 <style lang="scss">
-  @import "src/styles/tokens";
+  @use "src/styles/tokens" as *;
   .group {
     margin: $block-vertical-spacing 0 0 0;
     display: flex;

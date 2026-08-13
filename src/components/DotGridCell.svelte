@@ -22,7 +22,7 @@
     {/if}
     <div class="cell-content">
       {#if data.value}
-        <div class="dot" style="transform: scale({size})" />
+        <div class="dot" style="transform: scale({size})"></div>
         <!-- {data.value} -->
       {:else}
         <div class="missing">-</div>
@@ -32,8 +32,8 @@
 </div>
 
 <style lang="scss">
-  @import "src/styles/tokens";
-  @import "src/styles/type";
+  @use "src/styles/tokens" as *;
+  @use "src/styles/type" as *;
 
   .cell {
     height: 100%;

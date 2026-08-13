@@ -6,8 +6,8 @@
   import type { RealtimeProject } from "../data/schema";
   import Button from "./Button.svelte";
   import ButtonGroup from "./ButtonGroup.svelte";
-  import iconZoomOut from "@iconify/icons-ic/baseline-zoom-out";
-  import iconZoomIn from "@iconify/icons-ic/baseline-zoom-in";
+  import iconZoomOut from "@iconify-icons/ic/baseline-zoom-out";
+  import iconZoomIn from "@iconify-icons/ic/baseline-zoom-in";
 
   export let project: RealtimeProject;
 
@@ -179,8 +179,8 @@
 </div>
 
 <style lang="scss">
-  @import "src/styles/tokens";
-  @import "src/styles/type";
+  @use "src/styles/tokens" as *;
+  @use "src/styles/type" as *;
 
   .timeline {
     display: flex;

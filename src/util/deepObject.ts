@@ -56,9 +56,10 @@ export function deepEquals<T>(a: T, b: T): boolean {
       let bAsDate = b as unknown as Date;
       return aAsDate.getTime() === bAsDate.getTime();
     }
-    if (Object.keys(a).length !== Object.keys(b).length) return false;
+    if (Object.keys(a as object).length !== Object.keys(b as object).length)
+      return false;
     for (let prop in a) {
-      if (hasOwnProperty(a, prop) && !deepEquals(a[prop], b[prop])) {
+      if (hasOwnProperty(a, prop) && !deepEquals(a[prop], b![prop])) {
         return false;
       }
     }

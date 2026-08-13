@@ -3,7 +3,8 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-import { AllRequired, hasOwnProperty } from "../types/utility";
+import type { AllRequired } from "../types/utility";
+import { hasOwnProperty } from "../types/utility";
 import { deepClone, deepEquals } from "../util/deepObject";
 import {
   checkOptionalProperty,
@@ -186,11 +187,13 @@ function datifyBail<T extends { id: string }>(
 ): never {
   let id = object.id ?? "[No ID]";
   throw new Error(
-    `[${trace}|date]: ${prop} couldn't be resolved to a Date ${object[prop]}`
+    `[${trace}|date]: ${String(prop)} couldn't be resolved to a Date ${object[prop]}`
   );
 }
 
-function hasId<T>(data: T): data is T & Record<"id", Exclude<string, "">> {
+function hasId<T extends {}>(
+  data: T
+): data is T & Record<"id", Exclude<string, "">> {
   return hasOwnProperty(data, "id") && typeof data.id === "string" && !!data.id;
 }
 
@@ -383,7 +386,7 @@ export async function importAsyncProject(
     !typeAssert(data, "name", typeIsNonemptyString, true) ||
     !typeAssert(data, "notes", typeIsArrayOf(typeIsRecord), false) ||
     !typeAssert(data, "periodAlignment", typeIsEnum(weekdayEnum), false) ||
-    !typeAssert(data, "reportingPeriod", typeIsEnum(["day", "week"]), true)
+    !typeAssert(data, "reportingPeriod", typeIsEnum(["day", "week"] as const), true)
   )
     throw new Error("Unreachable!");
 

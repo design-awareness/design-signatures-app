@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
+import { mount } from "svelte";
 import App from "./App.svelte";
 
 import * as db from "./data/database";
@@ -14,14 +15,18 @@ if (BUILD_ENV !== "prod") {
   Object.assign(window, { db });
 }
 
-const app = new App({
+const app = mount(App, {
   target: document.body,
 });
 
 // install service worker
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("/service-worker.js");
+    const serviceWorkerUrl = import.meta.env.DEV
+      ? "/src/service-worker.ts"
+      : "/service-worker.js";
+
+    navigator.serviceWorker.register(serviceWorkerUrl, { type: "module" });
   });
 }
 

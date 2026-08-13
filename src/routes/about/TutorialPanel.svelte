@@ -18,7 +18,7 @@
 </script>
 
 <script lang="ts">
-  import { Carousel, CarouselItem } from "svelte-snappy-carousel";
+  import { Carousel, CarouselItem } from "../../components/carousel";
   import CarouselControls from "../../components/CarouselControls.svelte";
   import DeviceOutline from "../../components/DeviceOutline.svelte";
   import TypedMedia from "../../components/TypedMedia.svelte";
@@ -61,8 +61,8 @@
 </Carousel>
 
 <style lang="scss">
-  @import "src/styles/tokens";
-  @import "src/styles/type";
+  @use "src/styles/tokens" as *;
+  @use "src/styles/type" as *;
   .pane {
     display: flex;
     flex-direction: column;

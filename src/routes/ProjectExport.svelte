@@ -3,8 +3,8 @@
   SPDX-License-Identifier: BSD-3-Clause
 -->
 <script lang="ts">
-  import loadingIcon from "@iconify/icons-ic/baseline-hourglass-empty";
-  import notFoundIcon from "@iconify/icons-ic/baseline-search-off";
+  import loadingIcon from "@iconify-icons/ic/baseline-hourglass-empty";
+  import notFoundIcon from "@iconify-icons/ic/baseline-search-off";
   import BackButton from "../components/BackButton.svelte";
   import BottomActionBar from "../components/BottomActionBar.svelte";
   import Checkbox from "../components/Checkbox.svelte";
@@ -48,7 +48,7 @@
       download(
         `${safeName(project.name)}.json`,
         "application/json",
-        project.serialize()
+        project.serialize(),
       );
     } else {
       if (canvasElement) {
@@ -129,7 +129,7 @@
                 showNotes,
                 showTime,
               }}
-            />
+            ></canvas>
           </HorizontalScrollArea>
         {:else}
           <SegmentedSelector
@@ -160,7 +160,7 @@
                 showNotes,
                 // hideEmptyDays
               }}
-            />
+            ></canvas>
           </HorizontalScrollArea>
         {/if}
       {:else if exportType === "data"}
@@ -189,8 +189,8 @@
 {/await}
 
 <style lang="scss">
-  @import "src/styles/tokens";
-  @import "src/styles/type";
+  @use "src/styles/tokens" as *;
+  @use "src/styles/type" as *;
 
   pre {
     background: $alt-background-color;

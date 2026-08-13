@@ -3,7 +3,8 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-@import "vars";
+@forward "vars";
+@use "vars" as *;
 
 $background-color: getvar(background);
 $alt-background-color: getvar(alt-background);

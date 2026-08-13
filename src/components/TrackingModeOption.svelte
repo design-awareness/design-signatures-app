@@ -3,10 +3,10 @@
   SPDX-License-Identifier: BSD-3-Clause
 -->
 <script lang="ts">
-  import realtimeIcon from "@iconify/icons-ic/baseline-access-time";
-  import asyncIcon from "@iconify/icons-ic/baseline-list";
-  import helpIcon from "@iconify/icons-ic/baseline-help-outline";
-  import Icon from "@iconify/svelte/dist/Icon.svelte";
+  import realtimeIcon from "@iconify-icons/ic/baseline-access-time";
+  import asyncIcon from "@iconify-icons/ic/baseline-list";
+  import helpIcon from "@iconify-icons/ic/baseline-help-outline";
+  import Icon from "@iconify/svelte";
 
   export let type: "realtime" | "async";
 
@@ -36,8 +36,8 @@
 </button>
 
 <style lang="scss">
-  @import "src/styles/tokens";
-  @import "src/styles/type";
+  @use "src/styles/tokens" as *;
+  @use "src/styles/type" as *;
 
   .mode-container {
     text-align: center;

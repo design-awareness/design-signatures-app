@@ -101,6 +101,8 @@ export type SetPropertyTypes<
 export function hasOwnProperty<X extends {}, Y extends PropertyKey>(
   obj: X,
   prop: Y
-): obj is X & Record<Y, unknown> {
+): obj is [Extract<X, Record<Y, unknown>>] extends [never]
+  ? X & Record<Y, unknown>
+  : Extract<X, Record<Y, unknown>> {
   return obj.hasOwnProperty(prop);
 }

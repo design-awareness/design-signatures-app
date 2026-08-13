@@ -3,7 +3,7 @@
   SPDX-License-Identifier: BSD-3-Clause
 -->
 <script lang="ts">
-  import Icon from "@iconify/svelte/dist/Icon.svelte";
+  import Icon from "@iconify/svelte";
   import reflectIcon from "../../assets/reflectIcon";
   import BackButton from "../../components/BackButton.svelte";
   import Figure from "../../components/Figure.svelte";
@@ -68,7 +68,7 @@
             showNotes: false,
             showTime: false,
           }}
-        />
+        ></canvas>
       {/await}
       Signature A - Ideal project envelope pattern
     </p>
@@ -81,7 +81,7 @@
             showNotes: false,
             showTime: false,
           }}
-        />
+        ></canvas>
       {/await}
       Signature B - Ideal project envelope pattern with variation and emphasis on
       modeling
@@ -98,7 +98,7 @@
               showDates: false,
               hideEmptyDays: true,
             }}
-          />
+          ></canvas>
         </div>
       {/await}
       Signature C - Ideal project envelope pattern
@@ -113,7 +113,7 @@
               showDates: false,
               hideEmptyDays: true,
             }}
-          />
+          ></canvas>
         </div>
       {/await}
       Signature D - Ideal project envelope pattern with variation

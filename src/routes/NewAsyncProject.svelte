@@ -3,8 +3,7 @@
   SPDX-License-Identifier: BSD-3-Clause
 -->
 <script lang="ts">
-  import { pop, push } from "svelte-spa-router";
-  import { location, replace } from "svelte-spa-router/Router.svelte";
+  import { pop, push, replace, router } from "svelte-spa-router";
   import BackButton from "../components/BackButton.svelte";
   import BottomActionBar from "../components/BottomActionBar.svelte";
   import {
@@ -121,7 +120,7 @@
       />
       <DesignModelChooser
         bind:selectedDesignModel={designModel}
-        createNew={() => push($location + BUILDER_SUFFIX)}
+        createNew={() => push(router.location + BUILDER_SUFFIX)}
       />
     </ContentFrame>
     <BottomActionBar
@@ -138,7 +137,7 @@
 </main>
 
 <style lang="scss">
-  @import "src/styles/tokens";
+  @use "src/styles/tokens" as *;
   .page {
     background-color: $background-color;
     min-height: 100%;

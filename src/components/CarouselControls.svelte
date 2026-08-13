@@ -3,9 +3,9 @@
   SPDX-License-Identifier: BSD-3-Clause
 -->
 <script lang="ts">
-  import arrowLeft from "@iconify/icons-ic/outline-arrow-circle-left.js";
-  import arrowRight from "@iconify/icons-ic/outline-arrow-circle-right.js";
-  import Icon from "@iconify/svelte/dist/Icon.svelte";
+  import arrowLeft from "@iconify-icons/ic/outline-arrow-circle-left.js";
+  import arrowRight from "@iconify-icons/ic/outline-arrow-circle-right.js";
+  import Icon from "@iconify/svelte";
 
   export let next: () => void;
   export let previous: () => void;
@@ -35,7 +35,7 @@
         class="indicator"
         class:active={i === position}
         role="presentation"
-      />
+      ></div>
     {/each}
   </div>
   <button on:click={next} disabled={!nextAvailable} aria-label="next">
@@ -44,7 +44,7 @@
 </div>
 
 <style lang="scss">
-  @import "src/styles/tokens";
+  @use "src/styles/tokens" as *;
 
   .controls {
     display: flex;

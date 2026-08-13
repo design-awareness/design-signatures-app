@@ -8,7 +8,7 @@
 </script>
 
 <script lang="ts">
-  import add from "@iconify/icons-ic/baseline-add";
+  import add from "@iconify-icons/ic/baseline-add";
   import type { DesignModel } from "../../data/schema";
   import BottomActionBar from "../BottomActionBar.svelte";
   import InputField from "../InputField.svelte";
@@ -18,7 +18,7 @@
   import Button from "../Button.svelte";
   import colorPresets from "../../data/colorPresets";
   import { newDesignModel } from "../../data/database";
-  import { pop, push, location } from "svelte-spa-router";
+  import { pop, push, router } from "svelte-spa-router";
 
   export let designModel: DesignModel;
   export let showModal: boolean;
@@ -26,12 +26,12 @@
 
   function openModal(i: number) {
     modalId = i;
-    if ($location.endsWith(BUILDER_SUFFIX)) {
-      push($location.replace(BUILDER_SUFFIX, BUILDER_MODAL_SUFFIX));
+    if (router.location.endsWith(BUILDER_SUFFIX)) {
+      push(router.location.replace(BUILDER_SUFFIX, BUILDER_MODAL_SUFFIX));
     }
   }
   function closeModal() {
-    if ($location.endsWith(BUILDER_MODAL_SUFFIX)) pop();
+    if (router.location.endsWith(BUILDER_MODAL_SUFFIX)) pop();
   }
 
   type ActivityWithID = {
@@ -166,8 +166,8 @@
 
 <style lang="scss">
   @use "sass:math";
-  @import "src/styles/tokens";
-  @import "src/styles/type";
+  @use "src/styles/tokens" as *;
+  @use "src/styles/type" as *;
   .label {
     @include type-style($type-input-label);
     margin: $block-vertical-spacing 0 $input-spacing-inner 0;

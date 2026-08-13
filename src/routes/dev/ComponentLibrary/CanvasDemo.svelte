@@ -41,9 +41,9 @@
   <BackButton href="/dev/component-library/" />
   <Header>Static Canvas</Header>
   <button on:click={triggerDraw1}>trigger redraw ({i1})</button>
-  <canvas use:canvasAction1 />
+  <canvas use:canvasAction1></canvas>
   <Header>Animated Canvas</Header>
-  <canvas use:canvasAction2 />
+  <canvas use:canvasAction2></canvas>
 </ContentFrame>
 
 <style>

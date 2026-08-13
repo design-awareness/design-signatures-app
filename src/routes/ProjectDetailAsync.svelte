@@ -3,8 +3,8 @@
   SPDX-License-Identifier: BSD-3-Clause
 -->
 <script lang="ts">
-  import bellIcon from "@iconify/icons-ic/baseline-notifications-none";
-  import { pop, push, querystring } from "svelte-spa-router";
+  import bellIcon from "@iconify-icons/ic/baseline-notifications-none";
+  import { pop, push } from "svelte-spa-router";
   import reflectIcon from "../assets/reflectIcon";
   import ActivityToken from "../components/ActivityToken.svelte";
   import Alert from "../components/Alert.svelte";
@@ -24,6 +24,7 @@
   import { makeEntryTable } from "../util/asyncEntry";
   import { getToday } from "../util/date";
   import dotTimeline from "../util/dotTimeline";
+  import { querystring } from "../util/routerState";
   import { expressiveDurationM } from "../util/time";
   import AsyncEntryEditor from "./AsyncEntryEditor.svelte";
 
@@ -144,7 +145,7 @@
 
       {#if project && showCanvas}
         <div class="canvas-timeline-container">
-          <canvas use:dotTimeline={{ project }} />
+          <canvas use:dotTimeline={{ project }}></canvas>
         </div>
       {/if}
 
@@ -173,8 +174,8 @@
 </main>
 
 <style lang="scss">
-  @import "src/styles/tokens";
-  @import "src/styles/type";
+  @use "src/styles/tokens" as *;
+  @use "src/styles/type" as *;
 
   .page {
     background-color: $alt-background-color;

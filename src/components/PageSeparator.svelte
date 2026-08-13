@@ -2,11 +2,13 @@
   Copyright (c) 2021, Design Awareness Contributors.
   SPDX-License-Identifier: BSD-3-Clause
 -->
+<script lang="ts">
+</script>
 
 <hr />
 
 <style lang="scss">
-  @import "src/styles/tokens";
+  @use "src/styles/tokens" as *;
 
   hr {
     margin: $block-vertical-spacing (-$content-frame-pad);

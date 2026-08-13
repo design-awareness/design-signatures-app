@@ -1,8 +1,11 @@
 declare module "svelte-collapsible" {
-  import { SvelteComponentTyped } from "svelte";
+  import type { SvelteComponent } from "svelte";
 
   interface AccordionProps {
     key?: string;
+  }
+  interface AccordionSlots {
+    default: {};
   }
 
   interface AccordionItemProps {
@@ -10,6 +13,20 @@ declare module "svelte-collapsible" {
     easing?: string;
     duration?: number;
   }
-  export class Accordion extends SvelteComponentTyped<AccordionProps> {}
-  export class AccordionItem extends SvelteComponentTyped<AccordionItemProps> {}
+  interface AccordionItemSlots {
+    header: {};
+    body: {};
+    default: {};
+  }
+
+  export class Accordion extends SvelteComponent<
+    AccordionProps,
+    any,
+    AccordionSlots
+  > {}
+  export class AccordionItem extends SvelteComponent<
+    AccordionItemProps,
+    any,
+    AccordionItemSlots
+  > {}
 }
